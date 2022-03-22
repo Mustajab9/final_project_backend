@@ -1,1 +1,1 @@
-# final_project_backend
+Back End Linov HR Final Project Kelompok 2
