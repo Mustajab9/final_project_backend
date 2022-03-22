@@ -9,6 +9,12 @@
   <name>Linov HR Community Apps</name>
   	
   <dependencies>
+
+		<dependency>
+			<groupId>com.lawencon</groupId>
+			<artifactId>core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>

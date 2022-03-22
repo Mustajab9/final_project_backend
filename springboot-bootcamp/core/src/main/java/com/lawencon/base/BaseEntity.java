@@ -12,14 +12,17 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
 	public static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "id")
-	@GeneratedValue(generator = "uuid")
-	private UUID id;
+    @Column(length = 36)
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    private String id;
 
 	@Column(name = "created_by")
 	private UUID createdBy;
@@ -69,11 +72,11 @@ public abstract class BaseEntity implements Serializable {
 		this.version = version;
 	}
 
-	public UUID getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
