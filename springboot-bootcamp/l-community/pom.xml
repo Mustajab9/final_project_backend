@@ -6,7 +6,8 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>l-community</artifactId>
-  <name>Linov Community</name>
+  <name>Linov HR Community Apps</name>
+  	
   <dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
