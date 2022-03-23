@@ -3,24 +3,70 @@ package com.lawencon.community.model;
 import java.sql.Date;
 import java.sql.Time;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
 import com.lawencon.base.BaseEntity;
 
+@Entity
+@Table(name = "events", uniqueConstraints = @UniqueConstraint(name="event_bk", columnNames = "event_code"))
 public class Event extends BaseEntity {
 	
 	private static final long serialVersionUID = 1023072540840191613L;
+	
+	@Column(name = "event_title", length=100)
 	private String eventTitle;
+	
+	@Column(name = "event_code", length=5)
 	private String eventCode;
+	
+	@Column(name = "event_provider", length=100)
 	private String eventProvider;
+	
+	@Column(name = "event_price")
 	private Integer eventPrice;
+	
+	@Column(name = "event_time_start")
 	private Time eventTimeStart;
+	
+	@Column(name = "event_time_end")
 	private Time eventTimeEnd;
+	
+	@Column(name = "event_date_start")
 	private Date eventDateStart;
+	
+	@Column(name = "event_date_end")
 	private Date eventDateEnd;
+	
+	@Column(name = "is_approve")
 	private Boolean isApprove;
+	
+	@ManyToOne
+	@JoinColumn(name = "type_id")
 	private EventType typeId;
+	
+	@ManyToOne
+	@JoinColumn(name = "category_id")
+	private Category categoryId;
+	
+	@ManyToOne
+	@JoinColumn(name = "price_id")
 	private PriceListEvent priceId;
+	
+	@ManyToOne
+	@JoinColumn(name = "attachment_id")
 	private Attachment attachmentId;
 	
+	public Category getCategoryId() {
+		return categoryId;
+	}
+	public void setCategoryId(Category categoryId) {
+		this.categoryId = categoryId;
+	}
 	public String getEventTitle() {
 		return eventTitle;
 	}

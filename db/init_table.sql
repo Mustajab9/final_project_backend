@@ -14,6 +14,7 @@ CREATE TABLE roles(
 
 ALTER TABLE roles ADD CONSTRAINT role_pk PRIMARY KEY(id);
 ALTER TABLE roles ADD CONSTRAINT role_bk UNIQUE(role_code);
+ALTER TABLE roles ADD CONSTRAINT role_ck UNIQUE (role_name, role_code);
 
 CREATE TABLE users(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
@@ -36,7 +37,7 @@ ALTER TABLE users ADD CONSTRAINT role_fk FOREIGN KEY(role_id) REFERENCES roles(i
 CREATE TABLE industries(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
 	industry_code varchar(5) NOT NULL,
-	indsutry_name varchar(100) NOT NULL,
+	industry_name varchar(100) NOT NULL,
 	created_by varchar(36) NOT NULL,
 	created_at timestamp without time zone NOT NULL,
 	updated_by varchar(36),
@@ -47,6 +48,7 @@ CREATE TABLE industries(
 
 ALTER TABLE industries ADD CONSTRAINT industry_pk PRIMARY KEY(id);
 ALTER TABLE industries ADD CONSTRAINT industry_bk UNIQUE(industry_code);
+ALTER TABLE industries ADD CONSTRAINT industry_ck UNIQUE(industry_name, industry_code);
 
 CREATE TABLE positions(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
@@ -62,6 +64,7 @@ CREATE TABLE positions(
 
 ALTER TABLE positions ADD CONSTRAINT position_pk PRIMARY KEY(id);
 ALTER TABLE positions ADD CONSTRAINT position_bk UNIQUE(position_code);
+ALTER TABLE positions ADD CONSTRAINT position_ck UNIQUE(position_name, position_code);
 
 CREATE TABLE provinces(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
@@ -77,6 +80,7 @@ CREATE TABLE provinces(
 
 ALTER TABLE provinces ADD CONSTRAINT province_pk PRIMARY KEY(id);
 ALTER TABLE provinces ADD CONSTRAINT province_bk UNIQUE(province_code);
+ALTER TABLE provinces ADD CONSTRAINT province_ck UNIQUE(province_name, province_code);
 
 CREATE TABLE regencies(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
@@ -94,6 +98,7 @@ CREATE TABLE regencies(
 ALTER TABLE regencies ADD CONSTRAINT regency_pk PRIMARY KEY(id);
 ALTER TABLE regencies ADD CONSTRAINT regency_bk UNIQUE(regency_code);
 ALTER TABLE regencies ADD CONSTRAINT regency_province_fk FOREIGN KEY(province_id) REFERENCES provinces(id);
+ALTER TABLE regencies ADD CONSTRAINT regency_ck UNIQUE(regency_name, regency_code);
 
 CREATE TABLE attachments(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
@@ -136,6 +141,8 @@ ALTER TABLE profiles ADD CONSTRAINT profile_user_fk FOREIGN KEY(user_id) REFEREN
 ALTER TABLE profiles ADD CONSTRAINT profile_industry_fk FOREIGN KEY(industry_id) REFERENCES industries(id);
 ALTER TABLE profiles ADD CONSTRAINT profile_position_fk FOREIGN KEY(position_id) REFERENCES positions(id);
 ALTER TABLE profiles ADD CONSTRAINT profile_province_fk FOREIGN KEY(province_id) REFERENCES provinces(id);
+ALTER TABLE profiles ADD CONSTRAINT profile_ck UNIQUE(profile_name, profile_code);
+
 
 CREATE TABLE categories(
 	id varchar(36) DEFAULT uuid_generate_v4(),
@@ -151,6 +158,7 @@ CREATE TABLE categories(
 
 ALTER TABLE categories ADD CONSTRAINT category_pk PRIMARY KEY(id);
 ALTER TABLE categories ADD CONSTRAINT category_bk UNIQUE(category_code);
+ALTER TABLE categories ADD CONSTRAINT category_ck UNIQUE (category_name, category_code);
 
 CREATE TABLE thread_types(
 	id varchar(36) DEFAULT uuid_generate_v4(),
@@ -166,6 +174,7 @@ CREATE TABLE thread_types(
 
 ALTER TABLE thread_types ADD CONSTRAINT type_pk PRIMARY KEY(id);
 ALTER TABLE thread_types ADD CONSTRAINT type_bk UNIQUE(type_code);
+ALTER TABLE thread_types ADD CONSTRAINT type_ck UNIQUE(type_name, type_code);
 
 CREATE TABLE threads(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
@@ -201,6 +210,7 @@ CREATE TABLE thread_categories(
 ALTER TABLE thread_categories ADD CONSTRAINT thread_category_pk PRIMARY KEY(id);
 ALTER TABLE thread_categories ADD CONSTRAINT category_fk FOREIGN KEY(category_id) REFERENCES categories(id);
 ALTER TABLE thread_categories ADD CONSTRAINT thread_fk FOREIGN KEY(thread_id) REFERENCES threads(id);
+ALTER TABLE thread_categories ADD CONSTRAINT thread_category_ck UNIQUE (category_id, thread_id);
 
 CREATE TABLE thread_attachment(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
@@ -284,6 +294,7 @@ CREATE TABLE pollings(
 ALTER TABLE pollings ADD CONSTRAINT polling_pk PRIMARY KEY(id);
 ALTER TABLE pollings ADD CONSTRAINT polling_bk UNIQUE(polling_code);
 ALTER TABLE pollings ADD CONSTRAINT polling_thread_fk FOREIGN KEY(thread_id) REFERENCES threads(id);
+ALTER TABLE pollings ADD CONSTRAINT polling_ck UNIQUE(polling_name, polling_code);
 
 CREATE TABLE polling_choices(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
@@ -301,6 +312,7 @@ CREATE TABLE polling_choices(
 ALTER TABLE polling_choices ADD CONSTRAINT choice_pk PRIMARY KEY(id);
 ALTER TABLE polling_choices ADD CONSTRAINT choice_bk UNIQUE(choice_code);
 ALTER TABLE polling_choices ADD CONSTRAINT choice_polling_fk FOREIGN KEY(polling_id) REFERENCES pollings(id);
+ALTER TABLE polling_choices ADD CONSTRAINT choice_ck UNIQUE(choice_name, choice_code);
 
 CREATE TABLE choice_votes(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
@@ -332,6 +344,7 @@ CREATE TABLE event_types(
 
 ALTER TABLE event_types ADD CONSTRAINT type_event_pk PRIMARY KEY(id);
 ALTER TABLE event_types ADD CONSTRAINT type_event_bk UNIQUE(type_code);
+ALTER TABLE event_types ADD CONSTRAINT type_event_ck UNIQUE(type_name, type_code);
 
 CREATE TABLE payment_method(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
@@ -347,6 +360,7 @@ CREATE TABLE payment_method(
 
 ALTER TABLE payment_method ADD CONSTRAINT payment_pk PRIMARY KEY(id);
 ALTER TABLE payment_method ADD CONSTRAINT payment_bk UNIQUE(payment_code);
+ALTER TABLE payment_method ADD CONSTRAINT payment_ck UNIQUE(payment_name, payment_code);
 
 CREATE TABLE price_list_event(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
@@ -363,6 +377,7 @@ CREATE TABLE price_list_event(
 
 ALTER TABLE price_list_event ADD CONSTRAINT price_event_pk PRIMARY KEY(id);
 ALTER TABLE price_list_event ADD CONSTRAINT price_event_bk UNIQUE(price_code);
+ALTER TABLE price_list_event ADD CONSTRAINT price_event_ck UNIQUE(price_name, price_code);
 
 CREATE TABLE events(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
@@ -498,6 +513,7 @@ CREATE TABLE social_media(
 
 ALTER TABLE social_media ADD CONSTRAINT social_media_pk PRIMARY KEY(id);
 ALTER TABLE social_media ADD CONSTRAINT social_media_bk UNIQUE(social_media_code);
+ALTER TABLE social_media ADD CONSTRAINT social_media_ck UNIQUE(social_media_name,social_media_code);
 
 CREATE TABLE profile_sosmed(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
