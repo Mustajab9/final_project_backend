@@ -173,7 +173,6 @@ CREATE TABLE threads(
 	thread_title varchar(100) NOT NULL,
 	thread_content text,
 	is_premium boolean,
-	category_id varchar(36) NOT NULL,
 	type_id varchar(36) NOT NULL,
 	created_by varchar(36) NOT NULL,
 	created_at timestamp without time zone NOT NULL,
@@ -185,8 +184,23 @@ CREATE TABLE threads(
 
 ALTER TABLE threads ADD CONSTRAINT thread_pk PRIMARY KEY(id);
 ALTER TABLE threads ADD CONSTRAINT thread_bk UNIQUE(thread_code);
-ALTER TABLE threads ADD CONSTRAINT thread_category_fk FOREIGN KEY(category_id) REFERENCES categories(id);
 ALTER TABLE threads ADD CONSTRAINT thread_type_fk FOREIGN KEY(type_id) REFERENCES thread_types(id);
+
+CREATE TABLE thread_categories(
+	id varchar(36) DEFAULT uuid_generate_v4(),
+	category_id varchar(36),
+	thread_id varchar(36),
+	created_by varchar(36) NOT NULL,
+	created_at timestamp without time zone NOT NULL,
+	updated_by varchar(36),
+	updated_at timestamp without time zone,
+	"version" int NOT NULL,
+	is_active boolean
+);
+
+ALTER TABLE thread_categories ADD CONSTRAINT thread_category_pk PRIMARY KEY(id);
+ALTER TABLE thread_categories ADD CONSTRAINT category_fk FOREIGN KEY(category_id) REFERENCES categories(id);
+ALTER TABLE thread_categories ADD CONSTRAINT thread_fk FOREIGN KEY(thread_id) REFERENCES threads(id);
 
 CREATE TABLE thread_attachment(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
