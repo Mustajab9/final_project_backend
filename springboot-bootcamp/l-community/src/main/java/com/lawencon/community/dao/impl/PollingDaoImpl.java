@@ -2,11 +2,14 @@ package com.lawencon.community.dao.impl;
 
 import java.sql.Timestamp;
 
+import org.springframework.stereotype.Repository;
+
 import com.lawencon.base.BaseDaoImpl;
 import com.lawencon.community.dao.PollingDao;
 import com.lawencon.community.model.Polling;
 import com.lawencon.community.model.Thread;
 
+@Repository
 public class PollingDaoImpl extends BaseDaoImpl<Polling> implements PollingDao {
 
 	@Override

@@ -3,10 +3,13 @@ package com.lawencon.community.dao.impl;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Repository;
 
 import com.lawencon.base.BaseDaoImpl;
 import com.lawencon.community.dao.EnrollDetailDao;
@@ -15,6 +18,7 @@ import com.lawencon.community.model.EnrollDetail;
 import com.lawencon.community.model.EnrollEvent;
 import com.lawencon.community.model.Event;
 
+@Repository
 public class EnrollDetailDaoImpl extends BaseDaoImpl<EnrollDetail> implements EnrollDetailDao  {
 
 	@Override
@@ -37,7 +41,7 @@ public class EnrollDetailDaoImpl extends BaseDaoImpl<EnrollDetail> implements En
 			event.setId(obj[0].toString());
 			event.setEventTitle(obj[1].toString());
 			event.setEventProvider(obj[2].toString());
-			event.setEventPrice(Integer.valueOf(obj[3].toString()));
+			event.setEventPrice(BigInteger.valueOf(((Number)obj[3]).longValue()));
 			event.setEventTimeStart((Time)obj[4]);
 			event.setEventTimeEnd((Time)obj[5]);
 			event.setEventDateStart((Date)obj[6]);

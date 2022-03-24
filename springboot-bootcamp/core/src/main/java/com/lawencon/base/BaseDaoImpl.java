@@ -1,5 +1,8 @@
 package com.lawencon.base;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,9 +32,20 @@ public class BaseDaoImpl<T extends BaseEntity> {
 		return em().find(clazz, id);
 	}
 
+	protected Long countAll() {
+        return (Long) em().createQuery("SELECT COUNT(id) FROM " + clazz.getName()).getSingleResult();
+    }
+	
 	protected List<T> getAll() {
 		return em().createQuery("FROM " + clazz.getName(), clazz).getResultList();
 	}
+	
+	protected List<T> getAll(int startPage, int maxPage) {
+        return em().createQuery("FROM " + clazz.getName(), clazz)
+                .setFirstResult(startPage)
+                .setMaxResults(maxPage)
+                .getResultList();
+    }
 
 	protected T save(T entity) throws Exception {
 		if (entity.getId() != null) {
@@ -72,5 +86,4 @@ public class BaseDaoImpl<T extends BaseEntity> {
 	protected Query createNativeQuery(String sql) {
 		return em().createNativeQuery(sql);
 	}
-
 }

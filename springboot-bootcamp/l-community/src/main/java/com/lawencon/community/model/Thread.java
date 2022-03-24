@@ -32,10 +32,6 @@ public class Thread extends BaseEntity {
 	private Boolean isPremium = false;
 	
 	@ManyToOne
-	@JoinColumn(name = "category_id")
-	private Category categoryId;
-	
-	@ManyToOne
 	@JoinColumn(name = "type_id")
 	private ThreadType typeId;
 	
@@ -62,12 +58,6 @@ public class Thread extends BaseEntity {
 	}
 	public void setIsPremium(Boolean isPremium) {
 		this.isPremium = isPremium;
-	}
-	public Category getCategoryId() {
-		return categoryId;
-	}
-	public void setCategoryId(Category categoryId) {
-		this.categoryId = categoryId;
 	}
 	public ThreadType getTypeId() {
 		return typeId;

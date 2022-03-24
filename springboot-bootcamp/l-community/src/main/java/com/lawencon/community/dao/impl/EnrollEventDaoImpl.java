@@ -6,12 +6,15 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.lawencon.base.BaseDaoImpl;
 import com.lawencon.community.dao.EnrollEventDao;
 import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.EnrollEvent;
 import com.lawencon.community.model.Profiles;
 
+@Repository
 public class EnrollEventDaoImpl extends BaseDaoImpl<EnrollEvent> implements EnrollEventDao {
 
 	@Override

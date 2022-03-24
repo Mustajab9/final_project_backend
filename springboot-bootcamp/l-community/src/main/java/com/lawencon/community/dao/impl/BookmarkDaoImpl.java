@@ -7,6 +7,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.lawencon.base.BaseDaoImpl;
 import com.lawencon.community.dao.BookmarkDao;
 import com.lawencon.community.model.Attachment;
@@ -15,6 +17,7 @@ import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadAttachment;
 import com.lawencon.community.model.ThreadType;
 
+@Repository
 public class BookmarkDaoImpl extends BaseDaoImpl<Bookmark> implements BookmarkDao {
 
 	@Override

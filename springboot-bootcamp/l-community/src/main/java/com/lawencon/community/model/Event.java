@@ -1,5 +1,6 @@
 package com.lawencon.community.model;
 
+import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Time;
 
@@ -28,7 +29,7 @@ public class Event extends BaseEntity {
 	private String eventProvider;
 	
 	@Column(name = "event_price")
-	private Integer eventPrice;
+	private BigInteger eventPrice;
 	
 	@Column(name = "event_time_start")
 	private Time eventTimeStart;
@@ -85,10 +86,10 @@ public class Event extends BaseEntity {
 	public void setEventProvider(String eventProvider) {
 		this.eventProvider = eventProvider;
 	}
-	public Integer getEventPrice() {
+	public BigInteger getEventPrice() {
 		return eventPrice;
 	}
-	public void setEventPrice(Integer eventPrice) {
+	public void setEventPrice(BigInteger eventPrice) {
 		this.eventPrice = eventPrice;
 	}
 	public Time getEventTimeStart() {

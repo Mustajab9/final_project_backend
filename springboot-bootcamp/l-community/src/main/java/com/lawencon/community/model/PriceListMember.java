@@ -1,5 +1,7 @@
 package com.lawencon.community.model;
 
+import java.math.BigInteger;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -17,7 +19,7 @@ public class PriceListMember extends BaseEntity {
 	private String priceCode;
 	
 	@Column(name = "price_nominal")
-	private Integer priceNominal;
+	private BigInteger priceNominal;
 	
 	@Column(name = "duration")
 	private Integer duration;
@@ -28,10 +30,10 @@ public class PriceListMember extends BaseEntity {
 	public void setPriceCode(String priceCode) {
 		this.priceCode = priceCode;
 	}
-	public Integer getPriceNominal() {
+	public BigInteger getPriceNominal() {
 		return priceNominal;
 	}
-	public void setPriceNominal(Integer priceNominal) {
+	public void setPriceNominal(BigInteger priceNominal) {
 		this.priceNominal = priceNominal;
 	}
 	public Integer getDuration() {
