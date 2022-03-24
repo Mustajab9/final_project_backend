@@ -1,10 +1,6 @@
 package com.lawencon.base;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -28,7 +24,7 @@ public class BaseDaoImpl<T extends BaseEntity> {
 		this.clazz = (Class<T>) GenericTypeResolver.resolveTypeArgument(getClass(), BaseDaoImpl.class);
 	}
 
-	protected T getById(final UUID id) {
+	protected T getById(final String id) {
 		return em().find(clazz, id);
 	}
 
@@ -63,8 +59,8 @@ public class BaseDaoImpl<T extends BaseEntity> {
 
 	protected boolean deleteById(final Object entityId) throws Exception {
 		T entity = null;
-		if (entityId != null && entityId instanceof UUID) {
-			entity = getById((UUID) entityId);
+		if (entityId != null && entityId instanceof String) {
+			entity = getById((String) entityId);
 		}
 
 		if (entity != null) {

@@ -12,6 +12,31 @@ import com.lawencon.community.model.ThreadType;
 
 @Repository
 public class ThreadLikeDaoImpl extends BaseDaoImpl<ThreadLike> implements ThreadLikeDao {
+	
+	@Override
+	public List<ThreadLike> findAll() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public ThreadLike findById(String id) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public ThreadLike save(ThreadLike entity) throws Exception {
+		// TODO Auto-generated method stub
+		return super.save(entity);
+	}
+	
+	@Override
+	public boolean deleteById(String id) throws Exception {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 	@Override
 	public List<ThreadLike> getByUser(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();

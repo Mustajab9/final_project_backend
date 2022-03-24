@@ -13,19 +13,38 @@ import com.lawencon.community.model.ThreadAttachment;
 import com.lawencon.community.model.ThreadType;
 
 public class ThreadAttachmentDaoImpl extends BaseDaoImpl<ThreadAttachment> implements ThreadAttachmentDao {
-
 	@Override
-	public List<ThreadAttachment> getByThread(String id) {
+	public List<ThreadAttachment> findAll() throws Exception {
+		return null;
+	}
+	
+	@Override
+	public ThreadAttachment findById(String id) throws Exception {
+		return null;
+	}
+	
+	@Override
+	public ThreadAttachment save(ThreadAttachment entity) throws Exception {
+		return super.save(entity);
+	}
+	
+	@Override
+	public boolean deleteById(String id) throws Exception {
+		return false;
+	}
+	
+	@Override
+	public List<ThreadAttachment> findByThread(String id) {
 		StringBuilder builder = new StringBuilder();
-		String sql = "SELECT ta.id, t.id, t.thread_code, t.thread_title, t.thread_content, t.is_premium, tt.id, tt.type_code, tt.type_name, a.id, "; 
-		builder.append("a.attachment_code, a.attachment_content, a.attachment_extension, ta.\"version\", ta.is_active "); 
-		builder.append("FROM thread_attachment ta ");
-		builder.append("INNER JOIN threads t ON t.id = ta.thread_id ");
-		builder.append("INNER JOIN thread_types tt ON tt.id = t.type_id ");
-		builder.append("INNER JOIN attachments a ON a.id = ta.attachment_id ");
-		builder.append("WHERE t.id = :id");
+		builder.append("SELECT ta.id, t.id, t.thread_code, t.thread_title, t.thread_content, t.is_premium, tt.id, tt.type_code, tt.type_name, a.id,"); 
+		builder.append(" a.attachment_code, a.attachment_content, a.attachment_extension, ta.version, ta.is_active"); 
+		builder.append(" FROM thread_attachment ta");
+		builder.append(" INNER JOIN threads t ON t.id = ta.thread_id");
+		builder.append(" INNER JOIN thread_types tt ON tt.id = t.type_id");
+		builder.append(" INNER JOIN attachments a ON a.id = ta.attachment_id");
+		builder.append(" WHERE t.id = :id");
 		
-		List<?> results = createNativeQuery(sql).setParameter("id", id).getResultList();
+		List<?> results = createNativeQuery(builder.toString()).setParameter("id", id).getResultList();
 		List<ThreadAttachment> listResult = new ArrayList<>();
 		
 		results.forEach(result->{
