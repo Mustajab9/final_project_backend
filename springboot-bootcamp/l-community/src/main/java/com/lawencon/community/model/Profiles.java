@@ -27,6 +27,8 @@ public class Profiles extends BaseEntity {
 	@Column(name = "profile_company", length=100)
 	private String profileCompany;
 	
+	private Integer profilePortalCode;
+	
 	@ManyToOne
 	@JoinColumn(name = "profile_image")
 	private Attachment profileImage;
@@ -64,6 +66,12 @@ public class Profiles extends BaseEntity {
 	}
 	public void setProfileCompany(String profileCompany) {
 		this.profileCompany = profileCompany;
+	}
+	public Integer getProfilePortalCode() {
+		return profilePortalCode;
+	}
+	public void setProfilePortalCode(Integer profilePortalCode) {
+		this.profilePortalCode = profilePortalCode;
 	}
 	public Attachment getProfileImage() {
 		return profileImage;

@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 
 public class UpdateRoleDtoReq {
 	@NotNull(message = "Role Id is Empty")
-	private Long id;
+	private String id;
 	
 	@NotEmpty(message = "Role Name is Empty")
 	@Size(max = 30, min = 5, message = "Name min 5 Character and max 30 Character")
@@ -16,11 +16,11 @@ public class UpdateRoleDtoReq {
 	private Integer version;
 	private Boolean isActive;
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

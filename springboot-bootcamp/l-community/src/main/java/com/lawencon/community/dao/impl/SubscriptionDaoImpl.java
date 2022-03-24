@@ -8,5 +8,9 @@ import com.lawencon.community.model.Subscription;
 
 @Repository
 public class SubscriptionDaoImpl extends BaseDaoImpl<Subscription> implements SubscriptionDao {
-
+	@Override
+	public Subscription getByUser(String id) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

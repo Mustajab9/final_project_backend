@@ -1,5 +1,57 @@
 package com.lawencon.community.dto.profiles;
 
 public class InsertProfilesDtoReq {
-
+	private String profileName;
+	private String profileCode;
+	private String profileCompany;
+	private String userId;
+	private String industryId;
+	private String positionId;
+	private String provinceId;
+	
+	public String getProfileName() {
+		return profileName;
+	}
+	public void setProfileName(String profileName) {
+		this.profileName = profileName;
+	}
+	public String getProfileCode() {
+		return profileCode;
+	}
+	public void setProfileCode(String profileCode) {
+		this.profileCode = profileCode;
+	}
+	public String getProfileCompany() {
+		return profileCompany;
+	}
+	public void setProfileCompany(String profileCompany) {
+		this.profileCompany = profileCompany;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getIndustryId() {
+		return industryId;
+	}
+	public void setIndustryId(String industryId) {
+		this.industryId = industryId;
+	}
+	public String getPositionId() {
+		return positionId;
+	}
+	public void setPositionId(String positionId) {
+		this.positionId = positionId;
+	}
+	public String getProvinceId() {
+		return provinceId;
+	}
+	public void setProvinceId(String provinceId) {
+		this.provinceId = provinceId;
+	}
+	
+	
+	
 }

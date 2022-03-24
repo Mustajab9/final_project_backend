@@ -8,5 +8,9 @@ import com.lawencon.community.model.Role;
 
 @Repository
 public class RoleDaoImpl extends BaseDaoImpl<Role> implements RoleDao {
-
+	@Override
+	public Role getByCode(String code) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

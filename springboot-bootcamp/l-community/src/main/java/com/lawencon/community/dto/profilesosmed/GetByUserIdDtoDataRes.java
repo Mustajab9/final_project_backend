@@ -1,12 +1,7 @@
-package com.lawencon.community.dto.subscription;
+package com.lawencon.community.dto.profilesosmed;
 
-import java.sql.Date;
-
-public class GetAllSubscriptionDtoDataRes {
+public class GetByUserIdDtoDataRes {
 	private String id;
-	private String SubscriptionCode;
-	private Date subscriptionDuration;
-	private Boolean isApprove;
 	private String profileId;
 	private String profileCode;
 	private String profileName;
@@ -14,6 +9,9 @@ public class GetAllSubscriptionDtoDataRes {
 	private String profilePortalCode;
 	private String userId;
 	private String email;
+	private String socialMediaid;
+	private String socialMediaCode;
+	private String socialMediaName;
 	private Integer version;
 	private Boolean isActive;
 
@@ -23,30 +21,6 @@ public class GetAllSubscriptionDtoDataRes {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getSubscriptionCode() {
-		return SubscriptionCode;
-	}
-
-	public void setSubscriptionCode(String subscriptionCode) {
-		SubscriptionCode = subscriptionCode;
-	}
-
-	public Date getsubscriptionDuration() {
-		return subscriptionDuration;
-	}
-
-	public void setsubscriptionDuration(Date subscriptionDuration) {
-		this.subscriptionDuration = subscriptionDuration;
-	}
-
-	public Boolean getIsApprove() {
-		return isApprove;
-	}
-
-	public void setIsApprove(Boolean isApprove) {
-		this.isApprove = isApprove;
 	}
 
 	public String getProfileId() {
@@ -103,6 +77,30 @@ public class GetAllSubscriptionDtoDataRes {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getSocialMediaid() {
+		return socialMediaid;
+	}
+
+	public void setSocialMediaid(String socialMediaid) {
+		this.socialMediaid = socialMediaid;
+	}
+
+	public String getSocialMediaCode() {
+		return socialMediaCode;
+	}
+
+	public void setSocialMediaCode(String socialMediaCode) {
+		this.socialMediaCode = socialMediaCode;
+	}
+
+	public String getSocialMediaName() {
+		return socialMediaName;
+	}
+
+	public void setSocialMediaName(String socialMediaName) {
+		this.socialMediaName = socialMediaName;
 	}
 
 	public Integer getVersion() {
