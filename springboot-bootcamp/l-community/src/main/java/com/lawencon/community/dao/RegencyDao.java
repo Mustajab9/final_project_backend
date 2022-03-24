@@ -2,8 +2,8 @@ package com.lawencon.community.dao;
 
 import java.util.List;
 
-import com.lawencon.community.model.Regancy;
+import com.lawencon.community.model.Regency;
 
-public interface RegancyDao {
-	public List<Regancy> getByProvince(String code) throws Exception;
+public interface RegencyDao {
+	public List<Regency> getByProvince(String code) throws Exception;
 }

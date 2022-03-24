@@ -2,7 +2,6 @@ package com.lawencon.base;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -25,13 +24,13 @@ public abstract class BaseEntity implements Serializable {
     private String id;
 
 	@Column(name = "created_by")
-	private UUID createdBy;
+	private String createdBy;
 
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
 	@Column(name = "updated_by")
-	private UUID updatedBy;
+	private String updatedBy;
 
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
@@ -80,11 +79,11 @@ public abstract class BaseEntity implements Serializable {
 		this.id = id;
 	}
 
-	public UUID getCreatedBy() {
+	public String getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(UUID createdBy) {
+	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -96,11 +95,11 @@ public abstract class BaseEntity implements Serializable {
 		this.createdAt = createdAt;
 	}
 
-	public UUID getUpdatedBy() {
+	public String getUpdatedBy() {
 		return updatedBy;
 	}
 
-	public void setUpdatedBy(UUID updatedBy) {
+	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 
