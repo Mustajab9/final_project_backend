@@ -1,11 +1,16 @@
-package com.lawencon.community.dto.subscription;
+package com.lawencon.community.dto.subscriptiondetail;
 
-import java.sql.Date;
+import java.math.BigInteger;
 
-public class GetAllSubscriptionDtoDataRes {
+public class GetBySubscriptionIdDtoDataRes {
 	private String id;
+	private String priceId;
+	private String priceCode;
+	private BigInteger priceNominal;
+	private Integer duration;
+	private String subscriptionId;
 	private String SubscriptionCode;
-	private Date subscriptionDuration;
+	private String SubscriptionName;
 	private Boolean isApprove;
 	private String profileId;
 	private String profileCode;
@@ -25,6 +30,46 @@ public class GetAllSubscriptionDtoDataRes {
 		this.id = id;
 	}
 
+	public String getPriceId() {
+		return priceId;
+	}
+
+	public void setPriceId(String priceId) {
+		this.priceId = priceId;
+	}
+
+	public String getPriceCode() {
+		return priceCode;
+	}
+
+	public void setPriceCode(String priceCode) {
+		this.priceCode = priceCode;
+	}
+
+	public BigInteger getPriceNominal() {
+		return priceNominal;
+	}
+
+	public void setPriceNominal(BigInteger priceNominal) {
+		this.priceNominal = priceNominal;
+	}
+
+	public Integer getDuration() {
+		return duration;
+	}
+
+	public void setDuration(Integer duration) {
+		this.duration = duration;
+	}
+
+	public String getSubscriptionId() {
+		return subscriptionId;
+	}
+
+	public void setSubscriptionId(String subscriptionId) {
+		this.subscriptionId = subscriptionId;
+	}
+
 	public String getSubscriptionCode() {
 		return SubscriptionCode;
 	}
@@ -33,12 +78,12 @@ public class GetAllSubscriptionDtoDataRes {
 		SubscriptionCode = subscriptionCode;
 	}
 
-	public Date getsubscriptionDuration() {
-		return subscriptionDuration;
+	public String getSubscriptionName() {
+		return SubscriptionName;
 	}
 
-	public void setsubscriptionDuration(Date subscriptionDuration) {
-		this.subscriptionDuration = subscriptionDuration;
+	public void setSubscriptionName(String subscriptionName) {
+		SubscriptionName = subscriptionName;
 	}
 
 	public Boolean getIsApprove() {

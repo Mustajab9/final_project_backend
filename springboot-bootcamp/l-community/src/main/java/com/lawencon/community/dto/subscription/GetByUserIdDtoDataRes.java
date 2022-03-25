@@ -2,7 +2,7 @@ package com.lawencon.community.dto.subscription;
 
 import java.sql.Date;
 
-public class GetAllSubscriptionDtoDataRes {
+public class GetByUserIdDtoDataRes {
 	private String id;
 	private String SubscriptionCode;
 	private Date subscriptionDuration;
