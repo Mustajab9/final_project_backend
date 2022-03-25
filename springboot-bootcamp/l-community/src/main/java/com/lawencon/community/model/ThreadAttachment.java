@@ -26,15 +26,16 @@ public class ThreadAttachment extends BaseEntity {
 	public Thread getThreadId() {
 		return threadId;
 	}
+
 	public void setThreadId(Thread threadId) {
 		this.threadId = threadId;
 	}
+
 	public Attachment getAttachmentId() {
 		return attachmentId;
 	}
+
 	public void setAttachmentId(Attachment attachmentId) {
 		this.attachmentId = attachmentId;
 	}
-	
-	
 }

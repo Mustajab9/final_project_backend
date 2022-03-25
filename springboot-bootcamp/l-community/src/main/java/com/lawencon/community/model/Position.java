@@ -29,16 +29,16 @@ public class Position  extends BaseEntity {
 	public String getPositionName() {
 		return positionName;
 	}
+
 	public void setPositionName(String positionName) {
 		this.positionName = positionName;
 	}
+
 	public String getPositionCode() {
 		return positionCode;
 	}
+
 	public void setPositionCode(String positionCode) {
 		this.positionCode = positionCode;
 	}
-	
-	
-	
 }

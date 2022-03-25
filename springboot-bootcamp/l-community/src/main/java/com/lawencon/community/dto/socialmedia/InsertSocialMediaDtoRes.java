@@ -2,7 +2,7 @@ package com.lawencon.community.dto.socialmedia;
 
 public class InsertSocialMediaDtoRes {
 	private String msg;
-	private UpdateSocialMediaDtoDataRes data;
+	private InsertSocialMediaDtoDataRes data;
 
 	public String getMsg() {
 		return msg;
@@ -12,11 +12,11 @@ public class InsertSocialMediaDtoRes {
 		this.msg = msg;
 	}
 
-	public UpdateSocialMediaDtoDataRes getData() {
+	public InsertSocialMediaDtoDataRes getData() {
 		return data;
 	}
 
-	public void setData(UpdateSocialMediaDtoDataRes data) {
+	public void setData(InsertSocialMediaDtoDataRes data) {
 		this.data = data;
 	}
 }

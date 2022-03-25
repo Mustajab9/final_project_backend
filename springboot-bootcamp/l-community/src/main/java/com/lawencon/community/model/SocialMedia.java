@@ -25,15 +25,16 @@ public class SocialMedia extends BaseEntity {
 	public String getSocialMediaName() {
 		return socialMediaName;
 	}
+
 	public void setSocialMediaName(String socialMediaName) {
 		this.socialMediaName = socialMediaName;
 	}
+
 	public String getSocialMediaCode() {
 		return socialMediaCode;
 	}
+
 	public void setSocialMediaCode(String socialMediaCode) {
 		this.socialMediaCode = socialMediaCode;
 	}
-	
-	
 }

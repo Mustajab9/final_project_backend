@@ -31,21 +31,24 @@ public class PollingChoice extends BaseEntity {
 	public String getChoiceName() {
 		return choiceName;
 	}
+
 	public void setChoiceName(String choiceName) {
 		this.choiceName = choiceName;
 	}
+
 	public String getChoiceCode() {
 		return choiceCode;
 	}
+
 	public void setChoiceCode(String choiceCode) {
 		this.choiceCode = choiceCode;
 	}
+
 	public Polling getPollingId() {
 		return pollingId;
 	}
+
 	public void setPollingId(Polling pollingId) {
 		this.pollingId = pollingId;
 	}
-	
-	
 }

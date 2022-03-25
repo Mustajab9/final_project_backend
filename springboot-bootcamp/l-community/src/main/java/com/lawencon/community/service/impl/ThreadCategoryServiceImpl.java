@@ -1,67 +1,66 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.dao.CategoryDao;
 import com.lawencon.community.dao.ThreadCategoryDao;
+import com.lawencon.community.dao.ThreadDao;
 import com.lawencon.community.dto.threadcategory.DeleteByThreadCategoryIdDtoRes;
+import com.lawencon.community.dto.threadcategory.GetAllThreadCategoryDtoDataRes;
 import com.lawencon.community.dto.threadcategory.GetAllThreadCategoryDtoRes;
+import com.lawencon.community.dto.threadcategory.GetByThreadCategoryIdDtoDataRes;
 import com.lawencon.community.dto.threadcategory.GetByThreadCategoryIdDtoRes;
+import com.lawencon.community.dto.threadcategory.GetThreadCategoryByThreadDtoDataRes;
+import com.lawencon.community.dto.threadcategory.GetThreadCategoryByThreadDtoRes;
+import com.lawencon.community.dto.threadcategory.InsertThreadCategoryDtoDataRes;
 import com.lawencon.community.dto.threadcategory.InsertThreadCategoryDtoReq;
 import com.lawencon.community.dto.threadcategory.InsertThreadCategoryDtoRes;
-import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.model.Role;
-import com.lawencon.community.model.ThreadComment;
-import com.lawencon.community.model.User;
+import com.lawencon.community.model.Category;
+import com.lawencon.community.model.Thread;
+import com.lawencon.community.model.ThreadCategory;
 import com.lawencon.community.service.ThreadCategoryService;
 
 @Service
 public class ThreadCategoryServiceImpl extends BaseService implements ThreadCategoryService {
 	private ThreadCategoryDao threadCategoryDao;
+	private CategoryDao categoryDao;
+	private ThreadDao threadDao;
 
 	@Autowired
-	public ThreadCategoryServiceImpl(ThreadCategoryDao threadCategoryDao) {
+	public ThreadCategoryServiceImpl(ThreadCategoryDao threadCategoryDao, CategoryDao categoryDao, ThreadDao threadDao) {
 		this.threadCategoryDao = threadCategoryDao;
+		this.categoryDao = categoryDao;
+		this.threadDao = threadDao;
 	}
 	
 	@Override
 	public GetAllThreadCategoryDtoRes findAll() throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllThreadCategoryDtoRes getAll = new GetAllThreadCategoryDtoRes();
 
-		List<User> users = userDao.findAll();
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<ThreadCategory> threadCategories = threadCategoryDao.findAll();
+		List<GetAllThreadCategoryDtoDataRes> listThreadCategory = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+		for (int i = 0; i < threadCategories.size(); i++) {
+			ThreadCategory threadCategory = threadCategories.get(i);
+			GetAllThreadCategoryDtoDataRes data = new GetAllThreadCategoryDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(threadCategory.getId());
+			data.setCategoryId(threadCategory.getCategoryId().getId());
+			data.setCategoryName(threadCategory.getCategoryId().getCategoryName());
+			data.setThreadId(threadCategory.getThreadId().getId());
+			data.setThreadTitle(threadCategory.getThreadId().getThreadTitle());
+			data.setThreadContent(threadCategory.getThreadId().getThreadContent());
+			data.setVersion(threadCategory.getVersion());
+			data.setIsActive(threadCategory.getIsActive());
 
-			listUser.add(data);
+			listThreadCategory.add(data);
 		}
 
-		getAll.setData(listUser);
+		getAll.setData(listThreadCategory);
 		getAll.setMsg(null);
 
 		return getAll;
@@ -69,18 +68,19 @@ public class ThreadCategoryServiceImpl extends BaseService implements ThreadCate
 	
 	@Override
 	public GetByThreadCategoryIdDtoRes findById(String id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+		GetByThreadCategoryIdDtoRes getById = new GetByThreadCategoryIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		ThreadCategory threadCategory = threadCategoryDao.findById(id);
+		GetByThreadCategoryIdDtoDataRes data = new GetByThreadCategoryIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setId(threadCategory.getId());
+		data.setCategoryId(threadCategory.getCategoryId().getId());
+		data.setCategoryName(threadCategory.getCategoryId().getCategoryName());
+		data.setThreadId(threadCategory.getThreadId().getId());
+		data.setThreadTitle(threadCategory.getThreadId().getThreadTitle());
+		data.setThreadContent(threadCategory.getThreadId().getThreadContent());
+		data.setVersion(threadCategory.getVersion());
+		data.setIsActive(threadCategory.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -90,42 +90,24 @@ public class ThreadCategoryServiceImpl extends BaseService implements ThreadCate
 	
 	@Override
 	public InsertThreadCategoryDtoRes insert(InsertThreadCategoryDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+		InsertThreadCategoryDtoRes insert = new InsertThreadCategoryDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
-
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
+			ThreadCategory threadCategory = new ThreadCategory();
+			
+			Thread thread = threadDao.findById(data.getThreadId());
+			threadCategory.setThreadId(thread);
+			
+			Category category = categoryDao.findById(data.getCategoryId());
+			threadCategory.setCategoryId(category);
+			threadCategory.setCreatedBy(getId());
 
 			begin();
-			User insertUser = userDao.save(user);
+			ThreadCategory threadCategoryInsert = threadCategoryDao.save(threadCategory);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
+			InsertThreadCategoryDtoDataRes dataDto = new InsertThreadCategoryDtoDataRes();
+			dataDto.setId(threadCategoryInsert.getId());
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
@@ -140,11 +122,11 @@ public class ThreadCategoryServiceImpl extends BaseService implements ThreadCate
 	
 	@Override
 	public DeleteByThreadCategoryIdDtoRes delete(String id) throws Exception {
-		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+		DeleteByThreadCategoryIdDtoRes deleteById = new DeleteByThreadCategoryIdDtoRes();
 
 		try {
 			begin();
-			boolean isDeleted = userDao.deleteById(id);
+			boolean isDeleted = threadCategoryDao.deleteById(id);
 			commit();
 
 			if (isDeleted) {
@@ -160,8 +142,31 @@ public class ThreadCategoryServiceImpl extends BaseService implements ThreadCate
 	}
 	
 	@Override
-	public List<ThreadComment> findByThread(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public GetThreadCategoryByThreadDtoRes findByThread(String id) throws Exception {
+		GetThreadCategoryByThreadDtoRes getByThread = new GetThreadCategoryByThreadDtoRes();
+
+		List<ThreadCategory> threadCategories = threadCategoryDao.findByThread(id);
+		List<GetThreadCategoryByThreadDtoDataRes> listThreadCategory = new ArrayList<>();
+
+		for (int i = 0; i < threadCategories.size(); i++) {
+			ThreadCategory threadCategory = threadCategories.get(i);
+			GetThreadCategoryByThreadDtoDataRes data = new GetThreadCategoryByThreadDtoDataRes();
+
+			data.setId(threadCategory.getId());
+			data.setCategoryId(threadCategory.getCategoryId().getId());
+			data.setCategoryName(threadCategory.getCategoryId().getCategoryName());
+			data.setThreadId(threadCategory.getThreadId().getId());
+			data.setThreadTitle(threadCategory.getThreadId().getThreadTitle());
+			data.setThreadContent(threadCategory.getThreadId().getThreadContent());
+			data.setVersion(threadCategory.getVersion());
+			data.setIsActive(threadCategory.getIsActive());
+
+			listThreadCategory.add(data);
+		}
+
+		getByThread.setData(listThreadCategory);
+		getByThread.setMsg(null);
+
+		return getByThread;
 	}
 }

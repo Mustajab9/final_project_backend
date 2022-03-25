@@ -43,18 +43,18 @@ public class SubscriptionDetailDaoImpl extends BaseDao<SubscriptionDetail> imple
 	@Override
 	public List<SubscriptionDetail> findBySubscription(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT sd.id, plm.id, plm.price_code, plm.price_nominal, plm.duration, "); 
-		builder.append("s.id, s.subscription_code, s.subscription_duration, s.is_approve, "); 
-		builder.append("p.profile_code, p.profile_name, p.profile_company, a.attachment_content, ");
-		builder.append("u.email, r.role_name, r.role_code, sd.\"version\", sd.is_active ");
-		builder.append("FROM subscription_detail sd ");
-		builder.append("INNER JOIN price_list_member plm ON plm.id = sd.price_id ");
-		builder.append("INNER JOIN subscriptions s ON s.id = sd.subscription_id ");
-		builder.append("INNER JOIN profiles p ON p.id = s.profile_id ");
-		builder.append("INNER JOIN attachments a ON a.id = p.profile_image ");
-		builder.append("INNER JOIN users u ON u.id = p.user_id ");
-		builder.append("INNER JOIN roles r ON r.id = u.role_id ");
-		builder.append("WHERE s.id = :id");
+		builder.append("SELECT sd.id, plm.id, plm.price_code, plm.price_nominal, plm.duration,"); 
+		builder.append(" s.id, s.subscription_code, s.subscription_duration, s.is_approve,"); 
+		builder.append(" p.profile_code, p.profile_name, p.profile_company, a.attachment_content,");
+		builder.append(" u.email, r.role_name, r.role_code, sd.version, sd.is_active");
+		builder.append(" FROM subscription_detail sd");
+		builder.append(" INNER JOIN price_list_member plm ON plm.id = sd.price_id");
+		builder.append(" INNER JOIN subscriptions s ON s.id = sd.subscription_id");
+		builder.append(" INNER JOIN profiles p ON p.id = s.profile_id");
+		builder.append(" LEFT JOIN attachments a ON a.id = p.profile_image");
+		builder.append(" INNER JOIN users u ON u.id = p.user_id");
+		builder.append(" INNER JOIN roles r ON r.id = u.role_id");
+		builder.append(" WHERE s.id = :id");
 		
 		List<?> results = createNativeQuery(builder.toString()).setParameter("id", id).getResultList();
 		List<SubscriptionDetail> listResult = new ArrayList<>();

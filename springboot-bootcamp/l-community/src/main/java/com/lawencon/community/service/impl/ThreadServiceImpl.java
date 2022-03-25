@@ -1,71 +1,119 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lawencon.community.dao.ThreadAttachmentDao;
+import com.lawencon.community.dao.ThreadCategoryDao;
 import com.lawencon.community.dao.ThreadDao;
+import com.lawencon.community.dao.ThreadTypeDao;
 import com.lawencon.community.dto.thread.DeleteByThreadIdDtoRes;
+import com.lawencon.community.dto.thread.GetAllThreadDtoDataRes;
 import com.lawencon.community.dto.thread.GetAllThreadDtoRes;
+import com.lawencon.community.dto.thread.GetByThreadIdDtoDataRes;
 import com.lawencon.community.dto.thread.GetByThreadIdDtoRes;
+import com.lawencon.community.dto.thread.GetThreadByCategoryDtoDataRes;
+import com.lawencon.community.dto.thread.GetThreadByCategoryDtoRes;
+import com.lawencon.community.dto.thread.GetThreadByUserDtoDataRes;
+import com.lawencon.community.dto.thread.GetThreadByUserDtoRes;
+import com.lawencon.community.dto.thread.InsertThreadDtoDataRes;
 import com.lawencon.community.dto.thread.InsertThreadDtoReq;
 import com.lawencon.community.dto.thread.InsertThreadDtoRes;
+import com.lawencon.community.dto.thread.UpdateThreadDtoDataRes;
 import com.lawencon.community.dto.thread.UpdateThreadDtoReq;
 import com.lawencon.community.dto.thread.UpdateThreadDtoRes;
-import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
-import com.lawencon.community.dto.user.UpdateUserDtoRes;
-import com.lawencon.community.model.Role;
+import com.lawencon.community.dto.threadcategory.InsertThreadCategoryDtoReq;
 import com.lawencon.community.model.Thread;
-import com.lawencon.community.model.User;
+import com.lawencon.community.model.ThreadAttachment;
+import com.lawencon.community.model.ThreadCategory;
+import com.lawencon.community.model.ThreadType;
+import com.lawencon.community.service.ThreadCategoryService;
 import com.lawencon.community.service.ThreadService;
 
 @Service
 public class ThreadServiceImpl extends BaseService implements ThreadService {
 	private ThreadDao threadDao;
+	private ThreadTypeDao threadTypeDao;
+	private ThreadAttachmentDao threadAttachmentDao;
+	private ThreadCategoryDao threadCategoryDao;
+	private ThreadCategoryService threadCategoryService;
 
 	@Autowired
-	public ThreadServiceImpl(ThreadDao threadDao) {
+	public ThreadServiceImpl(ThreadDao threadDao, ThreadTypeDao threadTypeDao, ThreadAttachmentDao threadAttachmentDao, ThreadCategoryDao threadCategoryDao) {
 		this.threadDao = threadDao;
+		this.threadTypeDao = threadTypeDao;
+		this.threadAttachmentDao = threadAttachmentDao;
+		this.threadCategoryDao = threadCategoryDao;
+	}
+	
+	@Autowired
+	public void setThreadCategoryService(ThreadCategoryService threadCategoryService) {
+		this.threadCategoryService = threadCategoryService;
 	}
 	
 	@Override
 	public GetAllThreadDtoRes findAll() throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllThreadDtoRes getAll = new GetAllThreadDtoRes();
 
-		List<User> users = userDao.findAll();
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<Thread> threads = threadDao.findAll();
+		List<GetAllThreadDtoDataRes> listThread = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+		for (int i = 0; i < threads.size(); i++) {
+			Thread thread = threads.get(i);
+			GetAllThreadDtoDataRes data = new GetAllThreadDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(thread.getId());
+			data.setThreadCode(thread.getThreadCode());
+			data.setThreadTitle(thread.getThreadTitle());
+			data.setThreadContent(thread.getThreadContent());
+			
+			List<ThreadCategory> categories = threadCategoryDao.findByThread(thread.getId());		
+			List<String> listCategoryId = new ArrayList<>();
+			List<String> listCategoryName = new ArrayList<>();
+			for(int x = 0; x < categories.size(); x++) {
+				ThreadCategory category = categories.get(x);
+				
+				String categoryId = category.getCategoryId().getId();
+				String categoryName = category.getCategoryId().getCategoryName();
+				
+				listCategoryId.add(categoryId);
+				listCategoryName.add(categoryName);
+			}
+			
+			data.setCategoryId(listCategoryId);
+			data.setCategoryName(listCategoryName);
+			
+			List<ThreadAttachment> attachments = threadAttachmentDao.findByThread(thread.getId());
+			
+			if(attachments != null) {
+				List<String> listAttachmentId = new ArrayList<>();
+				List<String> listAttachemntExtension = new ArrayList<>();
+				for(int x = 0; x < attachments.size(); x++) {
+					ThreadAttachment attcahment = attachments.get(x);
+					
+					String attachmentId = attcahment.getAttachmentId().getId();
+					String attachemntExtension = attcahment.getAttachmentId().getAttachmentExtension();
+					
+					listAttachmentId.add(attachmentId);
+					listAttachemntExtension.add(attachemntExtension);
+				}
+				
+				data.setAttachmentId(listAttachmentId);
+				data.setAttachemntExtension(listAttachemntExtension);
+			}
+						 
+			data.setVersion(thread.getVersion());
+			data.setIsActive(thread.getIsActive());
 
-			listUser.add(data);
+			listThread.add(data);
 		}
 
-		getAll.setData(listUser);
+		getAll.setData(listThread);
 		getAll.setMsg(null);
 
 		return getAll;
@@ -73,18 +121,53 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 	
 	@Override
 	public GetByThreadIdDtoRes findById(String id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+		GetByThreadIdDtoRes getById = new GetByThreadIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		Thread thread = threadDao.findById(id);
+		GetByThreadIdDtoDataRes data = new GetByThreadIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setId(thread.getId());
+		data.setThreadCode(thread.getThreadCode());
+		data.setThreadTitle(thread.getThreadTitle());
+		data.setThreadContent(thread.getThreadContent());
+		
+		List<ThreadCategory> categories = threadCategoryDao.findByThread(thread.getId());		
+		List<String> listCategoryId = new ArrayList<>();
+		List<String> listCategoryName = new ArrayList<>();
+		for(int x = 0; x < categories.size(); x++) {
+			ThreadCategory category = categories.get(x);
+			
+			String categoryId = category.getCategoryId().getId();
+			String categoryName = category.getCategoryId().getCategoryName();
+			
+			listCategoryId.add(categoryId);
+			listCategoryName.add(categoryName);
+		}
+		
+		data.setCategoryId(listCategoryId);
+		data.setCategoryName(listCategoryName);
+		
+		List<ThreadAttachment> attachments = threadAttachmentDao.findByThread(thread.getId());
+		
+		if(attachments != null) {
+			List<String> listAttachmentId = new ArrayList<>();
+			List<String> listAttachemntExtension = new ArrayList<>();
+			for(int x = 0; x < attachments.size(); x++) {
+				ThreadAttachment attcahment = attachments.get(x);
+				
+				String attachmentId = attcahment.getAttachmentId().getId();
+				String attachemntExtension = attcahment.getAttachmentId().getAttachmentExtension();
+				
+				listAttachmentId.add(attachmentId);
+				listAttachemntExtension.add(attachemntExtension);
+			}
+			
+			data.setAttachmentId(listAttachmentId);
+			data.setAttachemntExtension(listAttachemntExtension);
+		}
+					 
+		data.setVersion(thread.getVersion());
+		data.setIsActive(thread.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -93,44 +176,43 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 	}
 	
 	@Override
-	public InsertThreadDtoRes insert(InsertThreadDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+	public InsertThreadDtoRes insert(String content, MultipartFile[] file) throws Exception {
+		InsertThreadDtoRes insert = new InsertThreadDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
-
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
+			InsertThreadDtoReq data = new ObjectMapper().readValue(content, InsertThreadDtoReq.class);
+			Thread thread = new Thread();
+			String code = getAlphaNumericString(5);
+			
+			thread.setThreadCode(code);
+			thread.setThreadTitle(data.getThreadTitle());
+			thread.setThreadContent(data.getThreadContent());
+			
+			if(data.getIsPremium() != null) {
+				thread.setIsPremium(data.getIsPremium());
+			}
+			
+			ThreadType type = threadTypeDao.findById(data.getTypeId());
+			thread.setTypeId(type);
+			thread.setCreatedBy(getId());
 
 			begin();
-			User insertUser = userDao.save(user);
+			Thread threadInsert = threadDao.save(thread);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
-
+			InsertThreadDtoDataRes dataDto = new InsertThreadDtoDataRes();
+			dataDto.setId(threadInsert.getId());
+			
+			if(threadInsert != null) {
+				for(int i = 0; i < data.getCategoryId().size(); i++) {
+					InsertThreadCategoryDtoReq categoryReq = new InsertThreadCategoryDtoReq();
+					categoryReq.setThreadId(threadInsert.getId());				
+					categoryReq.setCategoryId(data.getCategoryId().get(i));
+					
+					threadCategoryService.insert(categoryReq);
+				}
+			}
+			
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
 		} catch (Exception e) {
@@ -144,27 +226,30 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 	
 	@Override
 	public UpdateThreadDtoRes update(UpdateThreadDtoReq data) throws Exception {
-		UpdateUserDtoRes update = new UpdateUserDtoRes();
+		UpdateThreadDtoRes update = new UpdateThreadDtoRes();
 
 		try {
 			if (data.getVersion() != null) {
-				User user = userDao.findById(data.getId());
+				Thread thread = threadDao.findById(data.getId());
 
-				user.setEmail(data.getEmail());
-				user.setVersion(data.getVersion());
-
-				user.setUpdatedBy(getId());
+				thread.setThreadTitle(data.getThreadTitle());
+				thread.setThreadContent(data.getThreadContent());
+				thread.setIsPremium(data.getIsPremium());
+				
+				ThreadType type = threadTypeDao.findById(data.getTypeId());
+				thread.setTypeId(type);				
+				thread.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {
-					user.setIsActive(data.getIsActive());
+					thread.setIsActive(data.getIsActive());
 				}
 
 				begin();
-				User userUpdate = userDao.save(user);
+				Thread threadUpdate = threadDao.save(thread);
 				commit();
 
-				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
-				dataDto.setVersion(userUpdate.getVersion());
+				UpdateThreadDtoDataRes dataDto = new UpdateThreadDtoDataRes();
+				dataDto.setVersion(threadUpdate.getVersion());
 
 				update.setData(dataDto);
 				update.setMsg("Update Success");
@@ -180,11 +265,11 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 	
 	@Override
 	public DeleteByThreadIdDtoRes deleteById(String id) throws Exception {
-		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+		DeleteByThreadIdDtoRes deleteById = new DeleteByThreadIdDtoRes();
 
 		try {
 			begin();
-			boolean isDeleted = userDao.deleteById(id);
+			boolean isDeleted = threadDao.deleteById(id);
 			commit();
 
 			if (isDeleted) {
@@ -200,14 +285,128 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 	}
 	
 	@Override
-	public List<Thread> findByUser(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public GetThreadByUserDtoRes findByUser(String id) throws Exception {
+		GetThreadByUserDtoRes getByUser = new GetThreadByUserDtoRes();
+
+		List<Thread> threads = threadDao.findByUser(id);
+		List<GetThreadByUserDtoDataRes> listThread = new ArrayList<>();
+
+		for (int i = 0; i < threads.size(); i++) {
+			Thread thread = threads.get(i);
+			GetThreadByUserDtoDataRes data = new GetThreadByUserDtoDataRes();
+
+			data.setId(thread.getId());
+			data.setThreadCode(thread.getThreadCode());
+			data.setThreadTitle(thread.getThreadTitle());
+			data.setThreadContent(thread.getThreadContent());
+			
+			List<ThreadCategory> categories = threadCategoryDao.findByThread(thread.getId());		
+			List<String> listCategoryId = new ArrayList<>();
+			List<String> listCategoryName = new ArrayList<>();
+			for(int x = 0; x < categories.size(); x++) {
+				ThreadCategory category = categories.get(x);
+				
+				String categoryId = category.getCategoryId().getId();
+				String categoryName = category.getCategoryId().getCategoryName();
+				
+				listCategoryId.add(categoryId);
+				listCategoryName.add(categoryName);
+			}
+			
+			data.setCategoryId(listCategoryId);
+			data.setCategoryName(listCategoryName);
+			
+			List<ThreadAttachment> attachments = threadAttachmentDao.findByThread(thread.getId());
+			
+			if(attachments != null) {
+				List<String> listAttachmentId = new ArrayList<>();
+				List<String> listAttachemntExtension = new ArrayList<>();
+				for(int x = 0; x < attachments.size(); x++) {
+					ThreadAttachment attcahment = attachments.get(x);
+					
+					String attachmentId = attcahment.getAttachmentId().getId();
+					String attachemntExtension = attcahment.getAttachmentId().getAttachmentExtension();
+					
+					listAttachmentId.add(attachmentId);
+					listAttachemntExtension.add(attachemntExtension);
+				}
+				
+				data.setAttachmentId(listAttachmentId);
+				data.setAttachemntExtension(listAttachemntExtension);
+			}
+						 
+			data.setVersion(thread.getVersion());
+			data.setIsActive(thread.getIsActive());
+
+			listThread.add(data);
+		}
+
+		getByUser.setData(listThread);
+		getByUser.setMsg(null);
+
+		return getByUser;
 	}
 	
 	@Override
-	public List<Thread> findByCategory(String[] id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public GetThreadByCategoryDtoRes findByCategory(String[] id) throws Exception {
+		GetThreadByCategoryDtoRes getByCategory = new GetThreadByCategoryDtoRes();
+
+		List<Thread> threads = threadDao.findByCategory(id);
+		List<GetThreadByCategoryDtoDataRes> listThread = new ArrayList<>();
+
+		for (int i = 0; i < threads.size(); i++) {
+			Thread thread = threads.get(i);
+			GetThreadByCategoryDtoDataRes data = new GetThreadByCategoryDtoDataRes();
+
+			data.setId(thread.getId());
+			data.setThreadCode(thread.getThreadCode());
+			data.setThreadTitle(thread.getThreadTitle());
+			data.setThreadContent(thread.getThreadContent());
+			
+			List<ThreadCategory> categories = threadCategoryDao.findByThread(thread.getId());		
+			List<String> listCategoryId = new ArrayList<>();
+			List<String> listCategoryName = new ArrayList<>();
+			for(int x = 0; x < categories.size(); x++) {
+				ThreadCategory category = categories.get(x);
+				
+				String categoryId = category.getCategoryId().getId();
+				String categoryName = category.getCategoryId().getCategoryName();
+				
+				listCategoryId.add(categoryId);
+				listCategoryName.add(categoryName);
+			}
+			
+			data.setCategoryId(listCategoryId);
+			data.setCategoryName(listCategoryName);
+			
+			List<ThreadAttachment> attachments = threadAttachmentDao.findByThread(thread.getId());
+			
+			if(attachments != null) {
+				List<String> listAttachmentId = new ArrayList<>();
+				List<String> listAttachemntExtension = new ArrayList<>();
+				for(int x = 0; x < attachments.size(); x++) {
+					ThreadAttachment attcahment = attachments.get(x);
+					
+					String attachmentId = attcahment.getAttachmentId().getId();
+					String attachemntExtension = attcahment.getAttachmentId().getAttachmentExtension();
+					
+					listAttachmentId.add(attachmentId);
+					listAttachemntExtension.add(attachemntExtension);
+				}
+				
+				data.setAttachmentId(listAttachmentId);
+				data.setAttachemntExtension(listAttachemntExtension);
+			}
+						 
+			data.setVersion(thread.getVersion());
+			data.setIsActive(thread.getIsActive());
+
+			listThread.add(data);
+		}
+
+		getByCategory.setData(listThread);
+		getByCategory.setMsg(null);
+
+		return getByCategory;
 	}
 }

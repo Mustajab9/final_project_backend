@@ -9,8 +9,10 @@ import javax.persistence.UniqueConstraint;
 import com.lawencon.base.BaseEntity;
 
 @Entity
-@Table(name = "subscription_detail", uniqueConstraints = @UniqueConstraint(name = "detail_subs_ck", columnNames = {
-		"price_id", "subscription_id" }))
+@Table(name = "subscription_detail", 
+		uniqueConstraints = 
+			@UniqueConstraint(name = "detail_subs_ck", columnNames = { "price_id", "subscription_id" })
+)
 public class SubscriptionDetail extends BaseEntity {
 
 	private static final long serialVersionUID = 8586014839352944158L;
@@ -38,5 +40,4 @@ public class SubscriptionDetail extends BaseEntity {
 	public void setSubscriptionId(Subscription subscriptionId) {
 		this.subscriptionId = subscriptionId;
 	}
-
 }

@@ -1,5 +1,51 @@
 package com.lawencon.community.dto.thread;
 
-public class InsertThreadDtoReq {
+import java.util.List;
 
+public class InsertThreadDtoReq {
+	private String threadTitle;
+	private String threadContent;
+	private Boolean isPremium;
+	private String typeId;
+	private List<String> categoryId;
+
+	public String getThreadTitle() {
+		return threadTitle;
+	}
+
+	public void setThreadTitle(String threadTitle) {
+		this.threadTitle = threadTitle;
+	}
+
+	public String getThreadContent() {
+		return threadContent;
+	}
+
+	public void setThreadContent(String threadContent) {
+		this.threadContent = threadContent;
+	}
+
+	public Boolean getIsPremium() {
+		return isPremium;
+	}
+
+	public void setIsPremium(Boolean isPremium) {
+		this.isPremium = isPremium;
+	}
+
+	public String getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(String typeId) {
+		this.typeId = typeId;
+	}
+
+	public List<String> getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(List<String> categoryId) {
+		this.categoryId = categoryId;
+	}
 }

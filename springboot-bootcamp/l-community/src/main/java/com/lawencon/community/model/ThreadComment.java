@@ -30,22 +30,24 @@ public class ThreadComment extends BaseEntity {
 	public String getCommentContent() {
 		return commentContent;
 	}
+
 	public void setCommentContent(String commentContent) {
 		this.commentContent = commentContent;
 	}
+
 	public String getCommentCode() {
 		return commentCode;
 	}
+
 	public void setCommentCode(String commentCode) {
 		this.commentCode = commentCode;
 	}
+
 	public Thread getThreadId() {
 		return threadId;
 	}
+
 	public void setThreadId(Thread threadId) {
 		this.threadId = threadId;
 	}
-	
-	
-	
 }

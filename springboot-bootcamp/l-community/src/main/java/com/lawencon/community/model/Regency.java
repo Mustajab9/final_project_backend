@@ -36,21 +36,24 @@ public class Regency extends BaseEntity {
 	public String getRegencyName() {
 		return regencyName;
 	}
+
 	public void setRegencyName(String regencyName) {
 		this.regencyName = regencyName;
 	}
+
 	public String getRegencyCode() {
 		return regencyCode;
 	}
+
 	public void setRegencyCode(String regencyCode) {
 		this.regencyCode = regencyCode;
 	}
+
 	public Province getProvinceId() {
 		return provinceId;
 	}
+
 	public void setProvinceId(Province provinceId) {
 		this.provinceId = provinceId;
 	}
-	
-	
 }

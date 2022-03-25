@@ -25,15 +25,16 @@ public class Bookmark extends BaseEntity {
 	public String getBookmarCode() {
 		return bookmarCode;
 	}
+
 	public void setBookmarCode(String bookmarCode) {
 		this.bookmarCode = bookmarCode;
 	}
+
 	public Thread getThreadId() {
 		return threadId;
 	}
+
 	public void setThreadId(Thread threadId) {
 		this.threadId = threadId;
 	}
-	
-	
 }

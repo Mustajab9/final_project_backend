@@ -25,15 +25,16 @@ public class EnrollDetail extends BaseEntity {
 	public Event getEventId() {
 		return eventId;
 	}
+
 	public void setEventId(Event eventId) {
 		this.eventId = eventId;
 	}
+
 	public EnrollEvent getEnrollId() {
 		return enrollId;
 	}
+
 	public void setEnrollId(EnrollEvent enrollId) {
 		this.enrollId = enrollId;
 	}
-	
-	
 }

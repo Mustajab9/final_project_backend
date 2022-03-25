@@ -25,15 +25,16 @@ public class Category extends BaseEntity {
 	public String getCategoryName() {
 		return categoryName;
 	}
+
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
+
 	public String getCategoryCode() {
 		return categoryCode;
 	}
+
 	public void setCategoryCode(String categoryCode) {
 		this.categoryCode = categoryCode;
 	}
-	
-	
 }

@@ -38,7 +38,7 @@ public class BaseService extends BaseServiceImpl {
 		String auth = null;
 		
 		try {
-			auth = authPrincipal.getAuthentication().getPrincipal().toString();;
+			auth = authPrincipal.getAuthentication().getPrincipal().toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception();
