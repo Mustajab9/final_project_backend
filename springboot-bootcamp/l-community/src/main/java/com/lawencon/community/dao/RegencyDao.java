@@ -5,7 +5,7 @@ import java.util.List;
 import com.lawencon.community.model.Regency;
 
 public interface RegencyDao {
-	public List<Regency> findAll() throws Exception;
+	public List<Regency> findAll(int startPage, int maxPage) throws Exception;
 	public Regency findById(String id) throws Exception;
 	public Regency save(Regency data) throws Exception;
 	public boolean deleteById(String id) throws Exception;

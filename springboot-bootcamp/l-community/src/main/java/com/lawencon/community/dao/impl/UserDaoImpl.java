@@ -12,8 +12,8 @@ import com.lawencon.community.model.User;
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
 	
 	@Override
-	public List<User> findAll() throws Exception {
-		return super.getAll();
+	public List<User> findAll(int startPage, int maxPage) throws Exception {
+		return super.getAll(startPage, maxPage);
 	}
 	
 	@Override

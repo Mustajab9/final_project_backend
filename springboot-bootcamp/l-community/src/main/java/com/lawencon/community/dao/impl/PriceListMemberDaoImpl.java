@@ -11,8 +11,8 @@ import com.lawencon.community.model.PriceListMember;
 public class PriceListMemberDaoImpl extends BaseDao<PriceListMember> implements PriceListMemberDao {
 
 	@Override
-	public List<PriceListMember> findAll() throws Exception {
-		return super.getAll();
+	public List<PriceListMember> findAll(int startPage, int maxPage) throws Exception {
+		return super.getAll(startPage, maxPage);
 	}
 	
 	@Override

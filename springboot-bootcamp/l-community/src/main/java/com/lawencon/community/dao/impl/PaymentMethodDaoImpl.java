@@ -11,8 +11,8 @@ import com.lawencon.community.model.PaymentMethod;
 public class PaymentMethodDaoImpl extends BaseDao<PaymentMethod> implements PaymentMethodDao {
 	
 	@Override
-	public List<PaymentMethod> findAll() throws Exception {
-		return super.getAll();
+	public List<PaymentMethod> findAll(int startPage, int maxPage) throws Exception {
+		return super.getAll(startPage, maxPage);
 	}
 	
 	@Override

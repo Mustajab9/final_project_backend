@@ -13,8 +13,8 @@ import com.lawencon.community.model.Regency;
 public class RegencyDaoImpl extends BaseDao<Regency> implements RegencyDao {
 	
 	@Override
-	public List<Regency> findAll() throws Exception {
-		return super.getAll();
+	public List<Regency> findAll(int startPage, int maxPage) throws Exception {
+		return super.getAll(startPage, maxPage);
 	}
 	
 	@Override

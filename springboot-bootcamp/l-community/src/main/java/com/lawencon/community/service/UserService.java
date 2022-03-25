@@ -12,7 +12,7 @@ import com.lawencon.community.dto.user.UpdateUserDtoRes;
 import com.lawencon.community.model.User;
 
 public interface UserService extends UserDetailsService {
-	public GetAllUserDtoRes findAll() throws Exception;
+	public GetAllUserDtoRes findAll(int startPage, int maxPage) throws Exception;
 	public GetByUserIdDtoRes findById(String id) throws Exception;
 	public InsertUserDtoRes insert(InsertUserDtoReq data) throws Exception;
 	public UpdateUserDtoRes update(UpdateUserDtoReq data) throws Exception;

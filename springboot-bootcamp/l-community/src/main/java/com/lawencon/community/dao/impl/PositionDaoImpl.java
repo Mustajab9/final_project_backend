@@ -11,8 +11,8 @@ import com.lawencon.community.model.Position;
 public class PositionDaoImpl extends BaseDao<Position> implements PositionDao {
 	
 	@Override
-	public List<Position> findAll() throws Exception {
-		return super.getAll();
+	public List<Position> findAll(int startPage, int maxPage) throws Exception {
+		return super.getAll(startPage, maxPage);
 	}
 	
 	@Override

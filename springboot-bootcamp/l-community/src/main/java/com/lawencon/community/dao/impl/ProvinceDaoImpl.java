@@ -11,8 +11,8 @@ import com.lawencon.community.model.Province;
 public class ProvinceDaoImpl extends BaseDao<Province> implements ProvinceDao {
 	
 	@Override
-	public List<Province> findAll() throws Exception {
-		return super.getAll();
+	public List<Province> findAll(int startPage, int maxPage) throws Exception {
+		return super.getAll(startPage, maxPage);
 	}
 	
 	@Override

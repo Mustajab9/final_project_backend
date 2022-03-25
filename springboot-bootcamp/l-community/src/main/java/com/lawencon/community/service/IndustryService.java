@@ -9,7 +9,7 @@ import com.lawencon.community.dto.industry.UpdateIndustryDtoReq;
 import com.lawencon.community.dto.industry.UpdateIndustryDtoRes;
 
 public interface IndustryService {
-	public GetAllIndustryDtoRes findAll() throws Exception;
+	public GetAllIndustryDtoRes findAll(int startPage, int maxPage) throws Exception;
 	public GetByIndustryIdDtoRes findById(String id) throws Exception;
 	public InsertIndustryDtoRes insert(InsertIndustryDtoReq data) throws Exception;
 	public UpdateIndustryDtoRes update(UpdateIndustryDtoReq data) throws Exception;

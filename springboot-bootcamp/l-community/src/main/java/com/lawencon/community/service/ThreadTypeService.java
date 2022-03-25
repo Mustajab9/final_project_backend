@@ -9,7 +9,7 @@ import com.lawencon.community.dto.threadtype.UpdateThreadTypeDtoReq;
 import com.lawencon.community.dto.threadtype.UpdateThreadTypeDtoRes;
 
 public interface ThreadTypeService {
-	public GetAllThreadTypeDtoRes findAll() throws Exception;
+	public GetAllThreadTypeDtoRes findAll(int startPage, int maxPage) throws Exception;
 	public GetByThreadTypeIdDtoRes findById(String id) throws Exception;
 	public InsertThreadTypeDtoRes insert(InsertThreadTypeDtoReq data) throws Exception;
 	public UpdateThreadTypeDtoRes update(UpdateThreadTypeDtoReq data) throws Exception;

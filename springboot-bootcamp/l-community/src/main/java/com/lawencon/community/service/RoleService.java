@@ -10,7 +10,7 @@ import com.lawencon.community.dto.role.UpdateRoleDtoReq;
 import com.lawencon.community.dto.role.UpdateRoleDtoRes;
 
 public interface RoleService {
-	public GetAllRoleDtoRes findAll() throws Exception;
+	public GetAllRoleDtoRes findAll(int startPage, int maxPage) throws Exception;
 	public GetByRoleIdDtoRes findById(Long id) throws Exception;
 	public InsertRoleDtoRes insert(InsertRoleDtoReq data) throws Exception;
 	public UpdateRoleDtoRes update(UpdateRoleDtoReq data) throws Exception;

@@ -9,7 +9,7 @@ import com.lawencon.community.dto.eventtype.UpdateEventTypeDtoReq;
 import com.lawencon.community.dto.eventtype.UpdateEventTypeDtoRes;
 
 public interface EventTypeService {
-	public GetAllEventTypeDtoRes findAll() throws Exception;
+	public GetAllEventTypeDtoRes findAll(int startPage, int maxPage) throws Exception;
 	public GetByEventTypeIdDtoRes findById(String id) throws Exception;
 	public InsertEventTypeDtoRes insert(InsertEventTypeDtoReq data) throws Exception;
 	public UpdateEventTypeDtoRes update(UpdateEventTypeDtoReq data) throws Exception;

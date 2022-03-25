@@ -42,24 +42,24 @@ public class UserServiceImpl extends BaseService implements UserService {
 	private RoleDao roleDao;
 	private PasswordEncoder passwordEncoder;
 	private JavaMailSender mailSender;
-	
+
 	@Autowired
 	public UserServiceImpl(UserDao userDao, RoleDao roleDoa, JavaMailSender mailSender) {
 		this.userDao = userDao;
 		this.roleDao = roleDoa;
 		this.mailSender = mailSender;
 	}
-	
+
 	@Autowired
 	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
 		this.passwordEncoder = passwordEncoder;
 	}
-	
+
 	@Override
-	public GetAllUserDtoRes findAll() throws Exception {
+	public GetAllUserDtoRes findAll(int startPage, int maxPage) throws Exception {
 		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
 
-		List<User> users = userDao.findAll();
+		List<User> users = userDao.findAll(startPage, maxPage);
 		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
 
 		for (int i = 0; i < users.size(); i++) {
@@ -82,7 +82,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
 		return getAll;
 	}
-	
+
 	@Override
 	public GetByUserIdDtoRes findById(String id) throws Exception {
 		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
@@ -103,38 +103,38 @@ public class UserServiceImpl extends BaseService implements UserService {
 
 		return getById;
 	}
-	
+
 	@Override
 	public InsertUserDtoRes insert(InsertUserDtoReq data) throws Exception {
-		
-		try {		
-			InsertUserDtoRes insert  = new InsertUserDtoRes();
-			
+		InsertUserDtoRes insert = new InsertUserDtoRes();
+
+		try {
 			User user = new User();
 			user.setEmail(data.getUsername());
-			
+
 			String password = getAlphaNumericString(10);
-			
+
 			String passwordEncode = passwordEncoder.encode(password);
 			user.setPassword(passwordEncode);
-			
+
 			Role role = roleDao.findById(data.getRoleId());
 			user.setRoleId(role);
-			
+
 			begin();
 			User insertUser = userDao.save(user);
 			commit();
-			
+
 			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
+					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
 			messageHelper.setTo(data.getUsername());
 			messageHelper.setText(text + password, true);
 			messageHelper.setSubject(subject);
 			messageHelper.setFrom(email);
-			
+
 			ExecutorService executor = Executors.newSingleThreadExecutor();
-			
+
 			executor.submit(() -> {
 				mailSender.send(message);
 			});
@@ -145,29 +145,28 @@ public class UserServiceImpl extends BaseService implements UserService {
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
-
-			return insert;
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
 			throw new Exception(e);
 		}
+
+		return insert;
 	}
-	
+
 	@Override
 	public UpdateUserDtoRes update(UpdateUserDtoReq data) throws Exception {
 		UpdateUserDtoRes update = new UpdateUserDtoRes();
-		
+
 		try {
-			
 			if (data.getVersion() != null) {
 				User user = userDao.findById(data.getId());
 
 				user.setEmail(data.getEmail());
 				user.setVersion(data.getVersion());
-				
+
 				user.setUpdatedBy(getId());
-				
+
 				if (data.getIsActive() != null) {
 					user.setIsActive(data.getIsActive());
 				}
@@ -175,52 +174,49 @@ public class UserServiceImpl extends BaseService implements UserService {
 				begin();
 				User userUpdate = userDao.save(user);
 				commit();
-				
+
 				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
 				dataDto.setVersion(userUpdate.getVersion());
 
 				update.setData(dataDto);
 				update.setMsg("Update Success");
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
 			throw new Exception(e);
-
 		}
-		
+
 		return update;
 	}
-	
+
 	@Override
 	public DeleteByUserIdDtoRes deleteById(String id) throws Exception {
+		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+
 		try {
 			begin();
-			DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
-			commit();
-			
 			boolean isDeleted = userDao.deleteById(id);
-			
-			if(isDeleted) {
+			commit();
+
+			if (isDeleted) {
 				deleteById.setMsg("Delete Success");
 			}
-
-			return deleteById;
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
 			throw new Exception(e);
 		}
 
+		return deleteById;
 	}
-	
+
 	@Override
 	public User findByUser(String email) throws Exception {
 		User getByUser = userDao.findByUser(email);
 		return getByUser;
 	}
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = null;
@@ -231,7 +227,8 @@ public class UserServiceImpl extends BaseService implements UserService {
 			e.printStackTrace();
 			throw new UsernameNotFoundException("Invalid Username Or Password");
 		}
-		
-		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
+
+		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+				new ArrayList<>());
 	}
 }

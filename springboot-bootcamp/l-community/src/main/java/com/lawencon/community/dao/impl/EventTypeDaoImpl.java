@@ -11,8 +11,8 @@ import com.lawencon.community.model.EventType;
 public class EventTypeDaoImpl extends BaseDao<EventType> implements EventTypeDao {
 	
 	@Override
-	public List<EventType> findAll() throws Exception {
-		return super.getAll();
+	public List<EventType> findAll(int startPage, int maxPage) throws Exception {
+		return super.getAll(startPage, maxPage);
 	}
 	
 	@Override

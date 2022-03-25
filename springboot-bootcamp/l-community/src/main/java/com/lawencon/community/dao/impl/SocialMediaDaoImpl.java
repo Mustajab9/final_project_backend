@@ -11,8 +11,8 @@ import com.lawencon.community.model.SocialMedia;
 public class SocialMediaDaoImpl extends BaseDao<SocialMedia> implements SocialMediaDao {
 
 	@Override
-	public List<SocialMedia> findAll() throws Exception {
-		return super.getAll();
+	public List<SocialMedia> findAll(int startPage, int maxPage) throws Exception {
+		return super.getAll(startPage, maxPage);
 	}
 	
 	@Override

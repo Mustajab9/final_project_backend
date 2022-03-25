@@ -11,8 +11,8 @@ import com.lawencon.community.model.ThreadType;
 public class ThreadTypeDaoImpl extends BaseDao<ThreadType> implements ThreadTypeDao {
 	
 	@Override
-	public List<ThreadType> findAll() throws Exception {
-		return super.getAll();
+	public List<ThreadType> findAll(int startPage, int maxPage) throws Exception {
+		return super.getAll(startPage, maxPage);
 	}
 	
 	@Override

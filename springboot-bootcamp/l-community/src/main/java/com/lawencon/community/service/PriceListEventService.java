@@ -9,7 +9,7 @@ import com.lawencon.community.dto.pricelistevent.InsertPriceListEventDtoRes;
 import com.lawencon.community.dto.pricelistevent.UpdatePriceListEventDtoRes;
 
 public interface PriceListEventService {
-	public GetAllPriceListEventDtoRes findAll() throws Exception;
+	public GetAllPriceListEventDtoRes findAll(int startPage, int maxPage) throws Exception;
 	public GetByPriceListEventIdDtoRes findById(String id) throws Exception;
 	public InsertPriceListEventDtoRes insert(InsertAttachmentDtoReq data) throws Exception;
 	public UpdatePriceListEventDtoRes update(UpdateAttachmentDtoReq data) throws Exception;

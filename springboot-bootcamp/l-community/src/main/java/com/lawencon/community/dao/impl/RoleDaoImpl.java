@@ -15,8 +15,8 @@ import com.lawencon.community.model.Role;
 public class RoleDaoImpl extends BaseDao<Role> implements RoleDao {
 	
 	@Override
-	public List<Role> findAll() throws Exception {
-		return super.getAll();
+	public List<Role> findAll(int startPage, int maxPage) throws Exception {
+		return super.getAll(startPage, maxPage);
 	}
 	
 	@Override

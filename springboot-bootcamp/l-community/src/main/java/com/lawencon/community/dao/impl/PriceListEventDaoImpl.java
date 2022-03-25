@@ -11,8 +11,8 @@ import com.lawencon.community.model.PriceListEvent;
 public class PriceListEventDaoImpl extends BaseDao<PriceListEvent> implements PriceListEventDao {
 	
 	@Override
-	public List<PriceListEvent> findAll() throws Exception {
-		return super.getAll();
+	public List<PriceListEvent> findAll(int startPage, int maxPage) throws Exception {
+		return super.getAll(startPage, maxPage);
 	}
 	
 	@Override

@@ -11,8 +11,8 @@ import com.lawencon.community.model.Industry;
 public class IndustryDaoImpl extends BaseDao<Industry> implements IndustryDao {
 
 	@Override
-	public List<Industry> findAll() throws Exception {
-		return super.getAll();
+	public List<Industry> findAll(int startPage, int maxPage) throws Exception {
+		return super.getAll(startPage, maxPage);
 	}
 	
 	@Override

@@ -11,8 +11,8 @@ import com.lawencon.community.model.Category;
 public class CategoryDaoImpl extends BaseDao<Category> implements CategoryDao {
 	
 	@Override
-	public List<Category> findAll() throws Exception {
-		return super.getAll();
+	public List<Category> findAll(int startPage, int maxPage) throws Exception {
+		return super.getAll(startPage, maxPage);
 	}
 	
 	@Override
