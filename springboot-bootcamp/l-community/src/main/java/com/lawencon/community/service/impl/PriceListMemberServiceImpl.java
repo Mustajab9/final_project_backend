@@ -1,38 +1,24 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseServiceImpl;
 import com.lawencon.community.dao.PriceListMemberDao;
-import com.lawencon.community.dao.UserDao;
 import com.lawencon.community.dto.pricelistmember.DeleteByPriceListMemberIdDtoRes;
+import com.lawencon.community.dto.pricelistmember.GetAllPriceListMemberDtoDataRes;
 import com.lawencon.community.dto.pricelistmember.GetAllPriceListMemberDtoRes;
+import com.lawencon.community.dto.pricelistmember.GetByPriceListMemberIdDtoDataRes;
 import com.lawencon.community.dto.pricelistmember.GetByPriceListMemberIdDtoRes;
+import com.lawencon.community.dto.pricelistmember.InsertPriceListMemberDtoDataRes;
 import com.lawencon.community.dto.pricelistmember.InsertPriceListMemberDtoReq;
 import com.lawencon.community.dto.pricelistmember.InsertPriceListMemberDtoRes;
+import com.lawencon.community.dto.pricelistmember.UpdatePriceListMemberDtoDataRes;
 import com.lawencon.community.dto.pricelistmember.UpdatePriceListMemberDtoReq;
 import com.lawencon.community.dto.pricelistmember.UpdatePriceListMemberDtoRes;
-import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
-import com.lawencon.community.dto.user.UpdateUserDtoRes;
-import com.lawencon.community.model.Role;
-import com.lawencon.community.model.User;
+import com.lawencon.community.model.PriceListMember;
 import com.lawencon.community.service.PriceListMemberService;
 
 @Service
@@ -46,27 +32,26 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 	
 	@Override
 	public GetAllPriceListMemberDtoRes findAll(int startPage, int maxPage) throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllPriceListMemberDtoRes getAll = new GetAllPriceListMemberDtoRes();
 
-		List<User> users = userDao.findAll(startPage, maxPage);
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<PriceListMember> priceListMembers = priceListMemberDao.findAll(startPage, maxPage);
+		List<GetAllPriceListMemberDtoDataRes> priceListMemberList = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+		for (int i = 0; i < priceListMembers.size(); i++) {
+			PriceListMember priceListMember = priceListMembers.get(i);
+			GetAllPriceListMemberDtoDataRes data = new GetAllPriceListMemberDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(priceListMember.getId());
+			data.setPriceNominal(priceListMember.getPriceNominal());
+			data.setPriceCode(priceListMember.getPriceCode());
+			data.setDuration(priceListMember.getDuration());
+			data.setVersion(priceListMember.getVersion());
+			data.setIsActive(priceListMember.getIsActive());
 
-			listUser.add(data);
+			priceListMemberList.add(data);
 		}
 
-		getAll.setData(listUser);
+		getAll.setData(priceListMemberList);
 		getAll.setMsg(null);
 
 		return getAll;
@@ -74,18 +59,17 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 	
 	@Override
 	public GetByPriceListMemberIdDtoRes findById(String id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+		GetByPriceListMemberIdDtoRes getById = new GetByPriceListMemberIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		PriceListMember priceListMember = priceListMemberDao.findById(id);
+		GetByPriceListMemberIdDtoDataRes data = new GetByPriceListMemberIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setId(priceListMember.getId());
+		data.setPriceNominal(priceListMember.getPriceNominal());
+		data.setPriceCode(priceListMember.getPriceCode());
+		data.setDuration(priceListMember.getDuration());
+		data.setVersion(priceListMember.getVersion());
+		data.setIsActive(priceListMember.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -95,42 +79,20 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 	
 	@Override
 	public InsertPriceListMemberDtoRes insert(InsertPriceListMemberDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+		InsertPriceListMemberDtoRes insert = new InsertPriceListMemberDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
-
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
+			PriceListMember priceListMember = new PriceListMember();
+			priceListMember.setPriceNominal(data.getPriceNominal());
+			priceListMember.setPriceCode(data.getPriceCode());
+			priceListMember.setDuration(data.getDuration());
 
 			begin();
-			User insertUser = userDao.save(user);
+			PriceListMember priceListMemberInsert = priceListMemberDao.save(priceListMember);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
+			InsertPriceListMemberDtoDataRes dataDto = new InsertPriceListMemberDtoDataRes();
+			dataDto.setId(priceListMemberInsert.getId());
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
@@ -145,26 +107,27 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 	
 	@Override
 	public UpdatePriceListMemberDtoRes update(UpdatePriceListMemberDtoReq data) throws Exception {
-		UpdateUserDtoRes update = new UpdateUserDtoRes();
+		UpdatePriceListMemberDtoRes update = new UpdatePriceListMemberDtoRes();
 
 		try {
 			if (data.getVersion() != null) {
-				User user = userDao.findById(data.getId());
+				PriceListMember priceListMember = priceListMemberDao.findById(data.getId());
 
-				user.setEmail(data.getEmail());
-				user.setVersion(data.getVersion());
+				priceListMember.setPriceNominal(data.getPriceNominal());
+				priceListMember.setDuration(data.getDuration());
+				priceListMember.setVersion(data.getVersion());
 
-				user.setUpdatedBy(getId());
+				priceListMember.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {
-					user.setIsActive(data.getIsActive());
+					priceListMember.setIsActive(data.getIsActive());
 				}
 
 				begin();
-				User userUpdate = userDao.save(user);
+				PriceListMember userUpdate = priceListMemberDao.save(priceListMember);
 				commit();
 
-				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
+				UpdatePriceListMemberDtoDataRes dataDto = new UpdatePriceListMemberDtoDataRes();
 				dataDto.setVersion(userUpdate.getVersion());
 
 				update.setData(dataDto);
@@ -181,11 +144,11 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 	
 	@Override
 	public DeleteByPriceListMemberIdDtoRes deleteById(String id) throws Exception {
-		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+		DeleteByPriceListMemberIdDtoRes deleteById = new DeleteByPriceListMemberIdDtoRes();
 
 		try {
 			begin();
-			boolean isDeleted = userDao.deleteById(id);
+			boolean isDeleted = priceListMemberDao.deleteById(id);
 			commit();
 
 			if (isDeleted) {

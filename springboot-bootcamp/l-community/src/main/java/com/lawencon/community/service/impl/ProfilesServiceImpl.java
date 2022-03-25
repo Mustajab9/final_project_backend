@@ -1,73 +1,87 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseServiceImpl;
+import com.lawencon.community.dao.IndustryDao;
+import com.lawencon.community.dao.PositionDao;
 import com.lawencon.community.dao.ProfilesDao;
+import com.lawencon.community.dao.ProvinceDao;
 import com.lawencon.community.dao.UserDao;
 import com.lawencon.community.dto.profiles.DeleteByProfilesIdDtoRes;
+import com.lawencon.community.dto.profiles.GetAllProfilesDtoDataRes;
 import com.lawencon.community.dto.profiles.GetAllProfilesDtoRes;
+import com.lawencon.community.dto.profiles.GetByProfilesIdDtoDataRes;
 import com.lawencon.community.dto.profiles.GetByProfilesIdDtoRes;
+import com.lawencon.community.dto.profiles.InsertProfilesDtoDataRes;
 import com.lawencon.community.dto.profiles.InsertProfilesDtoReq;
 import com.lawencon.community.dto.profiles.InsertProfilesDtoRes;
+import com.lawencon.community.dto.profiles.UpdateProfilesDtoDataRes;
 import com.lawencon.community.dto.profiles.UpdateProfilesDtoReq;
 import com.lawencon.community.dto.profiles.UpdateProfilesDtoRes;
-import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
-import com.lawencon.community.dto.user.UpdateUserDtoRes;
+import com.lawencon.community.model.Industry;
+import com.lawencon.community.model.Position;
 import com.lawencon.community.model.Profiles;
-import com.lawencon.community.model.Role;
+import com.lawencon.community.model.Province;
 import com.lawencon.community.model.User;
 import com.lawencon.community.service.ProfilesService;
 
 @Service
 public class ProfilesServiceImpl extends BaseService implements ProfilesService {
 	private ProfilesDao profilesDao;
+	private UserDao userDao;
+	private IndustryDao industryDao;
+	private PositionDao positionDao;
+	private ProvinceDao provinceDao;
 
 	@Autowired
-	public ProfilesServiceImpl(ProfilesDao profilesDao) {
+	public ProfilesServiceImpl(ProfilesDao profilesDao, UserDao userDao, IndustryDao industryDao, PositionDao positionDao, ProvinceDao provinceDao) {
 		this.profilesDao = profilesDao;
+		this.userDao = userDao;
+		this.industryDao = industryDao;
+		this.positionDao = positionDao;
+		this.provinceDao = provinceDao;
 	}
 	
 	@Override
 	public GetAllProfilesDtoRes findAll() throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllProfilesDtoRes getAll = new GetAllProfilesDtoRes();
 
-		List<User> users = userDao.findAll();
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<Profiles> profiles = profilesDao.findAll();
+		List<GetAllProfilesDtoDataRes> profileList = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+		for (int i = 0; i < profiles.size(); i++) {
+			Profiles profile = profiles.get(i);
+			GetAllProfilesDtoDataRes data = new GetAllProfilesDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(profile.getId());
+			data.setProfileCode(profile.getProfileCode());
+			data.setProfileName(profile.getProfileName());
+			data.setProfileCompany(profile.getProfileCompany());
+			data.setProfilePortalCode(profile.getProfilePortalCode());
+			data.setProfileImageId(profile.getProfileImage().getId());
+			data.setProfileImageExtension(profile.getProfileImage().getAttachmentExtension());
+			data.setUserId(profile.getUserId().getId());
+			data.setEmail(profile.getUserId().getEmail());
+			data.setPassword(profile.getUserId().getPassword());
+			data.setIndustryId(profile.getIndustryId().getId());
+			data.setIndustyName(profile.getIndustryId().getIndustryName());
+			data.setPositionId(profile.getPositionId().getId());
+			data.setPositionName(profile.getPositionId().getPositionName());
+			data.setProvinceId(profile.getProvinceId().getId());
+			data.setProvinceName(profile.getProvinceId().getProvinceName());
+			data.setProvinceCode(profile.getProvinceId().getProvinceCode());
+			
+			data.setVersion(profile.getVersion());
+			data.setIsActive(profile.getIsActive());
 
-			listUser.add(data);
+			profileList.add(data);
 		}
 
-		getAll.setData(listUser);
+		getAll.setData(profileList);
 		getAll.setMsg(null);
 
 		return getAll;
@@ -75,18 +89,31 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 	
 	@Override
 	public GetByProfilesIdDtoRes findById(String id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+		GetByProfilesIdDtoRes getById = new GetByProfilesIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		Profiles profile = profilesDao.findById(id);
+		GetByProfilesIdDtoDataRes data = new GetByProfilesIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setId(profile.getId());
+		data.setProfileCode(profile.getProfileCode());
+		data.setProfileName(profile.getProfileName());
+		data.setProfileCompany(profile.getProfileCompany());
+		data.setProfilePortalCode(profile.getProfilePortalCode());
+		data.setProfileImageId(profile.getProfileImage().getId());
+		data.setProfileImageExtension(profile.getProfileImage().getAttachmentExtension());
+		data.setUserId(profile.getUserId().getId());
+		data.setEmail(profile.getUserId().getEmail());
+		data.setPassword(profile.getUserId().getPassword());
+		data.setIndustryId(profile.getIndustryId().getId());
+		data.setIndustyName(profile.getIndustryId().getIndustryName());
+		data.setPositionId(profile.getPositionId().getId());
+		data.setPositionName(profile.getPositionId().getPositionName());
+		data.setProvinceId(profile.getProvinceId().getId());
+		data.setProvinceName(profile.getProvinceId().getProvinceName());
+		data.setProvinceCode(profile.getProvinceId().getProvinceCode());
+		
+		data.setVersion(profile.getVersion());
+		data.setIsActive(profile.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -96,42 +123,32 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 	
 	@Override
 	public InsertProfilesDtoRes insert(InsertProfilesDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+		InsertProfilesDtoRes insert = new InsertProfilesDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
-
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
-
+			Profiles profile = new Profiles();
+			profile.setProfileName(data.getProfileName());
+			profile.setProfileCode(data.getProfileCode());
+			profile.setProfileCompany(data.getProfileCompany());
+			
+			User user = userDao.findById(data.getUserId());
+			profile.setUserId(user);
+			
+			Industry industry = industryDao.findById(data.getIndustryId());
+			profile.setIndustryId(industry);
+			
+			Position position = positionDao.findById(data.getPositionId());
+			profile.setPositionId(position);
+			
+			Province province = provinceDao.findById(data.getProvinceId());
+			profile.setProvinceId(province);
+			
 			begin();
-			User insertUser = userDao.save(user);
+			Profiles profileInsert = profilesDao.save(profile);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
+			InsertProfilesDtoDataRes dataDto = new InsertProfilesDtoDataRes();
+			dataDto.setId(profileInsert.getId());
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
@@ -146,27 +163,37 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 	
 	@Override
 	public UpdateProfilesDtoRes update(UpdateProfilesDtoReq data) throws Exception {
-		UpdateUserDtoRes update = new UpdateUserDtoRes();
+		UpdateProfilesDtoRes update = new UpdateProfilesDtoRes();
 
 		try {
 			if (data.getVersion() != null) {
-				User user = userDao.findById(data.getId());
+				Profiles profile = profilesDao.findById(data.getId());
 
-				user.setEmail(data.getEmail());
-				user.setVersion(data.getVersion());
+				profile.setProfileName(data.getProfileName());
+				profile.setProfileCompany(data.getProfileCompany());
+				
+				Industry industry = industryDao.findById(data.getIndustryId());
+				profile.setIndustryId(industry);
+				
+				Position position = positionDao.findById(data.getPositionId());
+				profile.setPositionId(position);
+				
+				Province province = provinceDao.findById(data.getProvinceId());
+				profile.setProvinceId(province);
+				profile.setVersion(data.getVersion());
 
-				user.setUpdatedBy(getId());
+				profile.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {
-					user.setIsActive(data.getIsActive());
+					profile.setIsActive(data.getIsActive());
 				}
 
 				begin();
-				User userUpdate = userDao.save(user);
+				Profiles profileUpdate = profilesDao.save(profile);
 				commit();
 
-				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
-				dataDto.setVersion(userUpdate.getVersion());
+				UpdateProfilesDtoDataRes dataDto = new UpdateProfilesDtoDataRes();
+				dataDto.setVersion(profileUpdate.getVersion());
 
 				update.setData(dataDto);
 				update.setMsg("Update Success");
@@ -182,11 +209,11 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 	
 	@Override
 	public DeleteByProfilesIdDtoRes deleteById(String id) throws Exception {
-		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+		DeleteByProfilesIdDtoRes deleteById = new DeleteByProfilesIdDtoRes();
 
 		try {
 			begin();
-			boolean isDeleted = userDao.deleteById(id);
+			boolean isDeleted = profilesDao.deleteById(id);
 			commit();
 
 			if (isDeleted) {
@@ -203,7 +230,7 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 	
 	@Override
 	public Profiles findByUser(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Profiles getByUserId = profilesDao.findByUser(id);
+		return getByUserId;
 	}
 }

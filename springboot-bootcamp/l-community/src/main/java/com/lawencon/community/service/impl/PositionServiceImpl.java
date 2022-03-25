@@ -1,38 +1,24 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseServiceImpl;
 import com.lawencon.community.dao.PositionDao;
-import com.lawencon.community.dao.UserDao;
 import com.lawencon.community.dto.position.DeleteByPositionIdDtoRes;
+import com.lawencon.community.dto.position.GetAllPositionDtoDataRes;
 import com.lawencon.community.dto.position.GetAllPositionDtoRes;
+import com.lawencon.community.dto.position.GetByPositionIdDtoDataRes;
 import com.lawencon.community.dto.position.GetByPositionIdDtoRes;
+import com.lawencon.community.dto.position.InsertPositionDtoDataRes;
 import com.lawencon.community.dto.position.InsertPositionDtoReq;
 import com.lawencon.community.dto.position.InsertPositionDtoRes;
+import com.lawencon.community.dto.position.UpdatePositionDtoDataRes;
 import com.lawencon.community.dto.position.UpdatePositionDtoReq;
 import com.lawencon.community.dto.position.UpdatePositionDtoRes;
-import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
-import com.lawencon.community.dto.user.UpdateUserDtoRes;
-import com.lawencon.community.model.Role;
-import com.lawencon.community.model.User;
+import com.lawencon.community.model.Position;
 import com.lawencon.community.service.PositionService;
 
 @Service
@@ -46,27 +32,25 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 	
 	@Override
 	public GetAllPositionDtoRes findAll(int startPage, int maxPage) throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllPositionDtoRes getAll = new GetAllPositionDtoRes();
 
-		List<User> users = userDao.findAll(startPage, maxPage);
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<Position> positions = positionDao.findAll(startPage, maxPage);
+		List<GetAllPositionDtoDataRes> positionList = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+		for (int i = 0; i < positions.size(); i++) {
+			Position position = positions.get(i);
+			GetAllPositionDtoDataRes data = new GetAllPositionDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(position.getId());
+			data.setPositionName(position.getPositionName());
+			data.setPositionCode(position.getPositionCode());
+			data.setVersion(position.getVersion());
+			data.setIsActive(position.getIsActive());
 
-			listUser.add(data);
+			positionList.add(data);
 		}
 
-		getAll.setData(listUser);
+		getAll.setData(positionList);
 		getAll.setMsg(null);
 
 		return getAll;
@@ -74,18 +58,16 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 	
 	@Override
 	public GetByPositionIdDtoRes findById(String id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+		GetByPositionIdDtoRes getById = new GetByPositionIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		Position position = positionDao.findById(id);
+		GetByPositionIdDtoDataRes data = new GetByPositionIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setId(position.getId());
+		data.setPositionName(position.getPositionName());
+		data.setPositionCode(position.getPositionCode());
+		data.setVersion(position.getVersion());
+		data.setIsActive(position.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -95,42 +77,19 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 	
 	@Override
 	public InsertPositionDtoRes insert(InsertPositionDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+		InsertPositionDtoRes insert = new InsertPositionDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
-
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
+			Position position = new Position();
+			position.setPositionName(data.getPositionName());
+			position.setPositionCode(data.getPositionCode());
 
 			begin();
-			User insertUser = userDao.save(user);
+			Position positionInsert = positionDao.save(position);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
+			InsertPositionDtoDataRes dataDto = new InsertPositionDtoDataRes();
+			dataDto.setId(positionInsert.getId());
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
@@ -145,27 +104,27 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 	
 	@Override
 	public UpdatePositionDtoRes update(UpdatePositionDtoReq data) throws Exception {
-		UpdateUserDtoRes update = new UpdateUserDtoRes();
+		UpdatePositionDtoRes update = new UpdatePositionDtoRes();
 
 		try {
 			if (data.getVersion() != null) {
-				User user = userDao.findById(data.getId());
+				Position position = positionDao.findById(data.getId());
 
-				user.setEmail(data.getEmail());
-				user.setVersion(data.getVersion());
+				position.setPositionName(data.getPositionName());
+				position.setVersion(data.getVersion());
 
-				user.setUpdatedBy(getId());
+				position.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {
-					user.setIsActive(data.getIsActive());
+					position.setIsActive(data.getIsActive());
 				}
 
 				begin();
-				User userUpdate = userDao.save(user);
+				Position updatePosition = positionDao.save(position);
 				commit();
 
-				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
-				dataDto.setVersion(userUpdate.getVersion());
+				UpdatePositionDtoDataRes dataDto = new UpdatePositionDtoDataRes();
+				dataDto.setVersion(updatePosition.getVersion());
 
 				update.setData(dataDto);
 				update.setMsg("Update Success");
@@ -181,11 +140,11 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 	
 	@Override
 	public DeleteByPositionIdDtoRes deleteById(String id) throws Exception {
-		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+		DeleteByPositionIdDtoRes deleteById = new DeleteByPositionIdDtoRes();
 
 		try {
 			begin();
-			boolean isDeleted = userDao.deleteById(id);
+			boolean isDeleted = positionDao.deleteById(id);
 			commit();
 
 			if (isDeleted) {

@@ -8,7 +8,7 @@ public class UpdateProfilesDtoReq {
 	private String positionId;
 	private String provinceId;
 	private Integer version;
-	private Boolean isActiver;
+	private Boolean isActive;
 	
 	public String getId() {
 		return id;
@@ -52,11 +52,11 @@ public class UpdateProfilesDtoReq {
 	public void setVersion(Integer version) {
 		this.version = version;
 	}
-	public Boolean getIsActiver() {
-		return isActiver;
+	public Boolean getIsActive() {
+		return isActive;
 	}
-	public void setIsActiver(Boolean isActiver) {
-		this.isActiver = isActiver;
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}
 	
 

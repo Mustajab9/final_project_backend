@@ -53,12 +53,12 @@ public class PollingDaoImpl extends BaseDao<Polling> implements PollingDao {
 		thread.setIsPremium(Boolean.valueOf(obj[3].toString()));
 
 		Polling polling = new Polling();
-		polling.setPollingName(obj[5].toString());
+		polling.setPollingName(obj[4].toString());
 		polling.setThreadId(thread);
-		polling.setCreatedBy(obj[6].toString());
-		polling.setCreatedAt(((Timestamp) obj[7]).toLocalDateTime());
-		polling.setVersion(Integer.valueOf(obj[8].toString()));
-		polling.setIsActive(Boolean.valueOf(obj[9].toString()));
+		polling.setCreatedBy(obj[5].toString());
+		polling.setCreatedAt(((Timestamp) obj[6]).toLocalDateTime());
+		polling.setVersion(Integer.valueOf(obj[7].toString()));
+		polling.setIsActive(Boolean.valueOf(obj[8].toString()));
 
 		return polling;
 	}

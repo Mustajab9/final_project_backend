@@ -1,71 +1,60 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.community.dao.PollingDao;
+import com.lawencon.community.dao.ThreadDao;
 import com.lawencon.community.dto.polling.DeleteByPollingIdDtoRes;
+import com.lawencon.community.dto.polling.GetAllPollingDtoDataRes;
 import com.lawencon.community.dto.polling.GetAllPollingDtoRes;
+import com.lawencon.community.dto.polling.GetByPollingIdDtoDataRes;
 import com.lawencon.community.dto.polling.GetByPollingIdDtoRes;
+import com.lawencon.community.dto.polling.InsertPollingDtoDataRes;
 import com.lawencon.community.dto.polling.InsertPollingDtoReq;
 import com.lawencon.community.dto.polling.InsertPollingDtoRes;
-import com.lawencon.community.dto.polling.UpdatePollingDtoReq;
-import com.lawencon.community.dto.polling.UpdatePollingDtoRes;
-import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
-import com.lawencon.community.dto.user.UpdateUserDtoRes;
 import com.lawencon.community.model.Polling;
-import com.lawencon.community.model.Role;
-import com.lawencon.community.model.User;
+import com.lawencon.community.model.Thread;
 import com.lawencon.community.service.PollingService;
 
 @Service
 public class PollingServiceImpl extends BaseService implements PollingService {
 	private PollingDao pollingDao;
+	private ThreadDao threadDao;
 
 	@Autowired
-	public PollingServiceImpl(PollingDao pollingDao) {
+	public PollingServiceImpl(PollingDao pollingDao, ThreadDao threadDao) {
 		this.pollingDao = pollingDao;
+		this.threadDao = threadDao;
 	}
 	
 	@Override
 	public GetAllPollingDtoRes findAll() throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllPollingDtoRes getAll = new GetAllPollingDtoRes();
 
-		List<User> users = userDao.findAll();
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<Polling> pollings = pollingDao.findAll();
+		List<GetAllPollingDtoDataRes> listPolling = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+		for (int i = 0; i < pollings.size(); i++) {
+			Polling polling = pollings.get(i);
+			GetAllPollingDtoDataRes data = new GetAllPollingDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(polling.getId());
+			data.setPollingName(polling.getPollingName());
+			data.setPollingCode(polling.getPollingCode());
+			data.setThreadId(polling.getThreadId().getId());
+			data.setThreadTitle(polling.getThreadId().getThreadTitle());
+			data.setThreadContent(polling.getThreadId().getThreadContent());
+			data.setVersion(polling.getVersion());
+			data.setIsActive(polling.getIsActive());
 
-			listUser.add(data);
+			listPolling.add(data);
 		}
 
-		getAll.setData(listUser);
+		getAll.setData(listPolling);
 		getAll.setMsg(null);
 
 		return getAll;
@@ -73,18 +62,19 @@ public class PollingServiceImpl extends BaseService implements PollingService {
 	
 	@Override
 	public GetByPollingIdDtoRes findById(String id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+		GetByPollingIdDtoRes getById = new GetByPollingIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		Polling polling = pollingDao.findById(id);
+		GetByPollingIdDtoDataRes data = new GetByPollingIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setId(polling.getId());
+		data.setPollingName(polling.getPollingName());
+		data.setPollingCode(polling.getPollingCode());
+		data.setThreadId(polling.getThreadId().getId());
+		data.setThreadTitle(polling.getThreadId().getThreadTitle());
+		data.setThreadContent(polling.getThreadId().getThreadContent());
+		data.setVersion(polling.getVersion());
+		data.setIsActive(polling.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -93,43 +83,22 @@ public class PollingServiceImpl extends BaseService implements PollingService {
 	}
 	
 	@Override
-	public InsertPollingDtoRes insert(InsertPollingDtoReq dasta) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+	public InsertPollingDtoRes insert(InsertPollingDtoReq data) throws Exception {
+		InsertPollingDtoRes insert = new InsertPollingDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
-
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
+			Polling polling = new Polling();
+			polling.setPollingName(data.getPollingName());
+			polling.setPollingCode(data.getPollingCode());
+			Thread thread = threadDao.findById(data.getThreadId());
+			polling.setThreadId(thread);
 
 			begin();
-			User insertUser = userDao.save(user);
+			Polling pollingInsert = pollingDao.save(polling);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
+			InsertPollingDtoDataRes dataDto = new InsertPollingDtoDataRes();
+			dataDto.setId(pollingInsert.getId());
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
@@ -143,48 +112,12 @@ public class PollingServiceImpl extends BaseService implements PollingService {
 	}
 	
 	@Override
-	public UpdatePollingDtoRes update(UpdatePollingDtoReq data) throws Exception {
-		UpdateUserDtoRes update = new UpdateUserDtoRes();
-
-		try {
-			if (data.getVersion() != null) {
-				User user = userDao.findById(data.getId());
-
-				user.setEmail(data.getEmail());
-				user.setVersion(data.getVersion());
-
-				user.setUpdatedBy(getId());
-
-				if (data.getIsActive() != null) {
-					user.setIsActive(data.getIsActive());
-				}
-
-				begin();
-				User userUpdate = userDao.save(user);
-				commit();
-
-				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
-				dataDto.setVersion(userUpdate.getVersion());
-
-				update.setData(dataDto);
-				update.setMsg("Update Success");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			rollback();
-			throw new Exception(e);
-		}
-
-		return update;
-	}
-	
-	@Override
 	public DeleteByPollingIdDtoRes deleteById(String id) throws Exception {
-		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+		DeleteByPollingIdDtoRes deleteById = new DeleteByPollingIdDtoRes();
 
 		try {
 			begin();
-			boolean isDeleted = userDao.deleteById(id);
+			boolean isDeleted = pollingDao.deleteById(id);
 			commit();
 
 			if (isDeleted) {
@@ -201,7 +134,7 @@ public class PollingServiceImpl extends BaseService implements PollingService {
 	
 	@Override
 	public Polling findByThread(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Polling getByThread = pollingDao.findByThread(id);
+		return getByThread;
 	}
 }
