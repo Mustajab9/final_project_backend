@@ -10,7 +10,7 @@ public class InsertUserDtoReq {
 	private String username;
 	
 	@NotNull(message = "Role Id Is Empty")
-	private Long roleId;
+	private String roleId;
 
 	public String getUsername() {
 		return username;
@@ -20,11 +20,11 @@ public class InsertUserDtoReq {
 		this.username = username;
 	}
 
-	public Long getRoleId() {
+	public String getRoleId() {
 		return roleId;
 	}
 
-	public void setRoleId(Long roleId) {
+	public void setRoleId(String roleId) {
 		this.roleId = roleId;
 	}
 }
