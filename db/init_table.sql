@@ -121,6 +121,7 @@ CREATE TABLE profiles(
 	profile_code varchar(5) NOT NULL,
 	profile_name varchar(100) NOT NULL,
 	profile_company varchar(100) NOT NULL,
+	profile_portal_code int NOT NULL,
 	profile_image varchar(36),
 	user_id varchar(36) NOT NULL,
 	industry_id varchar(36) NOT NULL,

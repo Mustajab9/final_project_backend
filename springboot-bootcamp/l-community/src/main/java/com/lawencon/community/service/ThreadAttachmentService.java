@@ -10,9 +10,9 @@ import com.lawencon.community.dto.threadattachment.InsertThreadAttachmentDtoRes;
 import com.lawencon.community.model.ThreadAttachment;
 
 public interface ThreadAttachmentService {
-	public GetAllThreadAttachmentDtoRes getAll() throws Exception;
-	public GetByThreadAttachmentIdDtoRes getById(String id) throws Exception;
+	public GetAllThreadAttachmentDtoRes findAll() throws Exception;
+	public GetByThreadAttachmentIdDtoRes findById(String id) throws Exception;
 	public InsertThreadAttachmentDtoRes insert(InsertAttachmentDtoReq data) throws Exception;
 	public DeleteByThreadAttachmentIdDtoRes delete(String id) throws Exception;
-	public List<ThreadAttachment> getByThread(String id);
+	public List<ThreadAttachment> findByThread(String id) throws Exception;
 }

@@ -10,10 +10,10 @@ import com.lawencon.community.dto.subscription.UpdateSubscriptionDtoRes;
 import com.lawencon.community.model.Subscription;
 
 public interface SubscriptionService {
-	public GetAllSubscriptionDtoRes getAll() throws Exception;
-	public GetBySubscriptionIdDtoRes getById(String id) throws Exception;
+	public GetAllSubscriptionDtoRes findAll() throws Exception;
+	public GetBySubscriptionIdDtoRes findById(String id) throws Exception;
 	public InsertSubscriptionDtoRes insert(InsertSubscriptionDtoReq data) throws Exception;
 	public UpdateSubscriptionDtoRes update(UpdateSubscriptionDtoReq data) throws Exception;
 	public DeleteBySocialMediaIdDtoRes deleteById(String id) throws Exception;
-	public Subscription getByUser(String id) throws Exception;
+	public Subscription findByUser(String id) throws Exception;
 }

@@ -1,8 +1,6 @@
 package com.lawencon.community.dao.impl;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Time;
@@ -11,7 +9,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.BaseDaoImpl;
 import com.lawencon.community.dao.EnrollDetailDao;
 import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.EnrollDetail;
@@ -19,21 +16,42 @@ import com.lawencon.community.model.EnrollEvent;
 import com.lawencon.community.model.Event;
 
 @Repository
-public class EnrollDetailDaoImpl extends BaseDaoImpl<EnrollDetail> implements EnrollDetailDao  {
+public class EnrollDetailDaoImpl extends BaseDao<EnrollDetail> implements EnrollDetailDao  {
 
 	@Override
-	public List<EnrollDetail> getByEvent(String id) throws Exception {
+	public List<EnrollDetail> findAll() throws Exception {
+		return super.getAll();
+	}
+	
+	@Override
+	public EnrollDetail findById(String id) throws Exception {
+		return super.getById(id);
+	}
+	
+	@Override
+	public EnrollDetail save(EnrollDetail entity) throws Exception {
+		return super.save(entity);
+	}
+	
+	@Override
+	public boolean deleteById(String id) throws Exception {
+		return super.deleteById(id);
+	}
+	
+	@Override
+	public List<EnrollDetail> findByEvent(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT e.id, e.event_title, e.event_provider, e.event_price, e.event_time_start, e.event_time_end, ");
-		builder.append("e.event_date_start, e.event_date_end, e.attachment_id, ee.id, ee.enroll_invoice, ee.is_approve, ");
-		builder.append("ed.created_by, ed.\"version\", ed.is_active ");
-		builder.append("FROM enroll_detail AS ed ");
-		builder.append("INNER JOIN events AS e ON e.id = ed.event_id ");
-		builder.append("INNER JOIN enroll_events AS ee ON ee.id = ed.enroll_id ");
-		builder.append("WHERE ed.event_id = :id");
+		builder.append("SELECT e.id, e.event_title, e.event_provider, e.event_price, e.event_time_start, e.event_time_end,");
+		builder.append(" e.event_date_start, e.event_date_end, e.attachment_id, ee.id, ee.enroll_invoice, ee.is_approve,");
+		builder.append(" ed.created_by, ed.version, ed.is_active");
+		builder.append(" FROM enroll_detail AS ed");
+		builder.append(" INNER JOIN events AS e ON e.id = ed.event_id");
+		builder.append(" INNER JOIN enroll_events AS ee ON ee.id = ed.enroll_id");
+		builder.append(" WHERE ed.event_id = :id");
 		
 		List<?> results = createNativeQuery(builder.toString()).getResultList();
 		List<EnrollDetail> listResult = new ArrayList<>();
+		
 		results.forEach(result -> {
 			Object[] obj = (Object[]) result;
 			
@@ -77,13 +95,4 @@ public class EnrollDetailDaoImpl extends BaseDaoImpl<EnrollDetail> implements En
 		
 		return listResult;
 	}
-	
-	private byte[] convertObjToByteArray(Object obj) throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-        outputStream.writeObject(obj);
-        outputStream.flush();
-        return byteArrayOutputStream.toByteArray();
-    }
-
 }

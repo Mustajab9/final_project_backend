@@ -9,8 +9,8 @@ import com.lawencon.community.dto.choicevote.InsertChoiceVoteDtoRes;
 import com.lawencon.community.model.ChoiceVote;
 
 public interface ChoiceVoteService {
-	public GetAllChoiceVoteDtoRes getAll() throws Exception;
-	public GetByChoiceVoteIdDtoRes getById(String id) throws Exception;
+	public GetAllChoiceVoteDtoRes findAll() throws Exception;
+	public GetByChoiceVoteIdDtoRes findById(String id) throws Exception;
 	public InsertChoiceVoteDtoRes insert(InsertChoiceVoteDtoReq data) throws Exception;
-	public List<ChoiceVote> getByChoice(String id) throws Exception;
+	public List<ChoiceVote> findByChoice(String id) throws Exception;
 }

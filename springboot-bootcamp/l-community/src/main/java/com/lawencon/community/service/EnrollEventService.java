@@ -12,10 +12,10 @@ import com.lawencon.community.dto.enrollevent.UpdateEnrollEventDtoRes;
 import com.lawencon.community.model.EnrollEvent;
 
 public interface EnrollEventService {
-	public GetAllEnrollEventDtoRes getAll() throws Exception;
-	public GetByEnrollEventIdDtoRes getById(String id) throws Exception;
+	public GetAllEnrollEventDtoRes findAll() throws Exception;
+	public GetByEnrollEventIdDtoRes findById(String id) throws Exception;
 	public InsertEnrollEventDtoRes insert(InsertEnrollEventDtoReq data) throws Exception;
 	public UpdateEnrollEventDtoRes update(UpdateEnrollEventDtoReq data) throws Exception;
 	public DeleteByEnrollEventIdDtoRes deleteById(String id) throws Exception;
-	public List<EnrollEvent> getByUser(String id) throws Exception;
+	public List<EnrollEvent> findByUser(String id) throws Exception;
 }

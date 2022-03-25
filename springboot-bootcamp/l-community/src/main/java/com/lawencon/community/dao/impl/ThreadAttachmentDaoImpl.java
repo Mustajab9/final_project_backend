@@ -1,26 +1,24 @@
 package com.lawencon.community.dao.impl;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lawencon.base.BaseDaoImpl;
 import com.lawencon.community.dao.ThreadAttachmentDao;
 import com.lawencon.community.model.Attachment;
+import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadAttachment;
 import com.lawencon.community.model.ThreadType;
 
-public class ThreadAttachmentDaoImpl extends BaseDaoImpl<ThreadAttachment> implements ThreadAttachmentDao {
+public class ThreadAttachmentDaoImpl extends BaseDao<ThreadAttachment> implements ThreadAttachmentDao {
 	@Override
 	public List<ThreadAttachment> findAll() throws Exception {
-		return null;
+		return super.getAll();
 	}
 	
 	@Override
 	public ThreadAttachment findById(String id) throws Exception {
-		return null;
+		return super.getById(id);
 	}
 	
 	@Override
@@ -30,7 +28,7 @@ public class ThreadAttachmentDaoImpl extends BaseDaoImpl<ThreadAttachment> imple
 	
 	@Override
 	public boolean deleteById(String id) throws Exception {
-		return false;
+		return super.deleteById(id);
 	}
 	
 	@Override
@@ -52,7 +50,7 @@ public class ThreadAttachmentDaoImpl extends BaseDaoImpl<ThreadAttachment> imple
 			ThreadAttachment threadAttach = new ThreadAttachment();
 			threadAttach.setId(obj[0].toString());
 			
-			com.lawencon.community.model.Thread thread = new com.lawencon.community.model.Thread();
+			Thread thread = new Thread();
 			thread.setId(obj[1].toString());
 			thread.setThreadCode(obj[2].toString());
 			thread.setThreadTitle(obj[3].toString());
@@ -70,6 +68,7 @@ public class ThreadAttachmentDaoImpl extends BaseDaoImpl<ThreadAttachment> imple
                 Attachment attach = new Attachment();
                 attach.setId(obj[9].toString());
                 attach.setAttachmentCode(obj[10].toString());
+                
                 byte[] content = null;
                 try {
                     content = convertObjToByteArray(obj[11].toString());
@@ -88,16 +87,6 @@ public class ThreadAttachmentDaoImpl extends BaseDaoImpl<ThreadAttachment> imple
 			listResult.add(threadAttach);
 		});
 		
-		
 		return listResult;
 	}
-	
-	private byte[] convertObjToByteArray(Object obj) throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-        outputStream.writeObject(obj);
-        outputStream.flush();
-        return byteArrayOutputStream.toByteArray();
-    }
-	
 }

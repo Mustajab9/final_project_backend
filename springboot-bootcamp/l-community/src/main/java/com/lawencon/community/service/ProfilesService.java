@@ -10,10 +10,10 @@ import com.lawencon.community.dto.profiles.UpdateProfilesDtoRes;
 import com.lawencon.community.model.Profiles;
 
 public interface ProfilesService {
-	public GetAllProfilesDtoRes getAll() throws Exception;
-	public GetByProfilesIdDtoRes getById(String id) throws Exception;
+	public GetAllProfilesDtoRes findAll() throws Exception;
+	public GetByProfilesIdDtoRes findById(String id) throws Exception;
 	public InsertProfilesDtoRes insert(InsertProfilesDtoReq data) throws Exception;
 	public UpdateProfilesDtoRes update(UpdateProfilesDtoReq data) throws Exception;
 	public DeleteByProfilesIdDtoRes deleteById(String id) throws Exception;
-	public Profiles getByUser(String id) throws Exception;
+	public Profiles findByUser(String id) throws Exception;
 }

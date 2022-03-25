@@ -10,9 +10,9 @@ import com.lawencon.community.dto.threadcomment.InsertThreadCommentDtoRes;
 import com.lawencon.community.model.ThreadComment;
 
 public interface ThreadCommentService {
-	public GetAllThreadCommentDtoRes getAll() throws Exception;
-	public GetByThreadCommentIdDtoRes getById(String id) throws Exception;
+	public GetAllThreadCommentDtoRes findAll() throws Exception;
+	public GetByThreadCommentIdDtoRes findById(String id) throws Exception;
 	public InsertThreadCommentDtoRes insert(InsertThreadCommentDtoReq data) throws Exception;
 	public DeleteByThreadCommentIdDtoRes delete(String id) throws Exception;
-	public List<ThreadComment> getByThread(String id) throws Exception;
+	public List<ThreadComment> findByThread(String id) throws Exception;
 }

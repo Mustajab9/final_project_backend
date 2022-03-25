@@ -1,8 +1,6 @@
 package com.lawencon.community.dao.impl;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -10,7 +8,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.BaseDaoImpl;
 import com.lawencon.community.dao.SubscriptionDetailDao;
 import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.PriceListMember;
@@ -21,9 +18,30 @@ import com.lawencon.community.model.SubscriptionDetail;
 import com.lawencon.community.model.User;
 
 @Repository
-public class SubscriptionDetailDaoImpl extends BaseDaoImpl<SubscriptionDetail> implements SubscriptionDetailDao {
+public class SubscriptionDetailDaoImpl extends BaseDao<SubscriptionDetail> implements SubscriptionDetailDao {
+	
 	@Override
-	public List<SubscriptionDetail> getBySubscription(String id) throws Exception {
+	public List<SubscriptionDetail> findAll() throws Exception {
+		return super.getAll();
+	}
+	
+	@Override
+	public SubscriptionDetail findById(String id) throws Exception {
+		return super.getById(id);
+	}
+	
+	@Override
+	public SubscriptionDetail save(SubscriptionDetail entity) throws Exception {
+		return super.save(entity);
+	}
+	
+	@Override
+	public boolean deleteById(String id) throws Exception {
+		return super.deleteById(id);
+	}
+	
+	@Override
+	public List<SubscriptionDetail> findBySubscription(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT sd.id, plm.id, plm.price_code, plm.price_nominal, plm.duration, "); 
 		builder.append("s.id, s.subscription_code, s.subscription_duration, s.is_approve, "); 
@@ -95,15 +113,6 @@ public class SubscriptionDetailDaoImpl extends BaseDaoImpl<SubscriptionDetail> i
 			listResult.add(subsDetail);
 		});
 		
-		
 		return listResult;
 	}
-	
-	private byte[] convertObjToByteArray(Object obj) throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-        outputStream.writeObject(obj);
-        outputStream.flush();
-        return byteArrayOutputStream.toByteArray();
-    }
 }

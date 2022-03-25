@@ -12,11 +12,11 @@ import com.lawencon.community.dto.thread.UpdateThreadDtoRes;
 import com.lawencon.community.model.Thread;
 
 public interface ThreadService {
-	public GetAllThreadDtoRes getAll() throws Exception;
-	public GetByThreadIdDtoRes getById(String id) throws Exception;
+	public GetAllThreadDtoRes findAll() throws Exception;
+	public GetByThreadIdDtoRes findById(String id) throws Exception;
 	public InsertThreadDtoRes insert(InsertThreadDtoReq data) throws Exception;
 	public UpdateThreadDtoRes update(UpdateThreadDtoReq data) throws Exception;
 	public DeleteByThreadIdDtoRes deleteById(String id) throws Exception;
-	public List<Thread> getByUser(String id) throws Exception;
-	public List<Thread> getByCategory(String id[]) throws Exception;
+	public List<Thread> findByUser(String id) throws Exception;
+	public List<Thread> findByCategory(String id[]) throws Exception;
 }

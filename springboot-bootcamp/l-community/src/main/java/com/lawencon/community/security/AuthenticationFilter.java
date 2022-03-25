@@ -52,7 +52,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 		User user = null;
 		try {
-			user = userDao.getByUser(authResult.getName());
+			user = userDao.findByUser(authResult.getName());
 			String token = jwtBuilderComponent.GenerateToken(Duration.ofHours(3), user.getId());
 			
 			LoginDtoDataRes data = new LoginDtoDataRes();

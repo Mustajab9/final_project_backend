@@ -9,8 +9,8 @@ import com.lawencon.community.dto.enrolldetail.InsertEnrollDetailDtoRes;
 import com.lawencon.community.model.EnrollDetail;
 
 public interface EnrollDetailService {
-	public GetAllEnrollDetailDtoRes getAll() throws Exception;
-	public GetByEnrollDetailIdDtoRes getById(String id) throws Exception;
+	public GetAllEnrollDetailDtoRes findAll() throws Exception;
+	public GetByEnrollDetailIdDtoRes findById(String id) throws Exception;
 	public InsertEnrollDetailDtoRes insert(InsertEnrollDetailDtoReq data) throws Exception;
-	public List<EnrollDetail> getByEvent(String id) throws Exception;
+	public List<EnrollDetail> findByEvent(String id) throws Exception;
 }

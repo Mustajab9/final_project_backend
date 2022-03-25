@@ -7,8 +7,8 @@ import com.lawencon.community.dto.bookmark.InsertBookmarkDtoReq;
 import com.lawencon.community.dto.bookmark.InsertBookmarkDtoRes;
 
 public interface BookmarkService {
-	public GetAllBookmarkDtoRes getAll() throws Exception;
-	public GetByBookmarkIdDtoRes getById(String id) throws Exception;
+	public GetAllBookmarkDtoRes findAll() throws Exception;
+	public GetByBookmarkIdDtoRes findById(String id) throws Exception;
 	public InsertBookmarkDtoRes insert(InsertBookmarkDtoReq data) throws Exception;
-	public GetBookmarkByUserDtoRes getByUser(String id) throws Exception;
+	public GetBookmarkByUserDtoRes findByUser(String id) throws Exception;
 }

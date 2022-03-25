@@ -9,8 +9,8 @@ import com.lawencon.community.dto.category.UpdateCategoryDtoReq;
 import com.lawencon.community.dto.category.UpdateCategoryDtoRes;
 
 public interface CategoryService {
-	public GetAllCategoryDtoRes getAll() throws Exception;
-	public GetByCategoryIdDtoRes getById(String id) throws Exception;
+	public GetAllCategoryDtoRes findAll() throws Exception;
+	public GetByCategoryIdDtoRes findById(String id) throws Exception;
 	public InsertCategoryDtoRes insert(InsertCategoryDtoReq data) throws Exception;
 	public UpdateCategoryDtoRes update(UpdateCategoryDtoReq data) throws Exception;
 	public DeleteByCategoryIdDtoRes deleteById(String id) throws Exception;

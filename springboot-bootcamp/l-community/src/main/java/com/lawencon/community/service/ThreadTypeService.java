@@ -9,8 +9,8 @@ import com.lawencon.community.dto.threadtype.UpdateThreadTypeDtoReq;
 import com.lawencon.community.dto.threadtype.UpdateThreadTypeDtoRes;
 
 public interface ThreadTypeService {
-	public GetAllThreadTypeDtoRes getAll() throws Exception;
-	public GetByThreadTypeIdDtoRes getById(String id) throws Exception;
+	public GetAllThreadTypeDtoRes findAll() throws Exception;
+	public GetByThreadTypeIdDtoRes findById(String id) throws Exception;
 	public InsertThreadTypeDtoRes insert(InsertThreadTypeDtoReq data) throws Exception;
 	public UpdateThreadTypeDtoRes update(UpdateThreadTypeDtoReq data) throws Exception;
 	public DeleteByThreadTypeIdDtoRes deleteById(String id) throws Exception;

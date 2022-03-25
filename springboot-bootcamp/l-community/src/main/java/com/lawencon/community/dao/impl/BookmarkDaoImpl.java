@@ -1,15 +1,12 @@
  package com.lawencon.community.dao.impl;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.BaseDaoImpl;
 import com.lawencon.community.dao.BookmarkDao;
 import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.Bookmark;
@@ -18,22 +15,43 @@ import com.lawencon.community.model.ThreadAttachment;
 import com.lawencon.community.model.ThreadType;
 
 @Repository
-public class BookmarkDaoImpl extends BaseDaoImpl<Bookmark> implements BookmarkDao {
+public class BookmarkDaoImpl extends BaseDao<Bookmark> implements BookmarkDao {
 
 	@Override
-	public List<Bookmark> getByUser(String id) throws Exception {
+	public List<Bookmark> findAll() throws Exception {
+		return super.getAll();
+	}
+	
+	@Override
+	public Bookmark findById(String id) throws Exception {
+		return super.getById(id);
+	}
+	
+	@Override
+	public Bookmark save(Bookmark entity) throws Exception {
+		return super.save(entity);
+	}
+	
+	@Override
+	public boolean deleteById(String id) throws Exception {
+		return super.deleteById(id);
+	}
+	
+	@Override
+	public List<Bookmark> findByUser(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT t.thread_title, t.thread_content, t.is_premium, ty.type_name, a.attachment_content, ");
-		builder.append("a.attachment_extension, t.created_by, t.created_at, b.\"version\", b.is_active ");
-		builder.append("FROM bookmarks AS b ");
-		builder.append("INNER JOIN threads AS t ON t.id = b.thread_id ");
-		builder.append("LEFT JOIN thread_attachment AS ta ON ta.thread_id = t.id ");
-		builder.append("LEFT JOIN attachments AS a ON a.id = ta.attachment_id ");
-		builder.append("INNER JOIN thread_types AS ty ON ty.id = t.type_id ");
-		builder.append("WHERE b.created_by = :id");
+		builder.append("SELECT t.thread_title, t.thread_content, t.is_premium, ty.type_name, a.attachment_content,");
+		builder.append(" a.attachment_extension, t.created_by, t.created_at, b.version, b.is_active");
+		builder.append(" FROM bookmarks AS b");
+		builder.append(" INNER JOIN threads AS t ON t.id = b.thread_id");
+		builder.append(" LEFT JOIN thread_attachment AS ta ON ta.thread_id = t.id");
+		builder.append(" LEFT JOIN attachments AS a ON a.id = ta.attachment_id");
+		builder.append(" INNER JOIN thread_types AS ty ON ty.id = t.type_id");
+		builder.append(" WHERE b.created_by = :id");
 		
 		List<?> results = createNativeQuery(builder.toString()).getResultList();
 		List<Bookmark> listResult = new ArrayList<>();
+		
 		results.forEach(result -> {
 			Object[] obj = (Object[]) result;
 			Bookmark bookmark = new Bookmark();
@@ -47,9 +65,9 @@ public class BookmarkDaoImpl extends BaseDaoImpl<Bookmark> implements BookmarkDa
 			thread.setThreadContent(obj[1].toString());
 			thread.setIsPremium(Boolean.valueOf(obj[2].toString()));
 			
-			Attachment attachment = null;
 			if(obj[4] != null) {
-				attachment = new Attachment();
+				Attachment attachment = new Attachment();
+				
 				byte[] content = null;
 				try {
 					content = convertObjToByteArray(obj[4].toString());
@@ -59,11 +77,11 @@ public class BookmarkDaoImpl extends BaseDaoImpl<Bookmark> implements BookmarkDa
 
 				attachment.setAttachmentContent(content);
 				attachment.setAttachmentExtension(obj[5].toString());
+				
+				ThreadAttachment threadAttachment = new ThreadAttachment();
+				threadAttachment.setAttachmentId(attachment);
+				threadAttachment.setThreadId(thread);
 			}
-			
-			ThreadAttachment threadAttachment = new ThreadAttachment();
-			threadAttachment.setAttachmentId(attachment);
-			threadAttachment.setThreadId(thread);
 			
 			thread.setCreatedBy(obj[6].toString());
 			thread.setCreatedAt(((Timestamp)obj[7]).toLocalDateTime());
@@ -76,14 +94,5 @@ public class BookmarkDaoImpl extends BaseDaoImpl<Bookmark> implements BookmarkDa
 		});
 		
 		return listResult;
-	}
-	
-	private byte[] convertObjToByteArray(Object obj) throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream outputStream = new ObjectOutputStream(byteArrayOutputStream);
-        outputStream.writeObject(obj);
-        outputStream.flush();
-        return byteArrayOutputStream.toByteArray();
-    }
-	 
+	}	 
 }

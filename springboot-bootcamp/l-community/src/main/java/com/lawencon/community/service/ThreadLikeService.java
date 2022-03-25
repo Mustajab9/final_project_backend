@@ -10,9 +10,9 @@ import com.lawencon.community.dto.threadlike.InsertThreadLikeDtoRes;
 import com.lawencon.community.model.ThreadLike;
 
 public interface ThreadLikeService {
-	public GetAllThreadLikeDtoRes getAll() throws Exception;
-	public GetByThreadLikeIdDtoRes getById(String id) throws Exception;
+	public GetAllThreadLikeDtoRes findAll() throws Exception;
+	public GetByThreadLikeIdDtoRes findById(String id) throws Exception;
 	public InsertThreadLikeDtoRes insert(InsertThreadLikeDtoReq data) throws Exception;
 	public DeleteByThreadLikeIdDtoRes deleteById(String id) throws Exception;
-	public List<ThreadLike> getByUser(String id) throws Exception;
+	public List<ThreadLike> findByUser(String id) throws Exception;
 }

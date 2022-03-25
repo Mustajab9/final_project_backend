@@ -5,48 +5,44 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.BaseDaoImpl;
 import com.lawencon.community.dao.ThreadLikeDao;
+import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadLike;
 import com.lawencon.community.model.ThreadType;
 
 @Repository
-public class ThreadLikeDaoImpl extends BaseDaoImpl<ThreadLike> implements ThreadLikeDao {
+public class ThreadLikeDaoImpl extends BaseDao<ThreadLike> implements ThreadLikeDao {
 	
 	@Override
 	public List<ThreadLike> findAll() throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
 	public ThreadLike findById(String id) throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
 	public ThreadLike save(ThreadLike entity) throws Exception {
-		// TODO Auto-generated method stub
 		return super.save(entity);
 	}
 	
 	@Override
 	public boolean deleteById(String id) throws Exception {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
 	@Override
-	public List<ThreadLike> getByUser(String id) throws Exception {
+	public List<ThreadLike> findByUser(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		String sql = "SELECT tl.id, tl.like_code, t.id, t.thread_code, t.thread_title, t.thread_content, t.is_premium, tt.id, tt.type_code, tt.type_name, tl.\"version\", tl.is_active "; 
-		builder.append("FROM thread_like tl ");
-		builder.append("INNER JOIN threads t ON t.id = tl.thread_id ");
-		builder.append("INNER JOIN thread_types tt ON tt.id = t.type_id ");
-		builder.append("WHERE tl.created_by = :id");
+		builder.append("SELECT tl.id, tl.like_code, t.id, t.thread_code, t.thread_title, t.thread_content, t.is_premium, tt.id, tt.type_code, tt.type_name, tl.version, tl.is_active"); 
+		builder.append(" FROM thread_like tl");
+		builder.append(" INNER JOIN threads t ON t.id = tl.thread_id");
+		builder.append(" INNER JOIN thread_types tt ON tt.id = t.type_id");
+		builder.append(" WHERE tl.created_by = :id");
 		
-		List<?> results = createNativeQuery(sql).setParameter("id", id).getResultList();
+		List<?> results = createNativeQuery(builder.toString()).setParameter("id", id).getResultList();
 		List<ThreadLike> listResult = new ArrayList<>();
 		
 		results.forEach(result->{
@@ -55,7 +51,7 @@ public class ThreadLikeDaoImpl extends BaseDaoImpl<ThreadLike> implements Thread
 			threadLike.setId(obj[0].toString());
 			threadLike.setLikeCode(obj[1].toString());
 			
-			com.lawencon.community.model.Thread thread = new com.lawencon.community.model.Thread();
+			Thread thread = new Thread();
 			thread.setId(obj[2].toString());
 			thread.setThreadCode(obj[3].toString());
 			thread.setThreadTitle(obj[4].toString());

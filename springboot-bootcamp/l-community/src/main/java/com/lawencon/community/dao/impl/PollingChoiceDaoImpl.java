@@ -6,30 +6,50 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.BaseDaoImpl;
 import com.lawencon.community.dao.PollingChoiceDao;
 import com.lawencon.community.model.Polling;
 import com.lawencon.community.model.PollingChoice;
 import com.lawencon.community.model.Thread;
 
 @Repository
-public class PollingChoiceDaoImpl extends BaseDaoImpl<PollingChoice> implements PollingChoiceDao {
+public class PollingChoiceDaoImpl extends BaseDao<PollingChoice> implements PollingChoiceDao {
 
 	@Override
-	public List<PollingChoice> getByPolling(String id) throws Exception {
+	public List<PollingChoice> findAll() throws Exception {
+		return super.getAll();
+	}
+	
+	@Override
+	public PollingChoice findById(String id) throws Exception {
+		return super.getById(id);
+	}
+	
+	@Override
+	public PollingChoice save(PollingChoice entity) throws Exception {
+		return super.save(entity);
+	}
+	
+	@Override
+	public boolean deleteById(String id) throws Exception {
+		return super.deleteById(id);
+	}
+	
+	@Override
+	public List<PollingChoice> findByPolling(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT t.id, t.thread_title, t.thread_content, t.is_premium, p.id, p.polling_name, ");
-		builder.append("pc.choice_name, pc.created_by, pc.created_at, pc.\"version\", pc.is_active ");
-		builder.append("FROM polling_choices AS pc ");
-		builder.append("INNER JOIN pollings AS p ON p.id = pc.polling_id ");
-		builder.append("INNER JOIN threads AS t ON t.id = p.thread_id ");
-		builder.append("INNER JOIN thread_types AS ty ON ty.id = t.type_id ");
-		builder.append("WHERE ty.type_code = 'TY01' AND p.id = :id");
+		builder.append("SELECT t.id, t.thread_title, t.thread_content, t.is_premium, p.id, p.polling_name,");
+		builder.append(" pc.choice_name, pc.created_by, pc.created_at, pc.version, pc.is_active");
+		builder.append(" FROM polling_choices AS pc");
+		builder.append(" INNER JOIN pollings AS p ON p.id = pc.polling_id");
+		builder.append(" INNER JOIN threads AS t ON t.id = p.thread_id");
+		builder.append(" INNER JOIN thread_types AS ty ON ty.id = t.type_id");
+		builder.append(" WHERE ty.type_code = 'TY01' AND p.id = :id");
 		
 		List<?> results = createNativeQuery(builder.toString())
 				.setParameter("id", id)
 				.getResultList();
 		List<PollingChoice> listResult = new ArrayList<>();
+		
 		results.forEach(result -> {
 			Object[] obj = (Object[]) result;
 			

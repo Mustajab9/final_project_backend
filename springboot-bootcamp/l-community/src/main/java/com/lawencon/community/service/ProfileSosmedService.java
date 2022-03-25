@@ -12,10 +12,10 @@ import com.lawencon.community.dto.profilesosmed.UpdateProfileSosmedDtoRes;
 import com.lawencon.community.model.ProfileSosmed;
 
 public interface ProfileSosmedService {
-	public GetAllProfileSosmedDtoRes getAll() throws Exception;
-	public GetByProfileSosmedIdDtoRes getById(String id) throws Exception;
+	public GetAllProfileSosmedDtoRes findAll() throws Exception;
+	public GetByProfileSosmedIdDtoRes findById(String id) throws Exception;
 	public InsertProfileSosmedDtoRes insert(InsertProfileSosmedDtoReq data) throws Exception;
 	public UpdateProfileSosmedDtoRes update(UpdateProfileSosmedDtoReq data) throws Exception;
 	public DeleteByProfileSosmedIdDtoRes deleteById(String id) throws Exception;
-	public List<ProfileSosmed> getByUser(String id) throws Exception;
+	public List<ProfileSosmed> findByUser(String id) throws Exception;
 }
