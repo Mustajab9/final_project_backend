@@ -1,66 +1,63 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.community.dao.PollingChoiceDao;
+import com.lawencon.community.dao.PollingDao;
 import com.lawencon.community.dto.pollingchoice.DeleteByPollingChoiceIdDtoRes;
+import com.lawencon.community.dto.pollingchoice.GetAllPollingChoiceDtoDataRes;
 import com.lawencon.community.dto.pollingchoice.GetAllPollingChoiceDtoRes;
+import com.lawencon.community.dto.pollingchoice.GetByPollingChoiceIdDtoDataRes;
 import com.lawencon.community.dto.pollingchoice.GetByPollingChoiceIdDtoRes;
+import com.lawencon.community.dto.pollingchoice.GetByPollingIdDtoDataRes;
+import com.lawencon.community.dto.pollingchoice.GetByPollingIdDtoRes;
+import com.lawencon.community.dto.pollingchoice.InsertPollingChoiceDtoDataRes;
 import com.lawencon.community.dto.pollingchoice.InsertPollingChoiceDtoReq;
 import com.lawencon.community.dto.pollingchoice.InsertPollingChoiceDtoRes;
+import com.lawencon.community.dto.pollingchoice.UpdatePollingChoiceDtoDataRes;
 import com.lawencon.community.dto.pollingchoice.UpdatePollingChoiceDtoReq;
 import com.lawencon.community.dto.pollingchoice.UpdatePollingChoiceDtoRes;
-import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
-import com.lawencon.community.dto.user.UpdateUserDtoRes;
+import com.lawencon.community.model.Polling;
 import com.lawencon.community.model.PollingChoice;
-import com.lawencon.community.model.Role;
-import com.lawencon.community.model.User;
 import com.lawencon.community.service.PollingChoiceService;
 
 @Service
 public class PollingChoiceServiceImpl extends BaseService implements PollingChoiceService {
 	private PollingChoiceDao pollingChoiceDao;
+	private PollingDao pollingDao;
 
 	@Autowired
-	public PollingChoiceServiceImpl(PollingChoiceDao pollingChoiceDao) {
+	public PollingChoiceServiceImpl(PollingChoiceDao pollingChoiceDao, PollingDao pollingDao) {
 		this.pollingChoiceDao = pollingChoiceDao;
+		this.pollingDao = pollingDao;
 	}
 	
 	@Override
 	public GetAllPollingChoiceDtoRes findAll() throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllPollingChoiceDtoRes getAll = new GetAllPollingChoiceDtoRes();
 
-		List<User> users = userDao.findAll();
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<PollingChoice> users = pollingChoiceDao.findAll();
+		List<GetAllPollingChoiceDtoDataRes> listUser = new ArrayList<>();
 
 		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+			PollingChoice pollingChoice = users.get(i);
+			GetAllPollingChoiceDtoDataRes data = new GetAllPollingChoiceDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(pollingChoice.getId());
+			data.setChoiceCode(pollingChoice.getChoiceCode());
+			data.setChoiceName(pollingChoice.getChoiceName());
+			data.setPollingId(pollingChoice.getPollingId().getId());
+			data.setPollingCode(pollingChoice.getPollingId().getPollingCode());
+			data.setPollingName(pollingChoice.getPollingId().getPollingName());
+			data.setThreadId(pollingChoice.getPollingId().getThreadId().getId());
+			data.setThreadTitle(pollingChoice.getPollingId().getThreadId().getThreadTitle());
+			data.setThreadContent(pollingChoice.getPollingId().getThreadId().getThreadContent());
+			data.setVersion(pollingChoice.getVersion());
+			data.setIsActive(pollingChoice.getIsActive());
 
 			listUser.add(data);
 		}
@@ -73,18 +70,22 @@ public class PollingChoiceServiceImpl extends BaseService implements PollingChoi
 	
 	@Override
 	public GetByPollingChoiceIdDtoRes findById(String id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+		GetByPollingChoiceIdDtoRes getById = new GetByPollingChoiceIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		PollingChoice pollingChoice = pollingChoiceDao.findById(id);
+		GetByPollingChoiceIdDtoDataRes data = new GetByPollingChoiceIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setId(pollingChoice.getId());
+		data.setChoiceCode(pollingChoice.getChoiceCode());
+		data.setChoiceName(pollingChoice.getChoiceName());
+		data.setPollingId(pollingChoice.getPollingId().getId());
+		data.setPollingCode(pollingChoice.getPollingId().getPollingCode());
+		data.setPollingName(pollingChoice.getPollingId().getPollingName());
+		data.setThreadId(pollingChoice.getPollingId().getThreadId().getId());
+		data.setThreadTitle(pollingChoice.getPollingId().getThreadId().getThreadTitle());
+		data.setThreadContent(pollingChoice.getPollingId().getThreadId().getThreadContent());
+		data.setVersion(pollingChoice.getVersion());
+		data.setIsActive(pollingChoice.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -94,42 +95,24 @@ public class PollingChoiceServiceImpl extends BaseService implements PollingChoi
 	
 	@Override
 	public InsertPollingChoiceDtoRes insert(InsertPollingChoiceDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+		InsertPollingChoiceDtoRes insert = new InsertPollingChoiceDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
-
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
+			PollingChoice pollingChoice = new PollingChoice();
+			pollingChoice.setChoiceCode(getAlphaNumericString(5));
+			pollingChoice.setChoiceName(data.getChoiceName());
+			
+			Polling polling = pollingDao.findById(data.getPollingId());
+			pollingChoice.setPollingId(polling);
+			
+			pollingChoice.setCreatedBy(getId());
 
 			begin();
-			User insertUser = userDao.save(user);
+			PollingChoice pollingChoiceInsert = pollingChoiceDao.save(pollingChoice);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
+			InsertPollingChoiceDtoDataRes dataDto = new InsertPollingChoiceDtoDataRes();
+			dataDto.setId(pollingChoiceInsert.getId());
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
@@ -144,27 +127,24 @@ public class PollingChoiceServiceImpl extends BaseService implements PollingChoi
 	
 	@Override
 	public UpdatePollingChoiceDtoRes update(UpdatePollingChoiceDtoReq data) throws Exception {
-		UpdateUserDtoRes update = new UpdateUserDtoRes();
+		UpdatePollingChoiceDtoRes update = new UpdatePollingChoiceDtoRes();
 
 		try {
 			if (data.getVersion() != null) {
-				User user = userDao.findById(data.getId());
-
-				user.setEmail(data.getEmail());
-				user.setVersion(data.getVersion());
-
-				user.setUpdatedBy(getId());
-
+				PollingChoice pollingChoice = pollingChoiceDao.findById(data.getId());
+				pollingChoice.setChoiceName(data.getChoiceName());
+				pollingChoice.setVersion(data.getVersion());
+				
 				if (data.getIsActive() != null) {
-					user.setIsActive(data.getIsActive());
+					pollingChoice.setIsActive(data.getIsActive());
 				}
 
 				begin();
-				User userUpdate = userDao.save(user);
+				PollingChoice pollingChoiceUpdate = pollingChoiceDao.save(pollingChoice);
 				commit();
 
-				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
-				dataDto.setVersion(userUpdate.getVersion());
+				UpdatePollingChoiceDtoDataRes dataDto = new UpdatePollingChoiceDtoDataRes();
+				dataDto.setVersion(pollingChoiceUpdate.getVersion());
 
 				update.setData(dataDto);
 				update.setMsg("Update Success");
@@ -180,11 +160,11 @@ public class PollingChoiceServiceImpl extends BaseService implements PollingChoi
 	
 	@Override
 	public DeleteByPollingChoiceIdDtoRes deleteById(String id) throws Exception {
-		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+		DeleteByPollingChoiceIdDtoRes deleteById = new DeleteByPollingChoiceIdDtoRes();
 
 		try {
 			begin();
-			boolean isDeleted = userDao.deleteById(id);
+			boolean isDeleted = pollingChoiceDao.deleteById(id);
 			commit();
 
 			if (isDeleted) {
@@ -200,8 +180,34 @@ public class PollingChoiceServiceImpl extends BaseService implements PollingChoi
 	}
 	
 	@Override
-	public List<PollingChoice> findByPolling(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public GetByPollingIdDtoRes findByPolling(String id) throws Exception {
+		GetByPollingIdDtoRes getByPolling = new GetByPollingIdDtoRes();
+
+		List<PollingChoice> users = pollingChoiceDao.findByPolling(id);
+		List<GetByPollingIdDtoDataRes> listUser = new ArrayList<>();
+
+		for (int i = 0; i < users.size(); i++) {
+			PollingChoice pollingChoice = users.get(i);
+			GetByPollingIdDtoDataRes data = new GetByPollingIdDtoDataRes();
+
+			data.setId(pollingChoice.getId());
+			data.setChoiceCode(pollingChoice.getChoiceCode());
+			data.setChoiceName(pollingChoice.getChoiceName());
+			data.setPollingId(pollingChoice.getPollingId().getId());
+			data.setPollingCode(pollingChoice.getPollingId().getPollingCode());
+			data.setPollingName(pollingChoice.getPollingId().getPollingName());
+			data.setThreadId(pollingChoice.getPollingId().getThreadId().getId());
+			data.setThreadTitle(pollingChoice.getPollingId().getThreadId().getThreadTitle());
+			data.setThreadContent(pollingChoice.getPollingId().getThreadId().getThreadContent());
+			data.setVersion(pollingChoice.getVersion());
+			data.setIsActive(pollingChoice.getIsActive());
+
+			listUser.add(data);
+		}
+
+		getByPolling.setData(listUser);
+		getByPolling.setMsg(null);
+
+		return getByPolling;
 	}
 }

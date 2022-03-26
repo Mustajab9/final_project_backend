@@ -1,39 +1,24 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseServiceImpl;
 import com.lawencon.community.dao.CategoryDao;
-import com.lawencon.community.dao.UserDao;
-import com.lawencon.community.dto.attachment.GetAllAttachmentDtoDataRes;
-import com.lawencon.community.dto.attachment.GetAllAttachmentDtoRes;
-import com.lawencon.community.dto.attachment.GetByAttachmentIdDtoDataRes;
-import com.lawencon.community.dto.attachment.GetByAttachmentIdDtoRes;
 import com.lawencon.community.dto.category.DeleteByCategoryIdDtoRes;
+import com.lawencon.community.dto.category.GetAllCategoryDtoDataRes;
 import com.lawencon.community.dto.category.GetAllCategoryDtoRes;
+import com.lawencon.community.dto.category.GetByCategoryIdDtoDataRes;
 import com.lawencon.community.dto.category.GetByCategoryIdDtoRes;
+import com.lawencon.community.dto.category.InsertCategoryDtoDataRes;
 import com.lawencon.community.dto.category.InsertCategoryDtoReq;
 import com.lawencon.community.dto.category.InsertCategoryDtoRes;
+import com.lawencon.community.dto.category.UpdateCategoryDtoDataRes;
 import com.lawencon.community.dto.category.UpdateCategoryDtoReq;
 import com.lawencon.community.dto.category.UpdateCategoryDtoRes;
-import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
-import com.lawencon.community.dto.user.UpdateUserDtoRes;
-import com.lawencon.community.model.Attachment;
-import com.lawencon.community.model.Role;
-import com.lawencon.community.model.User;
+import com.lawencon.community.model.Category;
 import com.lawencon.community.service.CategoryService;
 
 @Service
@@ -47,26 +32,25 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 	
 	@Override
 	public GetAllCategoryDtoRes findAll(int startPage, int maxPage) throws Exception {
-		GetAllAttachmentDtoRes getAll = new GetAllAttachmentDtoRes();
+		GetAllCategoryDtoRes getAll = new GetAllCategoryDtoRes();
 
-		List<Attachment> attachments = attachmentDao.findAll(startPage, maxPage);
-		List<GetAllAttachmentDtoDataRes> listAttachment = new ArrayList<>();
+		List<Category> categories = categoryDao.findAll(startPage, maxPage);
+		List<GetAllCategoryDtoDataRes> listCategory = new ArrayList<>();
 
-		for (int i = 0; i < attachments.size(); i++) {
-			Attachment attach = attachments.get(i);
-			GetAllAttachmentDtoDataRes data = new GetAllAttachmentDtoDataRes();
+		for (int i = 0; i < categories.size(); i++) {
+			Category category = categories.get(i);
+			GetAllCategoryDtoDataRes data = new GetAllCategoryDtoDataRes();
 			
-			data.setId(attach.getId());
-			data.setAttachmentCode(attach.getAttachmentCode());
-			data.setAttachmentContent(attach.getAttachmentContent());
-			data.setAttachmentExtension(attach.getAttachmentExtension());
-			data.setVersion(attach.getVersion());
-			data.setIsActive(attach.getIsActive());
+			data.setId(category.getId());
+			data.setCategoryCode(category.getCategoryCode());
+			data.setCategoryName(category.getCategoryName());
+			data.setVersion(category.getVersion());
+			data.setIsActive(category.getIsActive());
 
-			listAttachment.add(data);
+			listCategory.add(data);
 		}
 
-		getAll.setData(listAttachment);
+		getAll.setData(listCategory);
 		getAll.setMsg(null);
 
 		return getAll;
@@ -74,17 +58,16 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 	
 	@Override
 	public GetByCategoryIdDtoRes findById(String id) throws Exception {
-		GetByAttachmentIdDtoRes getById = new GetByAttachmentIdDtoRes();
+		GetByCategoryIdDtoRes getById = new GetByCategoryIdDtoRes();
 
-		Attachment attach = attachmentDao.findById(id);
-		GetByAttachmentIdDtoDataRes data = new GetByAttachmentIdDtoDataRes();
+		Category category = categoryDao.findById(id);
+		GetByCategoryIdDtoDataRes data = new GetByCategoryIdDtoDataRes();
 
-		data.setId(attach.getId());
-		data.setAttachmentCode(attach.getAttachmentCode());
-		data.setAttachmentContent(attach.getAttachmentContent());
-		data.setAttachmentExtension(attach.getAttachmentExtension());
-		data.setVersion(attach.getVersion());
-		data.setIsActive(attach.getIsActive());
+		data.setId(category.getId());
+		data.setCategoryCode(category.getCategoryCode());
+		data.setCategoryName(category.getCategoryName());
+		data.setVersion(category.getVersion());
+		data.setIsActive(category.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -94,42 +77,20 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 	
 	@Override
 	public InsertCategoryDtoRes insert(InsertCategoryDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+		InsertCategoryDtoRes insert = new InsertCategoryDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
-
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
+			Category category = new Category();
+			category.setCategoryCode(getAlphaNumericString(5));
+			category.setCategoryName(data.getCategoryName());
+			category.setCreatedBy(getId());
 
 			begin();
-			User insertUser = userDao.save(user);
+			Category categoryInsert = categoryDao.save(category);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
+			InsertCategoryDtoDataRes dataDto = new InsertCategoryDtoDataRes();
+			dataDto.setId(categoryInsert.getId());
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
@@ -144,27 +105,25 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 	
 	@Override
 	public UpdateCategoryDtoRes update(UpdateCategoryDtoReq data) throws Exception {
-		UpdateUserDtoRes update = new UpdateUserDtoRes();
+		UpdateCategoryDtoRes update = new UpdateCategoryDtoRes();
 
 		try {
 			if (data.getVersion() != null) {
-				User user = userDao.findById(data.getId());
-
-				user.setEmail(data.getEmail());
-				user.setVersion(data.getVersion());
-
-				user.setUpdatedBy(getId());
+				Category category = categoryDao.findById(data.getId());
+				category.setCategoryName(data.getCategoryName());
+				category.setUpdatedBy(getId());
+				category.setVersion(data.getVersion());
 
 				if (data.getIsActive() != null) {
-					user.setIsActive(data.getIsActive());
+					category.setIsActive(data.getIsActive());
 				}
 
 				begin();
-				User userUpdate = userDao.save(user);
+				Category categoryUpdate = categoryDao.save(category);
 				commit();
 
-				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
-				dataDto.setVersion(userUpdate.getVersion());
+				UpdateCategoryDtoDataRes dataDto = new UpdateCategoryDtoDataRes();
+				dataDto.setVersion(categoryUpdate.getVersion());
 
 				update.setData(dataDto);
 				update.setMsg("Update Success");
@@ -180,11 +139,11 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 	
 	@Override
 	public DeleteByCategoryIdDtoRes deleteById(String id) throws Exception {
-		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+		DeleteByCategoryIdDtoRes deleteById = new DeleteByCategoryIdDtoRes();
 
 		try {
 			begin();
-			boolean isDeleted = userDao.deleteById(id);
+			boolean isDeleted = categoryDao.deleteById(id);
 			commit();
 
 			if (isDeleted) {

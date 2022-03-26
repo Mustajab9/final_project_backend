@@ -44,7 +44,7 @@ public class Event extends BaseEntity {
 	private Date eventDateEnd;
 	
 	@Column(name = "is_approve")
-	private Boolean isApprove;
+	private Boolean isApprove = false;
 	
 	@ManyToOne
 	@JoinColumn(name = "type_id")

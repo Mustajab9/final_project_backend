@@ -1,67 +1,66 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseServiceImpl;
 import com.lawencon.community.dao.ChoiceVoteDao;
-import com.lawencon.community.dao.UserDao;
+import com.lawencon.community.dao.PollingChoiceDao;
+import com.lawencon.community.dto.choicevote.GetAllChoiceVoteDtoDataRes;
 import com.lawencon.community.dto.choicevote.GetAllChoiceVoteDtoRes;
+import com.lawencon.community.dto.choicevote.GetByChoiceVoteIdDtoDataRes;
 import com.lawencon.community.dto.choicevote.GetByChoiceVoteIdDtoRes;
+import com.lawencon.community.dto.choicevote.GetByPollingChoiceIdDtoDataRes;
+import com.lawencon.community.dto.choicevote.GetByPollingChoiceIdDtoRes;
+import com.lawencon.community.dto.choicevote.InsertChoiceVoteDtoDataRes;
 import com.lawencon.community.dto.choicevote.InsertChoiceVoteDtoReq;
 import com.lawencon.community.dto.choicevote.InsertChoiceVoteDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
 import com.lawencon.community.model.ChoiceVote;
-import com.lawencon.community.model.Role;
-import com.lawencon.community.model.User;
+import com.lawencon.community.model.PollingChoice;
 import com.lawencon.community.service.ChoiceVoteService;
 
 @Service
 public class ChoiceVoteServiceImpl extends BaseService implements ChoiceVoteService {
 	private ChoiceVoteDao choiceVoteDao;
+	private PollingChoiceDao pollingChoiceDao;
 
 	@Autowired
-	public ChoiceVoteServiceImpl(ChoiceVoteDao choiceVoteDao) {
+	public ChoiceVoteServiceImpl(ChoiceVoteDao choiceVoteDao, PollingChoiceDao pollingChoiceDao) {
 		this.choiceVoteDao = choiceVoteDao;
+		this.pollingChoiceDao = pollingChoiceDao;
 	}
 	
 	@Override
 	public GetAllChoiceVoteDtoRes findAll() throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllChoiceVoteDtoRes getAll = new GetAllChoiceVoteDtoRes();
 
-		List<User> users = userDao.findAll();
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<ChoiceVote> choiceVotes = choiceVoteDao.findAll();
+		List<GetAllChoiceVoteDtoDataRes> listChoiceVote = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+		for (int i = 0; i < choiceVotes.size(); i++) {
+			ChoiceVote choiceVote = choiceVotes.get(i);
+			GetAllChoiceVoteDtoDataRes data = new GetAllChoiceVoteDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(choiceVote.getId());
+			data.setVoteCode(choiceVote.getVoteCode());
+			data.setChoiceId(choiceVote.getChoiceId().getId());
+			data.setChoiceName(choiceVote.getChoiceId().getChoiceName());
+			data.setChoiceCode(choiceVote.getChoiceId().getChoiceCode());
+			data.setPollingId(choiceVote.getChoiceId().getPollingId().getId());
+			data.setPollingCode(choiceVote.getChoiceId().getPollingId().getPollingCode());
+			data.setPollingName(choiceVote.getChoiceId().getPollingId().getPollingName());
+			data.setThreadId(choiceVote.getChoiceId().getPollingId().getThreadId().getId());
+			data.setThreadTitle(choiceVote.getChoiceId().getPollingId().getThreadId().getThreadTitle());
+			data.setThreadContent(choiceVote.getChoiceId().getPollingId().getThreadId().getThreadContent());
+			data.setVersion(choiceVote.getVersion());
+			data.setIsActive(choiceVote.getIsActive());
 
-			listUser.add(data);
+			listChoiceVote.add(data);
 		}
 
-		getAll.setData(listUser);
+		getAll.setData(listChoiceVote);
 		getAll.setMsg(null);
 
 		return getAll;
@@ -69,18 +68,24 @@ public class ChoiceVoteServiceImpl extends BaseService implements ChoiceVoteServ
 	
 	@Override
 	public GetByChoiceVoteIdDtoRes findById(String id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+		GetByChoiceVoteIdDtoRes getById = new GetByChoiceVoteIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		ChoiceVote choiceVote = choiceVoteDao.findById(id);
+		GetByChoiceVoteIdDtoDataRes data = new GetByChoiceVoteIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setId(choiceVote.getId());
+		data.setVoteCode(choiceVote.getVoteCode());
+		data.setChoiceId(choiceVote.getChoiceId().getId());
+		data.setChoiceName(choiceVote.getChoiceId().getChoiceName());
+		data.setChoiceCode(choiceVote.getChoiceId().getChoiceCode());
+		data.setPollingId(choiceVote.getChoiceId().getPollingId().getId());
+		data.setPollingName(choiceVote.getChoiceId().getPollingId().getPollingName());
+		data.setPollingCode(choiceVote.getChoiceId().getPollingId().getPollingCode());
+		data.setThreadId(choiceVote.getChoiceId().getPollingId().getThreadId().getId());
+		data.setThreadTitle(choiceVote.getChoiceId().getPollingId().getThreadId().getThreadTitle());
+		data.setThreadContent(choiceVote.getChoiceId().getPollingId().getThreadId().getThreadContent());
+		data.setVersion(choiceVote.getVersion());
+		data.setIsActive(choiceVote.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -90,42 +95,23 @@ public class ChoiceVoteServiceImpl extends BaseService implements ChoiceVoteServ
 	
 	@Override
 	public InsertChoiceVoteDtoRes insert(InsertChoiceVoteDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+		InsertChoiceVoteDtoRes insert = new InsertChoiceVoteDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
-
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
-
+			ChoiceVote choiceVote = new ChoiceVote();
+			choiceVote.setVoteCode(getAlphaNumericString(5));
+			
+			PollingChoice pollingChoice = pollingChoiceDao.findById(data.getChoiceId());
+			choiceVote.setChoiceId(pollingChoice);
+			
+			choiceVote.setCreatedBy(getId());
+			
 			begin();
-			User insertUser = userDao.save(user);
+			ChoiceVote choiceVoteInsert = choiceVoteDao.save(choiceVote);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
+			InsertChoiceVoteDtoDataRes dataDto = new InsertChoiceVoteDtoDataRes();
+			dataDto.setId(choiceVoteInsert.getId());
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
@@ -139,8 +125,36 @@ public class ChoiceVoteServiceImpl extends BaseService implements ChoiceVoteServ
 	}
 	
 	@Override
-	public List<ChoiceVote> findByChoice(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public GetByPollingChoiceIdDtoRes findByChoice(String id) throws Exception {
+		GetByPollingChoiceIdDtoRes getByPollingChoice = new GetByPollingChoiceIdDtoRes();
+
+		List<ChoiceVote> choiceVotes = choiceVoteDao.findByChoice(id);
+		List<GetByPollingChoiceIdDtoDataRes> listChoiceVote = new ArrayList<>();
+
+		for (int i = 0; i < choiceVotes.size(); i++) {
+			ChoiceVote choiceVote = choiceVotes.get(i);
+			GetByPollingChoiceIdDtoDataRes data = new GetByPollingChoiceIdDtoDataRes();
+
+			data.setId(choiceVote.getId());
+			data.setVoteCode(choiceVote.getVoteCode());
+			data.setChoiceId(choiceVote.getChoiceId().getId());
+			data.setChoiceName(choiceVote.getChoiceId().getChoiceName());
+			data.setChoiceCode(choiceVote.getChoiceId().getChoiceCode());
+			data.setPollingId(choiceVote.getChoiceId().getPollingId().getId());
+			data.setPollingName(choiceVote.getChoiceId().getPollingId().getPollingName());
+			data.setPollingCode(choiceVote.getChoiceId().getPollingId().getPollingCode());
+			data.setThreadId(choiceVote.getChoiceId().getPollingId().getThreadId().getId());
+			data.setThreadTitle(choiceVote.getChoiceId().getPollingId().getThreadId().getThreadTitle());
+			data.setThreadContent(choiceVote.getChoiceId().getPollingId().getThreadId().getThreadContent());
+			data.setVersion(choiceVote.getVersion());
+			data.setIsActive(choiceVote.getIsActive());
+
+			listChoiceVote.add(data);
+		}
+
+		getByPollingChoice.setData(listChoiceVote);
+		getByPollingChoice.setMsg(null);
+
+		return getByPollingChoice;
 	}
 }

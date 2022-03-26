@@ -1,6 +1,8 @@
 package com.lawencon.community.dto.enrolldetail;
 
 import java.math.BigInteger;
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -11,10 +13,10 @@ public class GetByEventIdDtoDataRes {
 	private String eventTitle;
 	private String eventProvider;
 	private BigInteger eventPrice;
-	private LocalTime eventTimeStart;
-	private LocalTime eventTimeEnd;
-	private LocalDate eventDateStart;
-	private LocalDate eventDateEnd;
+	private Time eventTimeStart;
+	private Time eventTimeEnd;
+	private Date eventDateStart;
+	private Date eventDateEnd;
 	private Boolean isEventApprove;
 	private String categoryId;
 	private String categoryName;
@@ -74,28 +76,28 @@ public class GetByEventIdDtoDataRes {
 	public void setEventPrice(BigInteger eventPrice) {
 		this.eventPrice = eventPrice;
 	}
-	public LocalTime getEventTimeStart() {
+	public Time getEventTimeStart() {
 		return eventTimeStart;
 	}
-	public void setEventTimeStart(LocalTime eventTimeStart) {
+	public void setEventTimeStart(Time eventTimeStart) {
 		this.eventTimeStart = eventTimeStart;
 	}
-	public LocalTime getEventTimeEnd() {
+	public Time getEventTimeEnd() {
 		return eventTimeEnd;
 	}
-	public void setEventTimeEnd(LocalTime eventTimeEnd) {
+	public void setEventTimeEnd(Time eventTimeEnd) {
 		this.eventTimeEnd = eventTimeEnd;
 	}
-	public LocalDate getEventDateStart() {
+	public Date getEventDateStart() {
 		return eventDateStart;
 	}
-	public void setEventDateStart(LocalDate eventDateStart) {
+	public void setEventDateStart(Date eventDateStart) {
 		this.eventDateStart = eventDateStart;
 	}
-	public LocalDate getEventDateEnd() {
+	public Date getEventDateEnd() {
 		return eventDateEnd;
 	}
-	public void setEventDateEnd(LocalDate eventDateEnd) {
+	public void setEventDateEnd(Date eventDateEnd) {
 		this.eventDateEnd = eventDateEnd;
 	}
 	public Boolean getIsEventApprove() {

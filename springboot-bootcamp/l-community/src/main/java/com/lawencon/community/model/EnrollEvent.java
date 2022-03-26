@@ -22,7 +22,7 @@ public class EnrollEvent extends BaseEntity {
 	private String enrollCode;
 	
 	@Column(name = "is_approve")
-	private Boolean isApprove;
+	private Boolean isApprove = false;
 	
 	@ManyToOne
 	@JoinColumn(name = "profile_id")

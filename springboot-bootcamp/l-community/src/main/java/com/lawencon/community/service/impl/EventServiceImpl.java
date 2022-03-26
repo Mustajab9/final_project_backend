@@ -1,73 +1,89 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.lawencon.base.BaseServiceImpl;
+import com.lawencon.community.dao.AttachmentDao;
+import com.lawencon.community.dao.CategoryDao;
 import com.lawencon.community.dao.EventDao;
-import com.lawencon.community.dao.UserDao;
+import com.lawencon.community.dao.EventTypeDao;
 import com.lawencon.community.dto.event.DeleteByEventIdDtoRes;
+import com.lawencon.community.dto.event.GetAllEventDtoDataRes;
 import com.lawencon.community.dto.event.GetAllEventDtoRes;
+import com.lawencon.community.dto.event.GetByEventIdDtoDataRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoRes;
+import com.lawencon.community.dto.event.InsertEventDtoDataRes;
 import com.lawencon.community.dto.event.InsertEventDtoReq;
 import com.lawencon.community.dto.event.InsertEventDtoRes;
+import com.lawencon.community.dto.event.UpdateEventDtoDataRes;
 import com.lawencon.community.dto.event.UpdateEventDtoReq;
 import com.lawencon.community.dto.event.UpdateEventDtoRes;
-import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
-import com.lawencon.community.dto.user.UpdateUserDtoRes;
+import com.lawencon.community.model.Attachment;
+import com.lawencon.community.model.Category;
 import com.lawencon.community.model.Event;
-import com.lawencon.community.model.Role;
-import com.lawencon.community.model.User;
+import com.lawencon.community.model.EventType;
 import com.lawencon.community.service.EventService;
 
 @Service
 public class EventServiceImpl extends BaseService implements EventService {
 	private EventDao eventDao;
+	private EventTypeDao eventTypeDao;
+	private CategoryDao categoryDao;
+	private AttachmentDao attachmentDao;
 
 	@Autowired
-	public EventServiceImpl(EventDao eventDao) {
+	public EventServiceImpl(EventDao eventDao, EventTypeDao eventTypeDao, 
+			CategoryDao categoryDao, AttachmentDao attachmentDao) {
 		this.eventDao = eventDao;
+		this.eventTypeDao = eventTypeDao;
+		this.categoryDao = categoryDao;
+		this.attachmentDao = attachmentDao;
 	}
 	
 	@Override
 	public GetAllEventDtoRes findAll() throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllEventDtoRes getAll = new GetAllEventDtoRes();
 
-		List<User> users = userDao.findAll();
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<Event> events = eventDao.findAll();
+		List<GetAllEventDtoDataRes> listEvent = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+		for (int i = 0; i < events.size(); i++) {
+			Event event = events.get(i);
+			GetAllEventDtoDataRes data = new GetAllEventDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(event.getId());
+			data.setEventCode(event.getEventCode());
+			data.setEventTitle(event.getEventTitle());
+			data.setEventProvider(event.getEventProvider());
+			data.setEventPrice(event.getEventPrice());
+			data.setEventTimeStart(event.getEventTimeStart());
+			data.setEventTimeEnd(event.getEventTimeEnd());
+			data.setEventDateStart(event.getEventDateStart());
+			data.setEventDateEnd(event.getEventDateEnd());
+			data.setIsApprove(event.getIsApprove());
+			data.setCategoryId(event.getCategoryId().getId());
+			data.setCategoryName(event.getCategoryId().getCategoryName());
+			data.setTypeId(event.getTypeId().getId());
+			data.setTypeName(event.getTypeId().getTypeName());
+			data.setPriceId(event.getPriceId().getId());
+			data.setPriceName(event.getPriceId().getPriceName());
+			
+			if(event.getAttachmentId() != null) {
+				data.setAttachmentId(event.getAttachmentId().getId());
+				data.setAttachmentExtension(event.getAttachmentId().getAttachmentExtension());
+			}
+			
+			data.setVersion(event.getVersion());
+			data.setIsActive(event.getIsActive());
 
-			listUser.add(data);
+			listEvent.add(data);
 		}
 
-		getAll.setData(listUser);
+		getAll.setData(listEvent);
 		getAll.setMsg(null);
 
 		return getAll;
@@ -75,18 +91,34 @@ public class EventServiceImpl extends BaseService implements EventService {
 	
 	@Override
 	public GetByEventIdDtoRes findById(String id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+		GetByEventIdDtoRes getById = new GetByEventIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		Event event = eventDao.findById(id);
+		GetByEventIdDtoDataRes data = new GetByEventIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setEventCode(event.getEventCode());
+		data.setEventTitle(event.getEventTitle());
+		data.setEventProvider(event.getEventProvider());
+		data.setEventPrice(event.getEventPrice());
+		data.setEventTimeStart(event.getEventTimeStart());
+		data.setEventTimeEnd(event.getEventTimeEnd());
+		data.setEventDateStart(event.getEventDateStart());
+		data.setEventDateEnd(event.getEventDateEnd());
+		data.setIsApprove(event.getIsApprove());
+		data.setCategoryId(event.getCategoryId().getId());
+		data.setCategoryName(event.getCategoryId().getCategoryName());
+		data.setTypeId(event.getTypeId().getId());
+		data.setTypeName(event.getTypeId().getTypeName());
+		data.setPriceId(event.getPriceId().getId());
+		data.setPriceName(event.getPriceId().getPriceName());
+		
+		if(event.getAttachmentId() != null) {
+			data.setAttachmentId(event.getAttachmentId().getId());
+			data.setAttachmentExtension(event.getAttachmentId().getAttachmentExtension());
+		}
+		
+		data.setVersion(event.getVersion());
+		data.setIsActive(event.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -95,43 +127,46 @@ public class EventServiceImpl extends BaseService implements EventService {
 	}
 	
 	@Override
-	public InsertEventDtoRes insert(InsertEventDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+	public InsertEventDtoRes insert(String data, MultipartFile file) throws Exception {
+		InsertEventDtoReq dataInsert = new InsertEventDtoReq();
+		InsertEventDtoRes insert = new InsertEventDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
-
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
-
+			Event event = new Event();
+			event.setEventCode(getAlphaNumericString(5));
+			event.setEventTitle(dataInsert.getEventTitle());
+			event.setEventProvider(dataInsert.getEventProvider());
+			event.setEventPrice(dataInsert.getEventPrice());
+			event.setEventTimeStart(dataInsert.getEventTimeStart());
+			event.setEventTimeEnd(dataInsert.getEventTimeEnd());
+			event.setEventDateStart(dataInsert.getEventDateStart());
+			event.setEventDateEnd(dataInsert.getEventDateEnd());
+			
+			EventType eventType = eventTypeDao.findById(dataInsert.getEventTypeId());
+			event.setTypeId(eventType);
+			
+			Category category = categoryDao.findById(dataInsert.getCategoryId());
+			event.setCategoryId(category);
+			
+			event.setCreatedBy(getId());
+			
+			if(file != null) {
+				Attachment attachment = new Attachment();
+				attachment.setAttachmentContent(file.getBytes());
+				
+				String extension = fileExtensionName(file);
+				attachment.setAttachmentExtension(extension);
+				
+				Attachment attachmentInsert = attachmentDao.save(attachment);
+				event.setAttachmentId(attachmentInsert);
+			}
+			
 			begin();
-			User insertUser = userDao.save(user);
+			Event eventInsert = eventDao.save(event);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
+			InsertEventDtoDataRes dataDto = new InsertEventDtoDataRes();
+			dataDto.setId(eventInsert.getId());
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
@@ -146,27 +181,31 @@ public class EventServiceImpl extends BaseService implements EventService {
 	
 	@Override
 	public UpdateEventDtoRes update(UpdateEventDtoReq data) throws Exception {
-		UpdateUserDtoRes update = new UpdateUserDtoRes();
+		UpdateEventDtoRes update = new UpdateEventDtoRes();
 
 		try {
 			if (data.getVersion() != null) {
-				User user = userDao.findById(data.getId());
-
-				user.setEmail(data.getEmail());
-				user.setVersion(data.getVersion());
-
-				user.setUpdatedBy(getId());
+				Event event = eventDao.findById(data.getId());
+				event.setEventTitle(data.getEventTitle());
+				event.setEventPrice(data.getEventPrice());
+				event.setEventTimeStart(data.getEventTimeStart());
+				event.setEventTimeEnd(data.getEventTimeEnd());
+				event.setEventDateStart(data.getEventDateStart());
+				event.setEventDateEnd(data.getEventDateEnd());
+				event.setIsApprove(data.getIsApprove());
+				event.setUpdatedBy(getId());
+				event.setVersion(data.getVersion());
 
 				if (data.getIsActive() != null) {
-					user.setIsActive(data.getIsActive());
+					event.setIsActive(data.getIsActive());
 				}
 
 				begin();
-				User userUpdate = userDao.save(user);
+				Event eventUpdate = eventDao.save(event);
 				commit();
 
-				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
-				dataDto.setVersion(userUpdate.getVersion());
+				UpdateEventDtoDataRes dataDto = new UpdateEventDtoDataRes();
+				dataDto.setVersion(eventUpdate.getVersion());
 
 				update.setData(dataDto);
 				update.setMsg("Update Success");
@@ -182,11 +221,11 @@ public class EventServiceImpl extends BaseService implements EventService {
 	
 	@Override
 	public DeleteByEventIdDtoRes deleteById(String id) throws Exception {
-		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+		DeleteByEventIdDtoRes deleteById = new DeleteByEventIdDtoRes();
 
 		try {
 			begin();
-			boolean isDeleted = userDao.deleteById(id);
+			boolean isDeleted = eventDao.deleteById(id);
 			commit();
 
 			if (isDeleted) {
@@ -202,14 +241,92 @@ public class EventServiceImpl extends BaseService implements EventService {
 	}
 	
 	@Override
-	public List<Event> findEnrollEvent(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public GetAllEventDtoRes findEnrollEvent(String id) throws Exception {
+		GetAllEventDtoRes getEnrollEvent = new GetAllEventDtoRes();
+
+		List<Event> events = eventDao.findEnrollEvent(id);
+		List<GetAllEventDtoDataRes> listEvent = new ArrayList<>();
+
+		for (int i = 0; i < events.size(); i++) {
+			Event event = events.get(i);
+			GetAllEventDtoDataRes data = new GetAllEventDtoDataRes();
+
+			data.setId(event.getId());
+			data.setEventCode(event.getEventCode());
+			data.setEventTitle(event.getEventTitle());
+			data.setEventProvider(event.getEventProvider());
+			data.setEventPrice(event.getEventPrice());
+			data.setEventTimeStart(event.getEventTimeStart());
+			data.setEventTimeEnd(event.getEventTimeEnd());
+			data.setEventDateStart(event.getEventDateStart());
+			data.setEventDateEnd(event.getEventDateEnd());
+			data.setIsApprove(event.getIsApprove());
+			data.setCategoryId(event.getCategoryId().getId());
+			data.setCategoryName(event.getCategoryId().getCategoryName());
+			data.setTypeId(event.getTypeId().getId());
+			data.setTypeName(event.getTypeId().getTypeName());
+			data.setPriceId(event.getPriceId().getId());
+			data.setPriceName(event.getPriceId().getPriceName());
+			
+			if(event.getAttachmentId() != null) {
+				data.setAttachmentId(event.getAttachmentId().getId());
+				data.setAttachmentExtension(event.getAttachmentId().getAttachmentExtension());
+			}
+			
+			data.setVersion(event.getVersion());
+			data.setIsActive(event.getIsActive());
+
+			listEvent.add(data);
+		}
+
+		getEnrollEvent.setData(listEvent);
+		getEnrollEvent.setMsg(null);
+
+		return getEnrollEvent;
 	}
 	
 	@Override
-	public List<Event> findNotEnrollEvent(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public GetAllEventDtoRes findNotEnrollEvent(String id) throws Exception {
+		GetAllEventDtoRes getNotEnrollEvent = new GetAllEventDtoRes();
+
+		List<Event> events = eventDao.findNotEnrollEvent(id);
+		List<GetAllEventDtoDataRes> listEvent = new ArrayList<>();
+
+		for (int i = 0; i < events.size(); i++) {
+			Event event = events.get(i);
+			GetAllEventDtoDataRes data = new GetAllEventDtoDataRes();
+
+			data.setId(event.getId());
+			data.setEventCode(event.getEventCode());
+			data.setEventTitle(event.getEventTitle());
+			data.setEventProvider(event.getEventProvider());
+			data.setEventPrice(event.getEventPrice());
+			data.setEventTimeStart(event.getEventTimeStart());
+			data.setEventTimeEnd(event.getEventTimeEnd());
+			data.setEventDateStart(event.getEventDateStart());
+			data.setEventDateEnd(event.getEventDateEnd());
+			data.setIsApprove(event.getIsApprove());
+			data.setCategoryId(event.getCategoryId().getId());
+			data.setCategoryName(event.getCategoryId().getCategoryName());
+			data.setTypeId(event.getTypeId().getId());
+			data.setTypeName(event.getTypeId().getTypeName());
+			data.setPriceId(event.getPriceId().getId());
+			data.setPriceName(event.getPriceId().getPriceName());
+			
+			if(event.getAttachmentId() != null) {
+				data.setAttachmentId(event.getAttachmentId().getId());
+				data.setAttachmentExtension(event.getAttachmentId().getAttachmentExtension());
+			}
+			
+			data.setVersion(event.getVersion());
+			data.setIsActive(event.getIsActive());
+
+			listEvent.add(data);
+		}
+
+		getNotEnrollEvent.setData(listEvent);
+		getNotEnrollEvent.setMsg(null);
+
+		return getNotEnrollEvent;
 	}
 }
