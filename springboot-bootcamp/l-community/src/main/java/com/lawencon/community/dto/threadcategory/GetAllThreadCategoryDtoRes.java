@@ -1,8 +1,10 @@
 package com.lawencon.community.dto.threadcategory;
 
+import java.util.List;
+
 public class GetAllThreadCategoryDtoRes {
 	private String msg;
-	private GetAllThreadCategoryDtoDataRes data;
+	private List<GetAllThreadCategoryDtoDataRes> data;
 
 	public String getMsg() {
 		return msg;
@@ -12,11 +14,11 @@ public class GetAllThreadCategoryDtoRes {
 		this.msg = msg;
 	}
 
-	public GetAllThreadCategoryDtoDataRes getData() {
+	public List<GetAllThreadCategoryDtoDataRes> getData() {
 		return data;
 	}
 
-	public void setData(GetAllThreadCategoryDtoDataRes data) {
+	public void setData(List<GetAllThreadCategoryDtoDataRes> data) {
 		this.data = data;
 	}
 }

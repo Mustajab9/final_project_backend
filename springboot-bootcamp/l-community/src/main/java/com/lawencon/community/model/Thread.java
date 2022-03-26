@@ -38,34 +38,40 @@ public class Thread extends BaseEntity {
 	public String getThreadTitle() {
 		return threadTitle;
 	}
+
 	public void setThreadTitle(String threadTitle) {
 		this.threadTitle = threadTitle;
 	}
+
 	public String getThreadCode() {
 		return threadCode;
 	}
+
 	public void setThreadCode(String threadCode) {
 		this.threadCode = threadCode;
 	}
+
 	public String getThreadContent() {
 		return threadContent;
 	}
+
 	public void setThreadContent(String threadContent) {
 		this.threadContent = threadContent;
 	}
+
 	public Boolean getIsPremium() {
 		return isPremium;
 	}
+
 	public void setIsPremium(Boolean isPremium) {
 		this.isPremium = isPremium;
 	}
+
 	public ThreadType getTypeId() {
 		return typeId;
 	}
+
 	public void setTypeId(ThreadType typeId) {
 		this.typeId = typeId;
 	}
-	
-	
-	
 }

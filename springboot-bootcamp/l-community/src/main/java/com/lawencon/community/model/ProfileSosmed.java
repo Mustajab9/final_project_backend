@@ -25,15 +25,16 @@ public class ProfileSosmed extends BaseEntity {
 	public Profiles getProfileId() {
 		return profileId;
 	}
+
 	public void setProfileId(Profiles profileId) {
 		this.profileId = profileId;
 	}
+
 	public SocialMedia getSocialMediaId() {
 		return socialMediaId;
 	}
+
 	public void setSocialMediaId(SocialMedia socialMediaId) {
 		this.socialMediaId = socialMediaId;
-	}
-	
-	
+	}	
 }

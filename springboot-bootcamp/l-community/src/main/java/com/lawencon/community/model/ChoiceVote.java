@@ -25,15 +25,16 @@ public class ChoiceVote extends BaseEntity {
 	public String getVoteCode() {
 		return voteCode;
 	}
+
 	public void setVoteCode(String voteCode) {
 		this.voteCode = voteCode;
 	}
+
 	public PollingChoice getChoiceId() {
 		return choiceId;
 	}
+
 	public void setChoiceId(PollingChoice choiceId) {
 		this.choiceId = choiceId;
 	}
-	
-	
 }

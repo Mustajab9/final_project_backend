@@ -1,131 +1,150 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseServiceImpl;
+import com.lawencon.community.dao.PriceListMemberDao;
+import com.lawencon.community.dao.SubscriptionDao;
 import com.lawencon.community.dao.SubscriptionDetailDao;
-import com.lawencon.community.dao.UserDao;
-import com.lawencon.community.dto.attachment.InsertAttachmentDtoReq;
+import com.lawencon.community.dto.subscriptiondetail.GetAllSubscriptionDetailDtoDataRes;
 import com.lawencon.community.dto.subscriptiondetail.GetAllSubscriptionDetailDtoRes;
+import com.lawencon.community.dto.subscriptiondetail.GetBySubscriptionDetailIdDtoDataRes;
 import com.lawencon.community.dto.subscriptiondetail.GetBySubscriptionDetailIdDtoRes;
+import com.lawencon.community.dto.subscriptiondetail.GetSubscriptionDetailBySubscriptionDtoDataRes;
+import com.lawencon.community.dto.subscriptiondetail.GetSubscriptionDetailBySubscriptionDtoRes;
+import com.lawencon.community.dto.subscriptiondetail.InsertSubscriptionDetailDtoDataRes;
+import com.lawencon.community.dto.subscriptiondetail.InsertSubscriptionDetailDtoReq;
 import com.lawencon.community.dto.subscriptiondetail.InsertSubscriptionDetailDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.model.Role;
+import com.lawencon.community.model.PriceListMember;
+import com.lawencon.community.model.Subscription;
 import com.lawencon.community.model.SubscriptionDetail;
-import com.lawencon.community.model.User;
 import com.lawencon.community.service.SubscriptionDetailService;
 
 @Service
 public class SubscriptionDetailDaoImpl extends BaseService implements SubscriptionDetailService {
 	private SubscriptionDetailDao subscriptionDetailDao;
+	private SubscriptionDao subscriptionDao;
+	private PriceListMemberDao priceListMemberDao;
 
 	@Autowired
-	public SubscriptionDetailDaoImpl(SubscriptionDetailDao subscriptionDetailDao) {
+	public SubscriptionDetailDaoImpl(SubscriptionDetailDao subscriptionDetailDao, SubscriptionDao subscriptionDao,
+									PriceListMemberDao priceListMemberDao) {
 		this.subscriptionDetailDao = subscriptionDetailDao;
+		this.subscriptionDao = subscriptionDao;
+		this.priceListMemberDao = priceListMemberDao;
 	}
-	
+
 	@Override
 	public GetAllSubscriptionDetailDtoRes findAll() throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllSubscriptionDetailDtoRes getAll = new GetAllSubscriptionDetailDtoRes();
 
-		List<User> users = userDao.findAll();
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<SubscriptionDetail> details = subscriptionDetailDao.findAll();
+		List<GetAllSubscriptionDetailDtoDataRes> listDetail = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+		for (int i = 0; i < details.size(); i++) {
+			SubscriptionDetail detail = details.get(i);
+			GetAllSubscriptionDetailDtoDataRes data = new GetAllSubscriptionDetailDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(detail.getId());
+			data.setPriceId(detail.getPriceId().getId());
+			data.setPriceCode(detail.getPriceId().getPriceCode());
+			data.setPriceNominal(detail.getPriceId().getPriceNominal());
+			data.setDuration(detail.getPriceId().getDuration());
+			data.setSubscriptionId(detail.getSubscriptionId().getId());
+			data.setSubscriptionCode(detail.getSubscriptionId().getSubscriptionCode());
+			data.setSubscriptionDuration(detail.getSubscriptionId().getSubscriptionDuration());
+			data.setIsApprove(detail.getSubscriptionId().getIsApprove());
+			data.setProfileId(detail.getSubscriptionId().getProfileId().getId());
+			data.setProfileCode(detail.getSubscriptionId().getProfileId().getProfileCode());
+			data.setProfileName(detail.getSubscriptionId().getProfileId().getProfileName());
+			data.setProfileCompany(detail.getSubscriptionId().getProfileId().getProfileCompany());
+			data.setProfilePortalCode(detail.getSubscriptionId().getProfileId().getProfilePortalCode());
+			data.setUserId(detail.getSubscriptionId().getProfileId().getUserId().getId());
+			data.setEmail(detail.getSubscriptionId().getProfileId().getUserId().getEmail());
+			data.setVersion(detail.getVersion());
+			data.setIsActive(detail.getIsActive());
 
-			listUser.add(data);
+			listDetail.add(data);
 		}
 
-		getAll.setData(listUser);
+		getAll.setData(listDetail);
 		getAll.setMsg(null);
 
 		return getAll;
 	}
-	
+
 	@Override
 	public GetBySubscriptionDetailIdDtoRes findById(String id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+		GetBySubscriptionDetailIdDtoRes getById = new GetBySubscriptionDetailIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		SubscriptionDetail detail = subscriptionDetailDao.findById(id);
+		GetBySubscriptionDetailIdDtoDataRes data = new GetBySubscriptionDetailIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setId(detail.getId());
+		data.setPriceId(detail.getPriceId().getId());
+		data.setPriceCode(detail.getPriceId().getPriceCode());
+		data.setPriceNominal(detail.getPriceId().getPriceNominal());
+		data.setDuration(detail.getPriceId().getDuration());
+		data.setSubscriptionId(detail.getSubscriptionId().getId());
+		data.setSubscriptionCode(detail.getSubscriptionId().getSubscriptionCode());
+		data.setSubscriptionDuration(detail.getSubscriptionId().getSubscriptionDuration());
+		data.setIsApprove(detail.getSubscriptionId().getIsApprove());
+		data.setProfileId(detail.getSubscriptionId().getProfileId().getId());
+		data.setProfileCode(detail.getSubscriptionId().getProfileId().getProfileCode());
+		data.setProfileName(detail.getSubscriptionId().getProfileId().getProfileName());
+		data.setProfileCompany(detail.getSubscriptionId().getProfileId().getProfileCompany());
+		data.setProfilePortalCode(detail.getSubscriptionId().getProfileId().getProfilePortalCode());
+		data.setUserId(detail.getSubscriptionId().getProfileId().getUserId().getId());
+		data.setEmail(detail.getSubscriptionId().getProfileId().getUserId().getEmail());
+		data.setVersion(detail.getVersion());
+		data.setIsActive(detail.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
 
 		return getById;
 	}
-	
+
 	@Override
-	public InsertSubscriptionDetailDtoRes insert(InsertAttachmentDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+	public InsertSubscriptionDetailDtoRes insert(InsertSubscriptionDetailDtoReq data) throws Exception {
+		InsertSubscriptionDetailDtoRes insert = new InsertSubscriptionDetailDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
+			SubscriptionDetail detail = new SubscriptionDetail();
 
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
+			Subscription subscription = subscriptionDao.findById(data.getSubscriptionId());
+			detail.setSubscriptionId(subscription);
+			
+			PriceListMember priceListMember = priceListMemberDao.findById(data.getPriceId());
+			detail.setPriceId(priceListMember);
+			detail.setCreatedBy(getId());
 
 			begin();
-			User insertUser = userDao.save(user);
+			SubscriptionDetail detailInsert = subscriptionDetailDao.save(detail);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
+			InsertSubscriptionDetailDtoDataRes dataDto = new InsertSubscriptionDetailDtoDataRes();
+			dataDto.setId(detailInsert.getId());
+			
+			if(detailInsert != null) {
+				Integer LenghtDay = priceListMember.getDuration();
+				if(subscription.getSubscriptionDuration().compareTo(new Date()) <= 0){
+					java.sql.Date date = subscription.getSubscriptionDuration();
+					
+					begin();
+					subscriptionDao.update(date, LenghtDay, subscription.getId());
+					commit();
+					
+				}else {
+					begin();
+					subscriptionDao.update(new Date(), LenghtDay, subscription.getId());
+					commit();
+				}
+			}
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
@@ -137,10 +156,49 @@ public class SubscriptionDetailDaoImpl extends BaseService implements Subscripti
 
 		return insert;
 	}
-	
+
 	@Override
-	public List<SubscriptionDetail> findBySubscription(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public GetSubscriptionDetailBySubscriptionDtoRes findBySubscription(String id) throws Exception {
+		GetSubscriptionDetailBySubscriptionDtoRes getBySubscription = new GetSubscriptionDetailBySubscriptionDtoRes();
+
+		List<SubscriptionDetail> details = subscriptionDetailDao.findBySubscription(id);
+		List<GetSubscriptionDetailBySubscriptionDtoDataRes> listDetail = new ArrayList<>();
+
+		for (int i = 0; i < details.size(); i++) {
+			SubscriptionDetail detail = details.get(i);
+			GetSubscriptionDetailBySubscriptionDtoDataRes data = new GetSubscriptionDetailBySubscriptionDtoDataRes();
+
+			data.setId(detail.getId());
+			data.setPriceId(detail.getPriceId().getId());
+			data.setPriceCode(detail.getPriceId().getPriceCode());
+			data.setPriceNominal(detail.getPriceId().getPriceNominal());
+			data.setDuration(detail.getPriceId().getDuration());
+			data.setSubscriptionId(detail.getSubscriptionId().getId());
+			data.setSubscriptionCode(detail.getSubscriptionId().getSubscriptionCode());
+			data.setSubscriptionDuration(detail.getSubscriptionId().getSubscriptionDuration());
+			data.setIsApprove(detail.getSubscriptionId().getIsApprove());
+			data.setProfileId(detail.getSubscriptionId().getProfileId().getId());
+			data.setProfileCode(detail.getSubscriptionId().getProfileId().getProfileCode());
+			data.setProfileName(detail.getSubscriptionId().getProfileId().getProfileName());
+			data.setProfileCompany(detail.getSubscriptionId().getProfileId().getProfileCompany());
+			data.setProfilePortalCode(detail.getSubscriptionId().getProfileId().getProfilePortalCode());
+			
+			if(detail.getSubscriptionId().getProfileId().getProfileImage() != null) {
+				data.setProfileImage(detail.getSubscriptionId().getProfileId().getProfileImage().getId());
+				data.setAttachmentExtension(detail.getSubscriptionId().getProfileId().getProfileImage().getAttachmentExtension());
+			}
+			
+			data.setUserId(detail.getSubscriptionId().getProfileId().getUserId().getId());
+			data.setEmail(detail.getSubscriptionId().getProfileId().getUserId().getEmail());
+			data.setVersion(detail.getVersion());
+			data.setIsActive(detail.getIsActive());
+
+			listDetail.add(data);
+		}
+
+		getBySubscription.setData(listDetail);
+		getBySubscription.setMsg(null);
+
+		return getBySubscription;
 	}
 }

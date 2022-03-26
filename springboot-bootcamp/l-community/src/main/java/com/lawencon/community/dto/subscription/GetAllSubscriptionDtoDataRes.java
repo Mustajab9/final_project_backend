@@ -11,7 +11,7 @@ public class GetAllSubscriptionDtoDataRes {
 	private String profileCode;
 	private String profileName;
 	private String profileCompany;
-	private String profilePortalCode;
+	private Integer profilePortalCode;
 	private String userId;
 	private String email;
 	private Integer version;
@@ -81,11 +81,11 @@ public class GetAllSubscriptionDtoDataRes {
 		this.profileCompany = profileCompany;
 	}
 
-	public String getProfilePortalCode() {
+	public Integer getProfilePortalCode() {
 		return profilePortalCode;
 	}
 
-	public void setProfilePortalCode(String profilePortalCode) {
+	public void setProfilePortalCode(Integer profilePortalCode) {
 		this.profilePortalCode = profilePortalCode;
 	}
 

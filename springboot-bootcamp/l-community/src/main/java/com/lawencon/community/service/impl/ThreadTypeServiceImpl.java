@@ -1,38 +1,24 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseServiceImpl;
 import com.lawencon.community.dao.ThreadTypeDao;
-import com.lawencon.community.dao.UserDao;
 import com.lawencon.community.dto.threadtype.DeleteByThreadTypeIdDtoRes;
+import com.lawencon.community.dto.threadtype.GetAllThreadTypeDtoDataRes;
 import com.lawencon.community.dto.threadtype.GetAllThreadTypeDtoRes;
+import com.lawencon.community.dto.threadtype.GetByThreadTypeIdDtoDataRes;
 import com.lawencon.community.dto.threadtype.GetByThreadTypeIdDtoRes;
+import com.lawencon.community.dto.threadtype.InsertThreadTypeDtoDataRes;
 import com.lawencon.community.dto.threadtype.InsertThreadTypeDtoReq;
 import com.lawencon.community.dto.threadtype.InsertThreadTypeDtoRes;
+import com.lawencon.community.dto.threadtype.UpdateThreadTypeDtoDataRes;
 import com.lawencon.community.dto.threadtype.UpdateThreadTypeDtoReq;
 import com.lawencon.community.dto.threadtype.UpdateThreadTypeDtoRes;
-import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
-import com.lawencon.community.dto.user.UpdateUserDtoRes;
-import com.lawencon.community.model.Role;
-import com.lawencon.community.model.User;
+import com.lawencon.community.model.ThreadType;
 import com.lawencon.community.service.ThreadTypeService;
 
 @Service
@@ -46,22 +32,20 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 	
 	@Override
 	public GetAllThreadTypeDtoRes findAll(int startPage, int maxPage) throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllThreadTypeDtoRes getAll = new GetAllThreadTypeDtoRes();
 
-		List<User> users = userDao.findAll(startPage, maxPage);
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<ThreadType> types = typeDao.findAll(startPage, maxPage);
+		List<GetAllThreadTypeDtoDataRes> listUser = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+		for (int i = 0; i < types.size(); i++) {
+			ThreadType threadType = types.get(i);
+			GetAllThreadTypeDtoDataRes data = new GetAllThreadTypeDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(threadType.getId());
+			data.setTypeCode(threadType.getTypeCode());
+			data.setTypeName(threadType.getTypeName());
+			data.setVersion(threadType.getVersion());
+			data.setIsActive(threadType.getIsActive());
 
 			listUser.add(data);
 		}
@@ -74,18 +58,16 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 	
 	@Override
 	public GetByThreadTypeIdDtoRes findById(String id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+		GetByThreadTypeIdDtoRes getById = new GetByThreadTypeIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		ThreadType threadType = typeDao.findById(id);
+		GetByThreadTypeIdDtoDataRes data = new GetByThreadTypeIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setId(threadType.getId());
+		data.setTypeCode(threadType.getTypeCode());
+		data.setTypeName(threadType.getTypeName());
+		data.setVersion(threadType.getVersion());
+		data.setIsActive(threadType.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -95,41 +77,20 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 	
 	@Override
 	public InsertThreadTypeDtoRes insert(InsertThreadTypeDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+		InsertThreadTypeDtoRes insert = new InsertThreadTypeDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
+			ThreadType threadType = new ThreadType();
 
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
+			threadType.setTypeCode(data.getTypeCode());
+			threadType.setTypeName(data.getTypeName());
+			threadType.setCreatedBy(getId());
 
 			begin();
-			User insertUser = userDao.save(user);
+			ThreadType insertUser = typeDao.save(threadType);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
+			InsertThreadTypeDtoDataRes dataDto = new InsertThreadTypeDtoDataRes();
 			dataDto.setId(insertUser.getId());
 
 			insert.setData(dataDto);
@@ -145,27 +106,26 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 	
 	@Override
 	public UpdateThreadTypeDtoRes update(UpdateThreadTypeDtoReq data) throws Exception {
-		UpdateUserDtoRes update = new UpdateUserDtoRes();
+		UpdateThreadTypeDtoRes update = new UpdateThreadTypeDtoRes();
 
 		try {
 			if (data.getVersion() != null) {
-				User user = userDao.findById(data.getId());
+				ThreadType threadType = typeDao.findById(data.getId());
 
-				user.setEmail(data.getEmail());
-				user.setVersion(data.getVersion());
-
-				user.setUpdatedBy(getId());
+				threadType.setTypeName(data.getTypeName());
+				threadType.setVersion(data.getVersion());
+				threadType.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {
-					user.setIsActive(data.getIsActive());
+					threadType.setIsActive(data.getIsActive());
 				}
 
 				begin();
-				User userUpdate = userDao.save(user);
+				ThreadType threadTypeUpdate = typeDao.save(threadType);
 				commit();
 
-				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
-				dataDto.setVersion(userUpdate.getVersion());
+				UpdateThreadTypeDtoDataRes dataDto = new UpdateThreadTypeDtoDataRes();
+				dataDto.setVersion(threadTypeUpdate.getVersion());
 
 				update.setData(dataDto);
 				update.setMsg("Update Success");
@@ -181,11 +141,11 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 	
 	@Override
 	public DeleteByThreadTypeIdDtoRes deleteById(String id) throws Exception {
-		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+		DeleteByThreadTypeIdDtoRes deleteById = new DeleteByThreadTypeIdDtoRes();
 
 		try {
 			begin();
-			boolean isDeleted = userDao.deleteById(id);
+			boolean isDeleted = typeDao.deleteById(id);
 			commit();
 
 			if (isDeleted) {

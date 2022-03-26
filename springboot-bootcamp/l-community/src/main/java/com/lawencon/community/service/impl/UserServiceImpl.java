@@ -164,7 +164,6 @@ public class UserServiceImpl extends BaseService implements UserService {
 
 				user.setEmail(data.getEmail());
 				user.setVersion(data.getVersion());
-
 				user.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {

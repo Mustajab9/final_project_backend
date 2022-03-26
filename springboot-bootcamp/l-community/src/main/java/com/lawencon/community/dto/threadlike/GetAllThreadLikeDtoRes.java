@@ -1,8 +1,10 @@
 package com.lawencon.community.dto.threadlike;
 
+import java.util.List;
+
 public class GetAllThreadLikeDtoRes {
 	private String msg;
-	private GetAllThreadLikeDtoDataRes data;
+	private List<GetAllThreadLikeDtoDataRes> data;
 
 	public String getMsg() {
 		return msg;
@@ -12,11 +14,11 @@ public class GetAllThreadLikeDtoRes {
 		this.msg = msg;
 	}
 
-	public GetAllThreadLikeDtoDataRes getData() {
+	public List<GetAllThreadLikeDtoDataRes> getData() {
 		return data;
 	}
 
-	public void setData(GetAllThreadLikeDtoDataRes data) {
+	public void setData(List<GetAllThreadLikeDtoDataRes> data) {
 		this.data = data;
 	}
 }

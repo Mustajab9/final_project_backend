@@ -1,37 +1,26 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.community.dao.RoleDao;
 import com.lawencon.community.dto.role.DeleteByRoleIdDtoRes;
+import com.lawencon.community.dto.role.GetAllRoleDtoDataRes;
 import com.lawencon.community.dto.role.GetAllRoleDtoRes;
+import com.lawencon.community.dto.role.GetByRoleCodeDtoDataRes;
 import com.lawencon.community.dto.role.GetByRoleCodeDtoRes;
+import com.lawencon.community.dto.role.GetByRoleIdDtoDataRes;
 import com.lawencon.community.dto.role.GetByRoleIdDtoRes;
+import com.lawencon.community.dto.role.InsertRoleDtoDataRes;
 import com.lawencon.community.dto.role.InsertRoleDtoReq;
 import com.lawencon.community.dto.role.InsertRoleDtoRes;
+import com.lawencon.community.dto.role.UpdateRoleDtoDataRes;
 import com.lawencon.community.dto.role.UpdateRoleDtoReq;
 import com.lawencon.community.dto.role.UpdateRoleDtoRes;
-import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
-import com.lawencon.community.dto.user.UpdateUserDtoRes;
 import com.lawencon.community.model.Role;
-import com.lawencon.community.model.User;
 import com.lawencon.community.service.RoleService;
 
 @Service
@@ -45,46 +34,42 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	
 	@Override
 	public GetAllRoleDtoRes findAll(int startPage, int maxPage) throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllRoleDtoRes getAll = new GetAllRoleDtoRes();
 
-		List<User> users = userDao.findAll(startPage, maxPage);
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<Role> roles = roleDao.findAll(startPage, maxPage);
+		List<GetAllRoleDtoDataRes> roleList = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+		for (int i = 0; i < roles.size(); i++) {
+			Role role = roles.get(i);
+			GetAllRoleDtoDataRes data = new GetAllRoleDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(role.getId());
+			data.setRoleName(role.getRoleName());
+			data.setRoleCode(role.getRoleCode());
+			data.setVersion(role.getVersion());
+			data.setIsActive(role.getIsActive());
 
-			listUser.add(data);
+			roleList.add(data);
 		}
 
-		getAll.setData(listUser);
+		getAll.setData(roleList);
 		getAll.setMsg(null);
 
 		return getAll;
 	}
 	
 	@Override
-	public GetByRoleIdDtoRes findById(Long id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+	public GetByRoleIdDtoRes findById(String id) throws Exception {
+		GetByRoleIdDtoRes getById = new GetByRoleIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		Role role = roleDao.findById(id);
+		GetByRoleIdDtoDataRes data = new GetByRoleIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setId(role.getId());
+		data.setRoleName(role.getRoleName());
+		data.setRoleCode(role.getRoleCode());
+		data.setVersion(role.getVersion());
+		data.setIsActive(role.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -94,42 +79,19 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	
 	@Override
 	public InsertRoleDtoRes insert(InsertRoleDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+		InsertRoleDtoRes insert = new InsertRoleDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
-
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
-
+			Role role = new Role();
+			role.setRoleName(data.getRoleName());
+			role.setRoleCode(data.getRoleCode());
+			
 			begin();
-			User insertUser = userDao.save(user);
+			Role roleInsert = roleDao.save(role);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
+			InsertRoleDtoDataRes dataDto = new InsertRoleDtoDataRes();
+			dataDto.setId(roleInsert.getId());
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
@@ -144,27 +106,27 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	
 	@Override
 	public UpdateRoleDtoRes update(UpdateRoleDtoReq data) throws Exception {
-		UpdateUserDtoRes update = new UpdateUserDtoRes();
+		UpdateRoleDtoRes update = new UpdateRoleDtoRes();
 
 		try {
 			if (data.getVersion() != null) {
-				User user = userDao.findById(data.getId());
+				Role role = roleDao.findById(data.getId());
 
-				user.setEmail(data.getEmail());
-				user.setVersion(data.getVersion());
+				role.setRoleName(data.getRoleName());
+				role.setVersion(data.getVersion());
 
-				user.setUpdatedBy(getId());
+				role.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {
-					user.setIsActive(data.getIsActive());
+					role.setIsActive(data.getIsActive());
 				}
 
 				begin();
-				User userUpdate = userDao.save(user);
+				Role roleUpdate = roleDao.save(role);
 				commit();
 
-				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
-				dataDto.setVersion(userUpdate.getVersion());
+				UpdateRoleDtoDataRes dataDto = new UpdateRoleDtoDataRes();
+				dataDto.setVersion(roleUpdate.getVersion());
 
 				update.setData(dataDto);
 				update.setMsg("Update Success");
@@ -179,12 +141,12 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	}
 	
 	@Override
-	public DeleteByRoleIdDtoRes deleteById(Long id) throws Exception {
-		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+	public DeleteByRoleIdDtoRes deleteById(String id) throws Exception {
+		DeleteByRoleIdDtoRes deleteById = new DeleteByRoleIdDtoRes();
 
 		try {
 			begin();
-			boolean isDeleted = userDao.deleteById(id);
+			boolean isDeleted = roleDao.deleteById(id);
 			commit();
 
 			if (isDeleted) {
@@ -201,7 +163,20 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	
 	@Override
 	public GetByRoleCodeDtoRes findIdByCode(String code) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		GetByRoleCodeDtoRes getById = new GetByRoleCodeDtoRes();
+
+		Role role = roleDao.findByCode(code);
+		GetByRoleCodeDtoDataRes data = new GetByRoleCodeDtoDataRes();
+
+		data.setId(role.getId());
+		data.setRoleName(role.getRoleName());
+		data.setRoleCode(role.getRoleCode());
+		data.setVersion(role.getVersion());
+		data.setIsActive(role.getIsActive());
+
+		getById.setData(data);
+		getById.setMsg(null);
+
+		return getById;
 	}
 }

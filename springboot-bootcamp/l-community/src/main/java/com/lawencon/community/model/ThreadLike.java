@@ -27,15 +27,16 @@ public class ThreadLike extends BaseEntity {
 	public String getLikeCode() {
 		return likeCode;
 	}
+
 	public void setLikeCode(String likeCode) {
 		this.likeCode = likeCode;
 	}
+
 	public Thread getThreadId() {
 		return threadId;
 	}
+
 	public void setThreadId(Thread threadId) {
 		this.threadId = threadId;
 	}
-	
-	
 }

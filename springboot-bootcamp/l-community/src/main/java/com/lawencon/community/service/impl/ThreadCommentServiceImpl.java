@@ -1,62 +1,57 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.community.dao.ThreadCommentDao;
+import com.lawencon.community.dao.ThreadDao;
 import com.lawencon.community.dto.threadcomment.DeleteByThreadCommentIdDtoRes;
+import com.lawencon.community.dto.threadcomment.GetAllThreadCommentDtoDataRes;
 import com.lawencon.community.dto.threadcomment.GetAllThreadCommentDtoRes;
+import com.lawencon.community.dto.threadcomment.GetByThreadCommentIdDtoDataRes;
 import com.lawencon.community.dto.threadcomment.GetByThreadCommentIdDtoRes;
+import com.lawencon.community.dto.threadcomment.GetThreadCommentByThreadDtoDataRes;
+import com.lawencon.community.dto.threadcomment.GetThreadCommentByThreadDtoRes;
+import com.lawencon.community.dto.threadcomment.InsertThreadCommentDtoDataRes;
 import com.lawencon.community.dto.threadcomment.InsertThreadCommentDtoReq;
 import com.lawencon.community.dto.threadcomment.InsertThreadCommentDtoRes;
-import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.model.Role;
+import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadComment;
-import com.lawencon.community.model.User;
 import com.lawencon.community.service.ThreadCommentService;
 
 @Service
 public class ThreadCommentServiceImpl extends BaseService implements ThreadCommentService {
 	private ThreadCommentDao threadCommentDao;
+	private ThreadDao threadDao;
 
 	@Autowired
-	public ThreadCommentServiceImpl(ThreadCommentDao threadCommentDao) {
+	public ThreadCommentServiceImpl(ThreadCommentDao threadCommentDao, ThreadDao threadDao) {
 		this.threadCommentDao = threadCommentDao;
+		this.threadDao = threadDao;
 	}
 	
 	@Override
 	public GetAllThreadCommentDtoRes findAll() throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllThreadCommentDtoRes getAll = new GetAllThreadCommentDtoRes();
 
-		List<User> users = userDao.findAll();
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<ThreadComment> threadComments = threadCommentDao.findAll();
+		List<GetAllThreadCommentDtoDataRes> listUser = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+		for (int i = 0; i < threadComments.size(); i++) {
+			ThreadComment threadComment = threadComments.get(i);
+			GetAllThreadCommentDtoDataRes data = new GetAllThreadCommentDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(threadComment.getId());
+			data.setCommentCode(threadComment.getCommentCode());
+			data.setCommentContent(threadComment.getCommentContent());
+			data.setThreadId(threadComment.getThreadId().getId());
+			data.setThreadTitle(threadComment.getThreadId().getThreadTitle());
+			data.setThreadContent(threadComment.getThreadId().getThreadContent());
+			data.setVersion(threadComment.getVersion());
+			data.setIsActive(threadComment.getIsActive());
 
 			listUser.add(data);
 		}
@@ -69,18 +64,19 @@ public class ThreadCommentServiceImpl extends BaseService implements ThreadComme
 	
 	@Override
 	public GetByThreadCommentIdDtoRes findById(String id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+		GetByThreadCommentIdDtoRes getById = new GetByThreadCommentIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		ThreadComment threadComment = threadCommentDao.findById(id);
+		GetByThreadCommentIdDtoDataRes data = new GetByThreadCommentIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setId(threadComment.getId());
+		data.setCommentCode(threadComment.getCommentCode());
+		data.setCommentContent(threadComment.getCommentContent());
+		data.setThreadId(threadComment.getThreadId().getId());
+		data.setThreadTitle(threadComment.getThreadId().getThreadTitle());
+		data.setThreadContent(threadComment.getThreadId().getThreadContent());
+		data.setVersion(threadComment.getVersion());
+		data.setIsActive(threadComment.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -90,42 +86,25 @@ public class ThreadCommentServiceImpl extends BaseService implements ThreadComme
 	
 	@Override
 	public InsertThreadCommentDtoRes insert(InsertThreadCommentDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+		InsertThreadCommentDtoRes insert = new InsertThreadCommentDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
-
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
+			ThreadComment threadComment = new ThreadComment();
+			String code = getAlphaNumericString(5);
+			
+			threadComment.setCommentCode(code);
+			threadComment.setCommentContent(data.getCommentContent());
+			
+			Thread thread = threadDao.findById(data.getThreadId());
+			threadComment.setThreadId(thread);
+			threadComment.setCreatedBy(getId());
 
 			begin();
-			User insertUser = userDao.save(user);
+			ThreadComment threadCommentInsert = threadCommentDao.save(threadComment);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
+			InsertThreadCommentDtoDataRes dataDto = new InsertThreadCommentDtoDataRes();
+			dataDto.setId(threadCommentInsert.getId());
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
@@ -140,11 +119,11 @@ public class ThreadCommentServiceImpl extends BaseService implements ThreadComme
 	
 	@Override
 	public DeleteByThreadCommentIdDtoRes delete(String id) throws Exception {
-		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+		DeleteByThreadCommentIdDtoRes deleteById = new DeleteByThreadCommentIdDtoRes();
 
 		try {
 			begin();
-			boolean isDeleted = userDao.deleteById(id);
+			boolean isDeleted = threadCommentDao.deleteById(id);
 			commit();
 
 			if (isDeleted) {
@@ -160,8 +139,36 @@ public class ThreadCommentServiceImpl extends BaseService implements ThreadComme
 	}
 	
 	@Override
-	public List<ThreadComment> findByThread(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public GetThreadCommentByThreadDtoRes findByThread(String id) throws Exception {
+		GetThreadCommentByThreadDtoRes getByThread = new GetThreadCommentByThreadDtoRes();
+
+		List<ThreadComment> threadComments = threadCommentDao.findByThread(id);
+		List<GetThreadCommentByThreadDtoDataRes> listThreadComment = new ArrayList<>();
+
+		for (int i = 0; i < threadComments.size(); i++) {
+			ThreadComment threadComment = threadComments.get(i);
+			GetThreadCommentByThreadDtoDataRes data = new GetThreadCommentByThreadDtoDataRes();
+
+			data.setId(threadComment.getId());
+			data.setCommentCode(threadComment.getCommentCode());
+			data.setCommentContent(threadComment.getCommentContent());
+			data.setThreadId(threadComment.getThreadId().getId());
+			data.setThreadCode(threadComment.getThreadId().getThreadCode());
+			data.setThreadTitle(threadComment.getThreadId().getThreadTitle());
+			data.setThreadContent(threadComment.getThreadId().getThreadContent());
+			data.setIsPremium(threadComment.getThreadId().getIsPremium());
+			data.setTypeId(threadComment.getThreadId().getTypeId().getId());
+			data.setTypeCode(threadComment.getThreadId().getTypeId().getTypeCode());
+			data.setTypeName(threadComment.getThreadId().getTypeId().getTypeName());
+			data.setVersion(threadComment.getVersion());
+			data.setIsActive(threadComment.getIsActive());
+
+			listThreadComment.add(data);
+		}
+
+		getByThread.setData(listThreadComment);
+		getByThread.setMsg(null);
+
+		return getByThread;
 	}
 }

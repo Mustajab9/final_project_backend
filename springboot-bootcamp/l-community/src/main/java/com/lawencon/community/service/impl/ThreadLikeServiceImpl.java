@@ -1,67 +1,61 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.dao.ThreadDao;
 import com.lawencon.community.dao.ThreadLikeDao;
 import com.lawencon.community.dto.threadlike.DeleteByThreadLikeIdDtoRes;
+import com.lawencon.community.dto.threadlike.GetAllThreadLikeDtoDataRes;
 import com.lawencon.community.dto.threadlike.GetAllThreadLikeDtoRes;
+import com.lawencon.community.dto.threadlike.GetByThreadLikeIdDtoDataRes;
 import com.lawencon.community.dto.threadlike.GetByThreadLikeIdDtoRes;
+import com.lawencon.community.dto.threadlike.GetThreadLikeByThreadDtoDataRes;
+import com.lawencon.community.dto.threadlike.GetThreadLikeByThreadDtoRes;
+import com.lawencon.community.dto.threadlike.InsertThreadLikeDtoDataRes;
 import com.lawencon.community.dto.threadlike.InsertThreadLikeDtoReq;
 import com.lawencon.community.dto.threadlike.InsertThreadLikeDtoRes;
-import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.model.Role;
+import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadLike;
-import com.lawencon.community.model.User;
 import com.lawencon.community.service.ThreadLikeService;
 
 @Service
 public class ThreadLikeServiceImpl extends BaseService implements ThreadLikeService {
 	private ThreadLikeDao threadLikeDao;
+	private ThreadDao threadDao;
 
 	@Autowired
-	public ThreadLikeServiceImpl(ThreadLikeDao threadLikeDao) {
+	public ThreadLikeServiceImpl(ThreadLikeDao threadLikeDao, ThreadDao threadDao) {
 		this.threadLikeDao = threadLikeDao;
+		this.threadDao = threadDao;
 	}
 	
 	@Override
 	public GetAllThreadLikeDtoRes findAll() throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllThreadLikeDtoRes getAll = new GetAllThreadLikeDtoRes();
 
-		List<User> users = userDao.findAll();
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<ThreadLike> threadLikes = threadLikeDao.findAll();
+		List<GetAllThreadLikeDtoDataRes> listThreadLike = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+		for (int i = 0; i < threadLikes.size(); i++) {
+			ThreadLike threadLike = threadLikes.get(i);
+			GetAllThreadLikeDtoDataRes data = new GetAllThreadLikeDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(threadLike.getId());
+			data.setLikeCode(threadLike.getLikeCode());
+			data.setThreadId(threadLike.getThreadId().getId());
+			data.setThreadTitle(threadLike.getThreadId().getThreadTitle());
+			data.setThreadContent(threadLike.getThreadId().getThreadContent());
+			data.setVersion(threadLike.getVersion());
+			data.setIsActive(threadLike.getIsActive());
 
-			listUser.add(data);
+			listThreadLike.add(data);
 		}
 
-		getAll.setData(listUser);
+		getAll.setData(listThreadLike);
 		getAll.setMsg(null);
 
 		return getAll;
@@ -69,18 +63,18 @@ public class ThreadLikeServiceImpl extends BaseService implements ThreadLikeServ
 	
 	@Override
 	public GetByThreadLikeIdDtoRes findById(String id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+		GetByThreadLikeIdDtoRes getById = new GetByThreadLikeIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		ThreadLike threadLike = threadLikeDao.findById(id);
+		GetByThreadLikeIdDtoDataRes data = new GetByThreadLikeIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setId(threadLike.getId());
+		data.setLikeCode(threadLike.getLikeCode());
+		data.setThreadId(threadLike.getThreadId().getId());
+		data.setThreadTitle(threadLike.getThreadId().getThreadTitle());
+		data.setThreadContent(threadLike.getThreadId().getThreadContent());
+		data.setVersion(threadLike.getVersion());
+		data.setIsActive(threadLike.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -90,42 +84,24 @@ public class ThreadLikeServiceImpl extends BaseService implements ThreadLikeServ
 	
 	@Override
 	public InsertThreadLikeDtoRes insert(InsertThreadLikeDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+		InsertThreadLikeDtoRes insert = new InsertThreadLikeDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
-
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
+			ThreadLike threadLike = new ThreadLike();
+			String code = getAlphaNumericString(5);
+			
+			threadLike.setLikeCode(code);
+			
+			Thread thread = threadDao.findById(data.getThreadId());
+			threadLike.setThreadId(thread);
+			threadLike.setCreatedBy(getId());
 
 			begin();
-			User insertUser = userDao.save(user);
+			ThreadLike threadLikeInsert = threadLikeDao.save(threadLike);
 			commit();
-
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
+			
+			InsertThreadLikeDtoDataRes dataDto = new InsertThreadLikeDtoDataRes();
+			dataDto.setId(threadLikeInsert.getId());
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
@@ -140,11 +116,11 @@ public class ThreadLikeServiceImpl extends BaseService implements ThreadLikeServ
 	
 	@Override
 	public DeleteByThreadLikeIdDtoRes deleteById(String id) throws Exception {
-		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+		DeleteByThreadLikeIdDtoRes deleteById = new DeleteByThreadLikeIdDtoRes();
 
 		try {
 			begin();
-			boolean isDeleted = userDao.deleteById(id);
+			boolean isDeleted = threadLikeDao.deleteById(id);
 			commit();
 
 			if (isDeleted) {
@@ -160,8 +136,35 @@ public class ThreadLikeServiceImpl extends BaseService implements ThreadLikeServ
 	}
 	
 	@Override
-	public List<ThreadLike> findByUser(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public GetThreadLikeByThreadDtoRes findByUser(String id) throws Exception {
+		GetThreadLikeByThreadDtoRes getByThread = new GetThreadLikeByThreadDtoRes();
+
+		List<ThreadLike> threadLikes = threadLikeDao.findByUser(id);
+		List<GetThreadLikeByThreadDtoDataRes> listThreadLike = new ArrayList<>();
+
+		for (int i = 0; i < threadLikes.size(); i++) {
+			ThreadLike threadLike = threadLikes.get(i);
+			GetThreadLikeByThreadDtoDataRes data = new GetThreadLikeByThreadDtoDataRes();
+
+			data.setId(threadLike.getId());
+			data.setLikeCode(threadLike.getLikeCode());
+			data.setThreadId(threadLike.getThreadId().getId());
+			data.setThreadCode(threadLike.getThreadId().getThreadCode());
+			data.setThreadTitle(threadLike.getThreadId().getThreadTitle());
+			data.setThreadContent(threadLike.getThreadId().getThreadContent());
+			data.setIsPremium(threadLike.getThreadId().getIsPremium());
+			data.setTypeId(threadLike.getThreadId().getTypeId().getId());
+			data.setTypeCode(threadLike.getThreadId().getTypeId().getTypeCode());
+			data.setTypeName(threadLike.getThreadId().getTypeId().getTypeName());
+			data.setVersion(threadLike.getVersion());
+			data.setIsActive(threadLike.getIsActive());
+
+			listThreadLike.add(data);
+		}
+
+		getByThread.setData(listThreadLike);
+		getByThread.setMsg(null);
+
+		return getByThread;
 	}
 }

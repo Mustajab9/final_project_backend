@@ -26,15 +26,16 @@ public class ThreadCategory extends BaseEntity {
 	public Category getCategoryId() {
 		return categoryId;
 	}
+
 	public void setCategoryId(Category categoryId) {
 		this.categoryId = categoryId;
 	}
+
 	public Thread getThreadId() {
 		return threadId;
 	}
+
 	public void setThreadId(Thread threadId) {
 		this.threadId = threadId;
 	}
-	
-	
 }

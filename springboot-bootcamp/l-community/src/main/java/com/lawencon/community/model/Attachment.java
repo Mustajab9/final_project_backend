@@ -26,21 +26,24 @@ public class Attachment extends BaseEntity {
 	public String getAttachmentExtension() {
 		return attachmentExtension;
 	}
+
 	public void setAttachmentExtension(String attachmentExtension) {
 		this.attachmentExtension = attachmentExtension;
 	}
+
 	public String getAttachmentCode() {
 		return attachmentCode;
 	}
+
 	public void setAttachmentCode(String attachmentCode) {
 		this.attachmentCode = attachmentCode;
 	}
+
 	public byte[] getAttachmentContent() {
 		return attachmentContent;
 	}
+
 	public void setAttachmentContent(byte[] attachmentContent) {
 		this.attachmentContent = attachmentContent;
 	}
-	
-	
 }

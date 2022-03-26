@@ -1,6 +1,6 @@
 package com.lawencon.community.dao.impl;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -36,6 +36,27 @@ public class SubscriptionDaoImpl extends BaseDao<Subscription> implements Subscr
 	}
 	
 	@Override
+	public boolean update(Date date,Integer lenghtDay, String id) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("UPDATE subscription s");
+		builder.append(" SET s.subscription_duration = :date + (:lenghtDay || ' day')::interval,");
+		builder.append(" s.version = s.version + 1, s.updated_by = :id, s.updated_at = NOW()");
+		builder.append(" WHERE s.id = :id");
+		
+		Integer update = createNativeQuery(builder.toString())
+											.setParameter("date", date)
+											.setParameter("lenghtDay", lenghtDay)
+											.setParameter("id", id)
+											.executeUpdate();
+		boolean isSuccessUpdate = false;
+		if(update > 0) {
+			isSuccessUpdate = true;
+		}
+			
+		return isSuccessUpdate;
+	}
+	
+	@Override
 	public Subscription findByUser(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT s.id, s.subscription_code, s.subscription_duration, s.is_approve, p.id, p.profile_name, s.version. s.is_active");
@@ -54,7 +75,7 @@ public class SubscriptionDaoImpl extends BaseDao<Subscription> implements Subscr
 			
 			data.setId(obj[0].toString());
 			data.setSubscriptionCode(obj[1].toString());
-			data.setSubscriptionDuration((Date)obj[2]);
+			data.setSubscriptionDuration((java.sql.Date)obj[2]);
 			data.setIsApprove(Boolean.valueOf(obj[3].toString()));
 			
 			Profiles profiles = new Profiles();

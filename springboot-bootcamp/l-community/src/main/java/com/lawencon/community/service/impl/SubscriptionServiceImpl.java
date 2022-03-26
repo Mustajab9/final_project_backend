@@ -1,73 +1,79 @@
 package com.lawencon.community.service.impl;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.lawencon.base.BaseServiceImpl;
+import com.lawencon.community.dao.ProfilesDao;
 import com.lawencon.community.dao.SubscriptionDao;
-import com.lawencon.community.dao.UserDao;
 import com.lawencon.community.dto.socialmedia.DeleteBySocialMediaIdDtoRes;
+import com.lawencon.community.dto.subscription.GetAllSubscriptionDtoDataRes;
 import com.lawencon.community.dto.subscription.GetAllSubscriptionDtoRes;
+import com.lawencon.community.dto.subscription.GetBySubscriptionIdDtoDataRes;
 import com.lawencon.community.dto.subscription.GetBySubscriptionIdDtoRes;
+import com.lawencon.community.dto.subscription.GetSubscriptionByUserDtoDataRes;
+import com.lawencon.community.dto.subscription.GetSubscriptionByUserDtoRes;
+import com.lawencon.community.dto.subscription.InsertSubscriptionDtoDataRes;
 import com.lawencon.community.dto.subscription.InsertSubscriptionDtoReq;
 import com.lawencon.community.dto.subscription.InsertSubscriptionDtoRes;
+import com.lawencon.community.dto.subscription.UpdateSubscriptionDtoDataRes;
 import com.lawencon.community.dto.subscription.UpdateSubscriptionDtoReq;
 import com.lawencon.community.dto.subscription.UpdateSubscriptionDtoRes;
-import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
-import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
-import com.lawencon.community.dto.user.GetAllUserDtoRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.user.GetByUserIdDtoRes;
-import com.lawencon.community.dto.user.InsertUserDtoDataRes;
-import com.lawencon.community.dto.user.InsertUserDtoRes;
-import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
-import com.lawencon.community.dto.user.UpdateUserDtoRes;
-import com.lawencon.community.model.Role;
+import com.lawencon.community.dto.subscriptiondetail.InsertSubscriptionDetailDtoReq;
+import com.lawencon.community.model.Profiles;
 import com.lawencon.community.model.Subscription;
-import com.lawencon.community.model.User;
+import com.lawencon.community.service.SubscriptionDetailService;
 import com.lawencon.community.service.SubscriptionService;
 
 @Service
 public class SubscriptionServiceImpl extends BaseService implements SubscriptionService {
 	private SubscriptionDao subscriptionDao;
+	private ProfilesDao profileDao;
+	private SubscriptionDetailService subscriptionDetailService;
 
 	@Autowired
-	public SubscriptionServiceImpl(SubscriptionDao subscriptionDao) {
+	public SubscriptionServiceImpl(SubscriptionDao subscriptionDao, ProfilesDao profileDao) {
 		this.subscriptionDao = subscriptionDao;
+		this.profileDao = profileDao;
+	}
+	
+	@Autowired
+	public void setSubscriptionDetailService(SubscriptionDetailService subscriptionDetailService) {
+		this.subscriptionDetailService = subscriptionDetailService;
 	}
 	
 	@Override
 	public GetAllSubscriptionDtoRes findAll() throws Exception {
-		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		GetAllSubscriptionDtoRes getAll = new GetAllSubscriptionDtoRes();
 
-		List<User> users = userDao.findAll();
-		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
+		List<Subscription> subscriptions = subscriptionDao.findAll();
+		List<GetAllSubscriptionDtoDataRes> listSubscription = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
-			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
+		for (int i = 0; i < subscriptions.size(); i++) {
+			Subscription subscription = subscriptions.get(i);
+			GetAllSubscriptionDtoDataRes data = new GetAllSubscriptionDtoDataRes();
 
-			data.setId(user.getId());
-			data.setUsername(user.getEmail());
-			data.setPassword(user.getPassword());
-			data.setRoleId(user.getRoleId().getId());
-			data.setRoleName(user.getRoleId().getRoleName());
-			data.setVersion(user.getVersion());
-			data.setIsActive(user.getIsActive());
+			data.setId(subscription.getId());
+			data.setSubscriptionCode(subscription.getSubscriptionCode());
+			data.setsubscriptionDuration(subscription.getSubscriptionDuration());
+			data.setIsApprove(subscription.getIsApprove());
+			data.setProfileId(subscription.getProfileId().getId());
+			data.setProfileCode(subscription.getProfileId().getProfileCode());
+			data.setProfileName(subscription.getProfileId().getProfileName());
+			data.setProfileCompany(subscription.getProfileId().getProfileCompany());
+			data.setProfilePortalCode(subscription.getProfileId().getProfilePortalCode());
+			data.setUserId(subscription.getProfileId().getUserId().getId());
+			data.setEmail(subscription.getProfileId().getUserId().getEmail());
+			data.setVersion(subscription.getVersion());
+			data.setIsActive(subscription.getIsActive());
 
-			listUser.add(data);
+			listSubscription.add(data);
 		}
 
-		getAll.setData(listUser);
+		getAll.setData(listSubscription);
 		getAll.setMsg(null);
 
 		return getAll;
@@ -75,18 +81,24 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 	
 	@Override
 	public GetBySubscriptionIdDtoRes findById(String id) throws Exception {
-		GetByUserIdDtoRes getById = new GetByUserIdDtoRes();
+		GetBySubscriptionIdDtoRes getById = new GetBySubscriptionIdDtoRes();
 
-		User user = userDao.findById(id);
-		GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+		Subscription subscription = subscriptionDao.findById(id);
+		GetBySubscriptionIdDtoDataRes data = new GetBySubscriptionIdDtoDataRes();
 
-		data.setId(user.getId());
-		data.setUsername(user.getEmail());
-		data.setPassword(user.getPassword());
-		data.setRoleId(user.getRoleId().getId());
-		data.setRoleName(user.getRoleId().getRoleName());
-		data.setVersion(user.getVersion());
-		data.setIsActive(user.getIsActive());
+		data.setId(subscription.getId());
+		data.setSubscriptionCode(subscription.getSubscriptionCode());
+		data.setsubscriptionDuration(subscription.getSubscriptionDuration());
+		data.setIsApprove(subscription.getIsApprove());
+		data.setProfileId(subscription.getProfileId().getId());
+		data.setProfileCode(subscription.getProfileId().getProfileCode());
+		data.setProfileName(subscription.getProfileId().getProfileName());
+		data.setProfileCompany(subscription.getProfileId().getProfileCompany());
+		data.setProfilePortalCode(subscription.getProfileId().getProfilePortalCode());
+		data.setUserId(subscription.getProfileId().getUserId().getId());
+		data.setEmail(subscription.getProfileId().getUserId().getEmail());
+		data.setVersion(subscription.getVersion());
+		data.setIsActive(subscription.getIsActive());
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -96,42 +108,34 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 	
 	@Override
 	public InsertSubscriptionDtoRes insert(InsertSubscriptionDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+		InsertSubscriptionDtoRes insert = new InsertSubscriptionDtoRes();
 
 		try {
-			User user = new User();
-			user.setEmail(data.getUsername());
-
-			String password = getAlphaNumericString(10);
-
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-
-			Role role = roleDao.findById(data.getRoleId());
-			user.setRoleId(role);
-
+			Subscription subscription = new Subscription();
+			String code = getAlphaNumericString(5);
+			Date date = new Date();
+			
+			subscription.setSubscriptionCode(code);
+			subscription.setSubscriptionDuration((java.sql.Date) date);		
+			
+			Profiles profiles = profileDao.findById(data.getProfileId());
+			subscription.setProfileId(profiles);
+			subscription.setCreatedBy(getId());
+			
 			begin();
-			User insertUser = userDao.save(user);
+			Subscription subscriptionInsert = subscriptionDao.save(subscription);
 			commit();
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-
-			executor.submit(() -> {
-				mailSender.send(message);
-			});
-			executor.shutdown();
-
-			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-			dataDto.setId(insertUser.getId());
+			InsertSubscriptionDtoDataRes dataDto = new InsertSubscriptionDtoDataRes();
+			dataDto.setId(subscriptionInsert.getId());
+			
+			if(subscriptionInsert != null) {
+				InsertSubscriptionDetailDtoReq detailReq = new InsertSubscriptionDetailDtoReq();
+				detailReq.setSubscriptionId(subscriptionInsert.getId());
+				detailReq.setPriceId(data.getPriceId());
+				
+				subscriptionDetailService.insert(detailReq);
+			}
 
 			insert.setData(dataDto);
 			insert.setMsg("Insert Success");
@@ -146,27 +150,22 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 	
 	@Override
 	public UpdateSubscriptionDtoRes update(UpdateSubscriptionDtoReq data) throws Exception {
-		UpdateUserDtoRes update = new UpdateUserDtoRes();
+		UpdateSubscriptionDtoRes update = new UpdateSubscriptionDtoRes();
 
 		try {
 			if (data.getVersion() != null) {
-				User user = userDao.findById(data.getId());
+				Subscription subscription = subscriptionDao.findById(data.getId());
 
-				user.setEmail(data.getEmail());
-				user.setVersion(data.getVersion());
-
-				user.setUpdatedBy(getId());
-
-				if (data.getIsActive() != null) {
-					user.setIsActive(data.getIsActive());
-				}
+				subscription.setVersion(data.getVersion());
+				subscription.setUpdatedBy(getId());
+				subscription.setIsActive(data.getIsActive());
 
 				begin();
-				User userUpdate = userDao.save(user);
+				Subscription subscriptionUpdate = subscriptionDao.save(subscription);
 				commit();
 
-				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
-				dataDto.setVersion(userUpdate.getVersion());
+				UpdateSubscriptionDtoDataRes dataDto = new UpdateSubscriptionDtoDataRes();
+				dataDto.setVersion(subscriptionUpdate.getVersion());
 
 				update.setData(dataDto);
 				update.setMsg("Update Success");
@@ -182,11 +181,11 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 	
 	@Override
 	public DeleteBySocialMediaIdDtoRes deleteById(String id) throws Exception {
-		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
+		DeleteBySocialMediaIdDtoRes deleteById = new DeleteBySocialMediaIdDtoRes();
 
 		try {
 			begin();
-			boolean isDeleted = userDao.deleteById(id);
+			boolean isDeleted = subscriptionDao.deleteById(id);
 			commit();
 
 			if (isDeleted) {
@@ -202,8 +201,24 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 	}
 	
 	@Override
-	public Subscription findByUser(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public GetSubscriptionByUserDtoRes findByUser(String id) throws Exception {
+		GetSubscriptionByUserDtoRes getById = new GetSubscriptionByUserDtoRes();
+
+		Subscription subscription = subscriptionDao.findByUser(id);
+		GetSubscriptionByUserDtoDataRes data = new GetSubscriptionByUserDtoDataRes();
+
+		data.setId(subscription.getId());
+		data.setSubscriptionCode(subscription.getSubscriptionCode());
+		data.setsubscriptionDuration(subscription.getSubscriptionDuration());
+		data.setIsApprove(subscription.getIsApprove());
+		data.setProfileId(subscription.getProfileId().getId());
+		data.setProfileName(subscription.getProfileId().getProfileName());
+		data.setVersion(subscription.getVersion());
+		data.setIsActive(subscription.getIsActive());
+
+		getById.setData(data);
+		getById.setMsg(null);
+
+		return getById;
 	}
 }

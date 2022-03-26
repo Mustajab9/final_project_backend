@@ -1,6 +1,7 @@
 package com.lawencon.community.dto.subscriptiondetail;
 
 import java.math.BigInteger;
+import java.sql.Date;
 
 public class GetAllSubscriptionDetailDtoDataRes {
 	private String id;
@@ -10,13 +11,13 @@ public class GetAllSubscriptionDetailDtoDataRes {
 	private Integer duration;
 	private String subscriptionId;
 	private String SubscriptionCode;
-	private String SubscriptionName;
+	private Date SubscriptionDuration;
 	private Boolean isApprove;
 	private String profileId;
 	private String profileCode;
 	private String profileName;
 	private String profileCompany;
-	private String profilePortalCode;
+	private Integer profilePortalCode;
 	private String userId;
 	private String email;
 	private Integer version;
@@ -78,12 +79,12 @@ public class GetAllSubscriptionDetailDtoDataRes {
 		SubscriptionCode = subscriptionCode;
 	}
 
-	public String getSubscriptionName() {
-		return SubscriptionName;
+	public Date getSubscriptionDuration() {
+		return SubscriptionDuration;
 	}
 
-	public void setSubscriptionName(String subscriptionName) {
-		SubscriptionName = subscriptionName;
+	public void setSubscriptionDuration(Date SubscriptionDuration) {
+		this.SubscriptionDuration = SubscriptionDuration;
 	}
 
 	public Boolean getIsApprove() {
@@ -126,11 +127,11 @@ public class GetAllSubscriptionDetailDtoDataRes {
 		this.profileCompany = profileCompany;
 	}
 
-	public String getProfilePortalCode() {
+	public Integer getProfilePortalCode() {
 		return profilePortalCode;
 	}
 
-	public void setProfilePortalCode(String profilePortalCode) {
+	public void setProfilePortalCode(Integer profilePortalCode) {
 		this.profilePortalCode = profilePortalCode;
 	}
 
