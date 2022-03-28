@@ -121,7 +121,7 @@ public class ThreadCategoryServiceImpl extends BaseService implements ThreadCate
 	}
 	
 	@Override
-	public DeleteByThreadCategoryIdDtoRes delete(String id) throws Exception {
+	public DeleteByThreadCategoryIdDtoRes deleteById(String id) throws Exception {
 		DeleteByThreadCategoryIdDtoRes deleteById = new DeleteByThreadCategoryIdDtoRes();
 
 		try {

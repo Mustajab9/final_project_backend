@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.lawencon.community.dao.AttachmentDao;
 import com.lawencon.community.dao.ThreadAttachmentDao;
 import com.lawencon.community.dao.ThreadDao;
-import com.lawencon.community.dto.attachment.InsertAttachmentDtoReq;
 import com.lawencon.community.dto.threadattachment.DeleteByThreadAttachmentIdDtoRes;
 import com.lawencon.community.dto.threadattachment.GetAllThreadAttachmentDtoDataRes;
 import com.lawencon.community.dto.threadattachment.GetAllThreadAttachmentDtoRes;
@@ -18,6 +17,7 @@ import com.lawencon.community.dto.threadattachment.GetByThreadAttachmentIdDtoRes
 import com.lawencon.community.dto.threadattachment.GetThreadAttachmentByThreadDtoDataRes;
 import com.lawencon.community.dto.threadattachment.GetThreadAttachmentByThreadDtoRes;
 import com.lawencon.community.dto.threadattachment.InsertThreadAttachmentDtoDataRes;
+import com.lawencon.community.dto.threadattachment.InsertThreadAttachmentDtoReq;
 import com.lawencon.community.dto.threadattachment.InsertThreadAttachmentDtoRes;
 import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.Thread;
@@ -89,7 +89,7 @@ public class ThreadAttachmentServiceImpl extends BaseService implements ThreadAt
 	}
 	
 	@Override
-	public InsertThreadAttachmentDtoRes insert(InsertAttachmentDtoReq data) throws Exception {
+	public InsertThreadAttachmentDtoRes insert(InsertThreadAttachmentDtoReq data) throws Exception {
 		InsertThreadAttachmentDtoRes insert = new InsertThreadAttachmentDtoRes();
 
 		try {
@@ -121,7 +121,7 @@ public class ThreadAttachmentServiceImpl extends BaseService implements ThreadAt
 	}
 	
 	@Override
-	public DeleteByThreadAttachmentIdDtoRes delete(String id) throws Exception {
+	public DeleteByThreadAttachmentIdDtoRes deleteById(String id) throws Exception {
 		DeleteByThreadAttachmentIdDtoRes deleteById = new DeleteByThreadAttachmentIdDtoRes();
 
 		try {

@@ -16,8 +16,8 @@ import com.lawencon.community.model.Subscription;
 public class SubscriptionDaoImpl extends BaseDao<Subscription> implements SubscriptionDao {
 	
 	@Override
-	public List<Subscription> findAll() throws Exception {
-		return super.getAll();
+	public List<Subscription> findAll(int startPage, int maxPage) throws Exception {
+		return super.getAll(startPage, maxPage);
 	}
 	
 	@Override
