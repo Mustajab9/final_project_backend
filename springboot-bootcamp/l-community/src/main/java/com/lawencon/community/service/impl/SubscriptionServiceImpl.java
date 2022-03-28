@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.lawencon.community.dao.ProfilesDao;
 import com.lawencon.community.dao.SubscriptionDao;
-import com.lawencon.community.dto.socialmedia.DeleteBySocialMediaIdDtoRes;
+import com.lawencon.community.dto.subscription.DeleteBySubscriptionIdDtoRes;
 import com.lawencon.community.dto.subscription.GetAllSubscriptionDtoDataRes;
 import com.lawencon.community.dto.subscription.GetAllSubscriptionDtoRes;
 import com.lawencon.community.dto.subscription.GetBySubscriptionIdDtoDataRes;
@@ -46,10 +46,10 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 	}
 	
 	@Override
-	public GetAllSubscriptionDtoRes findAll() throws Exception {
+	public GetAllSubscriptionDtoRes findAll(int startPage, int maxPage) throws Exception {
 		GetAllSubscriptionDtoRes getAll = new GetAllSubscriptionDtoRes();
 
-		List<Subscription> subscriptions = subscriptionDao.findAll();
+		List<Subscription> subscriptions = subscriptionDao.findAll(startPage, maxPage);
 		List<GetAllSubscriptionDtoDataRes> listSubscription = new ArrayList<>();
 
 		for (int i = 0; i < subscriptions.size(); i++) {
@@ -180,8 +180,8 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 	}
 	
 	@Override
-	public DeleteBySocialMediaIdDtoRes deleteById(String id) throws Exception {
-		DeleteBySocialMediaIdDtoRes deleteById = new DeleteBySocialMediaIdDtoRes();
+	public DeleteBySubscriptionIdDtoRes deleteById(String id) throws Exception {
+		DeleteBySubscriptionIdDtoRes deleteById = new DeleteBySubscriptionIdDtoRes();
 
 		try {
 			begin();

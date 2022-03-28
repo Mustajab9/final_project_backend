@@ -12,5 +12,5 @@ public interface ThreadLikeService {
 	public GetByThreadLikeIdDtoRes findById(String id) throws Exception;
 	public InsertThreadLikeDtoRes insert(InsertThreadLikeDtoReq data) throws Exception;
 	public DeleteByThreadLikeIdDtoRes deleteById(String id) throws Exception;
-	public GetThreadLikeByThreadDtoRes findByUser(String id) throws Exception;
+	public GetThreadLikeByThreadDtoRes findByThread(String id) throws Exception;
 }

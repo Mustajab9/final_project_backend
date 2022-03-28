@@ -17,10 +17,9 @@ import com.lawencon.community.dto.profilesosmed.GetByProfileSosmedIdDtoRes;
 import com.lawencon.community.dto.profilesosmed.InsertProfileSosmedDtoDataRes;
 import com.lawencon.community.dto.profilesosmed.InsertProfileSosmedDtoReq;
 import com.lawencon.community.dto.profilesosmed.InsertProfileSosmedDtoRes;
+import com.lawencon.community.dto.profilesosmed.UpdateProfileSosmedDtoDataRes;
 import com.lawencon.community.dto.profilesosmed.UpdateProfileSosmedDtoReq;
 import com.lawencon.community.dto.profilesosmed.UpdateProfileSosmedDtoRes;
-import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
-import com.lawencon.community.dto.user.UpdateUserDtoRes;
 import com.lawencon.community.model.ProfileSosmed;
 import com.lawencon.community.model.Profiles;
 import com.lawencon.community.model.SocialMedia;
@@ -133,27 +132,27 @@ public class ProfileSosmedDaoImpl extends BaseService implements ProfileSosmedSe
 	
 	@Override
 	public UpdateProfileSosmedDtoRes update(UpdateProfileSosmedDtoReq data) throws Exception {
-		UpdateUserDtoRes update = new UpdateUserDtoRes();
+		UpdateProfileSosmedDtoRes update = new UpdateProfileSosmedDtoRes();
 
 		try {
 			if (data.getVersion() != null) {
-				ProfileSosmed user = profileSosmedDao.findById(data.getId());
+				ProfileSosmed profileSosmed = profileSosmedDao.findById(data.getId());
 
-				user.setEmail(data.getEmail());
-				user.setVersion(data.getVersion());
+				profileSosmed.setAccountName(data.getAccountName());
+				profileSosmed.setVersion(data.getVersion());
 
-				user.setUpdatedBy(getId());
+				profileSosmed.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {
-					user.setIsActive(data.getIsActive());
+					profileSosmed.setIsActive(data.getIsActive());
 				}
 
 				begin();
-				ProfileSosmed userUpdate = profileSosmedDao.save(user);
+				ProfileSosmed profileSosmedUpdate = profileSosmedDao.save(profileSosmed);
 				commit();
 
-				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
-				dataDto.setVersion(userUpdate.getVersion());
+				UpdateProfileSosmedDtoDataRes dataDto = new UpdateProfileSosmedDtoDataRes();
+				dataDto.setVersion(profileSosmedUpdate.getVersion());
 
 				update.setData(dataDto);
 				update.setMsg("Update Success");

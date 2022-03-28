@@ -134,6 +134,24 @@ public class PollingServiceImpl extends BaseService implements PollingService {
 	
 	@Override
 	public Polling findByThread(String id) throws Exception {
+//		GetByPollingIdDtoRes getById = new GetByPollingIdDtoRes();
+//
+//		Polling polling = pollingDao.findById(id);
+//		GetByPollingIdDtoDataRes data = new GetByPollingIdDtoDataRes();
+//
+//		data.setId(polling.getId());
+//		data.setPollingName(polling.getPollingName());
+//		data.setPollingCode(polling.getPollingCode());
+//		data.setThreadId(polling.getThreadId().getId());
+//		data.setThreadTitle(polling.getThreadId().getThreadTitle());
+//		data.setThreadContent(polling.getThreadId().getThreadContent());
+//		data.setVersion(polling.getVersion());
+//		data.setIsActive(polling.getIsActive());
+//
+//		getById.setData(data);
+//		getById.setMsg(null);
+//
+//		return getById;
 		Polling getByThread = pollingDao.findByThread(id);
 		return getByThread;
 	}

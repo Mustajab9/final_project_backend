@@ -11,6 +11,6 @@ public interface ThreadCommentService {
 	public GetAllThreadCommentDtoRes findAll() throws Exception;
 	public GetByThreadCommentIdDtoRes findById(String id) throws Exception;
 	public InsertThreadCommentDtoRes insert(InsertThreadCommentDtoReq data) throws Exception;
-	public DeleteByThreadCommentIdDtoRes delete(String id) throws Exception;
+	public DeleteByThreadCommentIdDtoRes deleteById(String id) throws Exception;
 	public GetThreadCommentByThreadDtoRes findByThread(String id) throws Exception;
 }

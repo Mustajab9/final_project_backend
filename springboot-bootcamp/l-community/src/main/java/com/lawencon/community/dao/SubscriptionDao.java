@@ -6,7 +6,7 @@ import java.util.List;
 import com.lawencon.community.model.Subscription;
 
 public interface SubscriptionDao {
-	public List<Subscription> findAll() throws Exception;
+	public List<Subscription> findAll(int startPage, int maxPage) throws Exception;
 	public Subscription findById(String id) throws Exception;
 	public Subscription save(Subscription data) throws Exception;
 	public boolean deleteById(String id) throws Exception;

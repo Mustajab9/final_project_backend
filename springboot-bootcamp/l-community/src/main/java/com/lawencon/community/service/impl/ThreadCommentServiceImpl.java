@@ -118,7 +118,7 @@ public class ThreadCommentServiceImpl extends BaseService implements ThreadComme
 	}
 	
 	@Override
-	public DeleteByThreadCommentIdDtoRes delete(String id) throws Exception {
+	public DeleteByThreadCommentIdDtoRes deleteById(String id) throws Exception {
 		DeleteByThreadCommentIdDtoRes deleteById = new DeleteByThreadCommentIdDtoRes();
 
 		try {

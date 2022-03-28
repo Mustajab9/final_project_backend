@@ -3,8 +3,6 @@ package com.lawencon.community.dto.enrolldetail;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class GetAllEnrollDetailDtoDataRes {
 	private String id;
