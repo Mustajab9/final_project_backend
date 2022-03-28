@@ -518,6 +518,7 @@ ALTER TABLE social_media ADD CONSTRAINT social_media_ck UNIQUE(social_media_name
 
 CREATE TABLE profile_sosmed(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
+	account_name varchar(100) NOT NULL,
 	profile_id varchar(36) NOT NULL,
 	social_media_id varchar(36) NOT NULL,
 	created_by varchar(36) NOT NULL,
