@@ -2,9 +2,9 @@ package com.lawencon.community.dto.profilesosmed;
 
 import java.util.List;
 
-public class GetByUserIdDtoRes {
+public class GetProfileSosmedByUserDtoRes {
 	private String msg;
-	private List<GetByUserIdDtoDataRes> data;
+	private List<GetProfileSosmedByUserDtoDataRes> data;
 	
 	public String getMsg() {
 		return msg;
@@ -12,10 +12,10 @@ public class GetByUserIdDtoRes {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	public List<GetByUserIdDtoDataRes> getData() {
+	public List<GetProfileSosmedByUserDtoDataRes> getData() {
 		return data;
 	}
-	public void setData(List<GetByUserIdDtoDataRes> data) {
+	public void setData(List<GetProfileSosmedByUserDtoDataRes> data) {
 		this.data = data;
 	}
 	

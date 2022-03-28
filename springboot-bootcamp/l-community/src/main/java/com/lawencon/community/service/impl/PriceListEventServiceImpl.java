@@ -86,6 +86,7 @@ public class PriceListEventServiceImpl extends BaseService implements PriceListE
 			priceListEvent.setPriceName(data.getPriceName());
 			priceListEvent.setPriceCode(data.getPriceCode());
 			priceListEvent.setPriceNominal(data.getPriceNominal());
+			priceListEvent.setCreatedBy(getId());
 
 			begin();
 			PriceListEvent priceListEventInsert = priceListEventDao.save(priceListEvent);
@@ -116,7 +117,6 @@ public class PriceListEventServiceImpl extends BaseService implements PriceListE
 				priceListEvent.setPriceName(data.getPriceName());
 				priceListEvent.setPriceNominal(data.getPriceNominal());
 				priceListEvent.setVersion(data.getVersion());
-
 				priceListEvent.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {

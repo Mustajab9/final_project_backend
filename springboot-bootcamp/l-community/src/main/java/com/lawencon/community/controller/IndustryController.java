@@ -35,7 +35,7 @@ public class IndustryController {
 	}
 
 	@GetMapping
-	public ResponseEntity<GetAllIndustryDtoRes> getAll(@RequestParam("start") Integer start, @RequestParam("max") Integer max) throws Exception {
+	public ResponseEntity<GetAllIndustryDtoRes> getAll(@RequestParam int start, @RequestParam int max) throws Exception {
 		GetAllIndustryDtoRes result = industryService.findAll(start, max);
 		return new ResponseEntity<GetAllIndustryDtoRes>(result, HttpStatus.OK);
 	}

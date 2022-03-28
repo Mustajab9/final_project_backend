@@ -36,8 +36,8 @@ private PriceListMemberService priceListMemberService;
 	}
 	
 	@GetMapping
-	public ResponseEntity<GetAllPriceListMemberDtoRes> getAll(@RequestParam int startPage, @RequestParam int maxPage) throws Exception {
-		GetAllPriceListMemberDtoRes priceListMembers = priceListMemberService.findAll(startPage, maxPage);
+	public ResponseEntity<GetAllPriceListMemberDtoRes> getAll(@RequestParam int start, @RequestParam int max) throws Exception {
+		GetAllPriceListMemberDtoRes priceListMembers = priceListMemberService.findAll(start, max);
 		return new ResponseEntity<GetAllPriceListMemberDtoRes>(priceListMembers, HttpStatus.OK);
 	}
 	
@@ -46,12 +46,6 @@ private PriceListMemberService priceListMemberService;
 		GetByPriceListMemberIdDtoRes priceListMember = priceListMemberService.findById(id);
 		return new ResponseEntity<GetByPriceListMemberIdDtoRes>(priceListMember, HttpStatus.OK);
 	}
-	
-//	@GetMapping("code-{code}")
-//	public ResponseEntity<GetByRoleCodeDtoRes> getByCode(@PathVariable("code") String code) throws Exception {
-//		GetByRoleCodeDtoRes role = priceListMemberService.findIdByCode(code);
-//		return new ResponseEntity<GetByRoleCodeDtoRes>(role, HttpStatus.OK);
-//	}
 	
 	@DeleteMapping("{id}")
 	public ResponseEntity<DeleteByPriceListMemberIdDtoRes> deleteById(@PathVariable("id") String id) throws Exception {

@@ -25,7 +25,7 @@ import com.lawencon.community.dto.threadtype.UpdateThreadTypeDtoRes;
 import com.lawencon.community.service.ThreadTypeService;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("thread-types")
 public class ThreadTypeController {
 	private ThreadTypeService threadTypeService;
 	

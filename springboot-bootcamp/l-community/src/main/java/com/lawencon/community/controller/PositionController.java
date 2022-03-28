@@ -36,9 +36,9 @@ public class PositionController {
 	}
 
 	@GetMapping
-	public ResponseEntity<GetAllPositionDtoRes> getAll(@RequestParam int startPage, @RequestParam int maxPage)
+	public ResponseEntity<GetAllPositionDtoRes> getAll(@RequestParam int start, @RequestParam int max)
 			throws Exception {
-		GetAllPositionDtoRes positions = positionService.findAll(startPage, maxPage);
+		GetAllPositionDtoRes positions = positionService.findAll(start, max);
 		return new ResponseEntity<GetAllPositionDtoRes>(positions, HttpStatus.OK);
 	}
 

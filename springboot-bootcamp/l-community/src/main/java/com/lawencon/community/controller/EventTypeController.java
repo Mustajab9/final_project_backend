@@ -35,7 +35,7 @@ public class EventTypeController {
 	}
 
 	@GetMapping
-	public ResponseEntity<GetAllEventTypeDtoRes> getAll(@RequestParam("start") Integer start, @RequestParam("max") Integer max) throws Exception {
+	public ResponseEntity<GetAllEventTypeDtoRes> getAll(@RequestParam int start, @RequestParam int max) throws Exception {
 		GetAllEventTypeDtoRes result = eventTypeService.findAll(start, max);
 		return new ResponseEntity<GetAllEventTypeDtoRes>(result, HttpStatus.OK);
 	}

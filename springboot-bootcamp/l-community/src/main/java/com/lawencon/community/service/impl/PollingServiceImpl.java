@@ -13,6 +13,8 @@ import com.lawencon.community.dto.polling.GetAllPollingDtoDataRes;
 import com.lawencon.community.dto.polling.GetAllPollingDtoRes;
 import com.lawencon.community.dto.polling.GetByPollingIdDtoDataRes;
 import com.lawencon.community.dto.polling.GetByPollingIdDtoRes;
+import com.lawencon.community.dto.polling.GetPollingByThreadIdDtoDataRes;
+import com.lawencon.community.dto.polling.GetPollingByThreadIdDtoRes;
 import com.lawencon.community.dto.polling.InsertPollingDtoDataRes;
 import com.lawencon.community.dto.polling.InsertPollingDtoReq;
 import com.lawencon.community.dto.polling.InsertPollingDtoRes;
@@ -92,6 +94,7 @@ public class PollingServiceImpl extends BaseService implements PollingService {
 			polling.setPollingCode(data.getPollingCode());
 			Thread thread = threadDao.findById(data.getThreadId());
 			polling.setThreadId(thread);
+			polling.setCreatedBy(getId());
 
 			begin();
 			Polling pollingInsert = pollingDao.save(polling);
@@ -133,26 +136,25 @@ public class PollingServiceImpl extends BaseService implements PollingService {
 	}
 	
 	@Override
-	public Polling findByThread(String id) throws Exception {
-//		GetByPollingIdDtoRes getById = new GetByPollingIdDtoRes();
-//
-//		Polling polling = pollingDao.findById(id);
-//		GetByPollingIdDtoDataRes data = new GetByPollingIdDtoDataRes();
-//
-//		data.setId(polling.getId());
-//		data.setPollingName(polling.getPollingName());
-//		data.setPollingCode(polling.getPollingCode());
-//		data.setThreadId(polling.getThreadId().getId());
-//		data.setThreadTitle(polling.getThreadId().getThreadTitle());
-//		data.setThreadContent(polling.getThreadId().getThreadContent());
-//		data.setVersion(polling.getVersion());
-//		data.setIsActive(polling.getIsActive());
-//
-//		getById.setData(data);
-//		getById.setMsg(null);
-//
-//		return getById;
-		Polling getByThread = pollingDao.findByThread(id);
+	public GetPollingByThreadIdDtoRes findByThread(String id) throws Exception {
+		GetPollingByThreadIdDtoRes getByThread = new GetPollingByThreadIdDtoRes();
+
+		Polling polling = pollingDao.findByThread(id);
+		GetPollingByThreadIdDtoDataRes data = new GetPollingByThreadIdDtoDataRes();
+
+		data.setId(polling.getId());
+		data.setPollingName(polling.getPollingName());
+		data.setThreadId(polling.getThreadId().getId());
+		data.setThreadTitle(polling.getThreadId().getThreadTitle());
+		data.setIsPremium(polling.getThreadId().getIsPremium());
+		data.setCreatedBy(polling.getCreatedBy());
+		data.setCreatedAt(polling.getCreatedAt());
+		data.setVersion(polling.getVersion());
+		data.setIsActive(polling.getIsActive());
+
+		getByThread.setData(data);
+		getByThread.setMsg(null);
+
 		return getByThread;
 	}
 }

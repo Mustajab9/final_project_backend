@@ -1,8 +1,8 @@
 package com.lawencon.community.dto.profiles;
 
-public class GetByUserIdDtoRes {
+public class GetProfileByUserDtoRes {
 	private String msg;
-	private GetByUserIdDtoDataRes data;
+	private GetProfileByUserDtoDataRes data;
 	
 	public String getMsg() {
 		return msg;
@@ -10,10 +10,10 @@ public class GetByUserIdDtoRes {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	public GetByUserIdDtoDataRes getData() {
+	public GetProfileByUserDtoDataRes getData() {
 		return data;
 	}
-	public void setData(GetByUserIdDtoDataRes data) {
+	public void setData(GetProfileByUserDtoDataRes data) {
 		this.data = data;
 	}
 	

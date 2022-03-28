@@ -22,7 +22,6 @@ import com.lawencon.community.dto.regency.InsertRegencyDtoReq;
 import com.lawencon.community.dto.regency.InsertRegencyDtoRes;
 import com.lawencon.community.dto.regency.UpdateRegencyDtoReq;
 import com.lawencon.community.dto.regency.UpdateRegencyDtoRes;
-import com.lawencon.community.dto.role.GetByRoleCodeDtoRes;
 import com.lawencon.community.service.RegencyService;
 
 @RestController
@@ -37,8 +36,8 @@ private RegencyService regencyService;
 	}
 	
 	@GetMapping
-	public ResponseEntity<GetAllRegencyDtoRes> getAll(@RequestParam int startPage, @RequestParam int maxPage) throws Exception {
-		GetAllRegencyDtoRes regencies = regencyService.findAll(startPage, maxPage);
+	public ResponseEntity<GetAllRegencyDtoRes> getAll(@RequestParam int start, @RequestParam int max) throws Exception {
+		GetAllRegencyDtoRes regencies = regencyService.findAll(start, max);
 		return new ResponseEntity<GetAllRegencyDtoRes>(regencies, HttpStatus.OK);
 	}
 	
@@ -47,12 +46,6 @@ private RegencyService regencyService;
 		GetByRegencyIdDtoRes regency = regencyService.findById(id);
 		return new ResponseEntity<GetByRegencyIdDtoRes>(regency, HttpStatus.OK);
 	}
-	
-//	@GetMapping("code-{code}")
-//	public ResponseEntity<GetByRoleCodeDtoRes> getByCode(@PathVariable("code") String code) throws Exception {
-//		GetByRoleCodeDtoRes role = regencyService.findIdByCode(code);
-//		return new ResponseEntity<GetByRoleCodeDtoRes>(role, HttpStatus.OK);
-//	}
 	
 	@DeleteMapping("{id}")
 	public ResponseEntity<DeleteByRegencyIdDtoRes> deleteById(@PathVariable("id") String id) throws Exception {

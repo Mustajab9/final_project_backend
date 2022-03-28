@@ -38,7 +38,7 @@ public class Profiles extends BaseEntity {
 	private User userId;
 	
 	@ManyToOne
-	@JoinColumn(name = "indsutry_id")
+	@JoinColumn(name = "industry_id")
 	private Industry industryId;
 	
 	@ManyToOne

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.dto.polling.DeleteByPollingIdDtoRes;
 import com.lawencon.community.dto.polling.GetAllPollingDtoRes;
 import com.lawencon.community.dto.polling.GetByPollingIdDtoRes;
-import com.lawencon.community.dto.polling.GetByThreadIdDtoRes;
 import com.lawencon.community.dto.polling.InsertPollingDtoReq;
 import com.lawencon.community.dto.polling.InsertPollingDtoRes;
 import com.lawencon.community.service.PollingService;

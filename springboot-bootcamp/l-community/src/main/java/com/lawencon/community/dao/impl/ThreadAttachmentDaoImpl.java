@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.lawencon.community.dao.ThreadAttachmentDao;
 import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadAttachment;
 import com.lawencon.community.model.ThreadType;
 
+@Repository
 public class ThreadAttachmentDaoImpl extends BaseDao<ThreadAttachment> implements ThreadAttachmentDao {
 	@Override
 	public List<ThreadAttachment> findAll() throws Exception {
@@ -34,7 +37,7 @@ public class ThreadAttachmentDaoImpl extends BaseDao<ThreadAttachment> implement
 	@Override
 	public List<ThreadAttachment> findByThread(String id) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT ta.id, t.id, t.thread_code, t.thread_title, t.thread_content, t.is_premium, tt.id, tt.type_code, tt.type_name, a.id,"); 
+		builder.append("SELECT ta.id, t.id AS thread_id, t.thread_code, t.thread_title, t.thread_content, t.is_premium, tt.id AS type_id, tt.type_code, tt.type_name, a.id AS attachment_id,"); 
 		builder.append(" a.attachment_code, a.attachment_content, a.attachment_extension, ta.version, ta.is_active"); 
 		builder.append(" FROM thread_attachment ta");
 		builder.append(" INNER JOIN threads t ON t.id = ta.thread_id");

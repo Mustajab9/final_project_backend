@@ -86,6 +86,7 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 			priceListMember.setPriceNominal(data.getPriceNominal());
 			priceListMember.setPriceCode(data.getPriceCode());
 			priceListMember.setDuration(data.getDuration());
+			priceListMember.setCreatedBy(getId());
 
 			begin();
 			PriceListMember priceListMemberInsert = priceListMemberDao.save(priceListMember);
@@ -116,7 +117,6 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 				priceListMember.setPriceNominal(data.getPriceNominal());
 				priceListMember.setDuration(data.getDuration());
 				priceListMember.setVersion(data.getVersion());
-
 				priceListMember.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {

@@ -112,10 +112,13 @@ public class UserServiceImpl extends BaseService implements UserService {
 			User user = new User();
 			user.setEmail(data.getUsername());
 
-			String password = getAlphaNumericString(10);
+			String password = getAlphaNumericString(5);
 
 			String passwordEncode = passwordEncoder.encode(password);
 			user.setPassword(passwordEncode);
+			
+			String verificationCode = getAlphaNumericString(5);
+			user.setVerificationCode(verificationCode);
 
 			Role role = roleDao.findById(data.getRoleId());
 			user.setRoleId(role);
@@ -163,6 +166,11 @@ public class UserServiceImpl extends BaseService implements UserService {
 				User user = userDao.findById(data.getId());
 
 				user.setEmail(data.getEmail());
+				
+								
+				String passwordEncode = passwordEncoder.encode(data.getPassword());
+				user.setPassword(passwordEncode);
+				
 				user.setVersion(data.getVersion());
 				user.setUpdatedBy(getId());
 

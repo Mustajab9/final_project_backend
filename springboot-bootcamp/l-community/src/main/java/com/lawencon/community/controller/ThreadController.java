@@ -66,13 +66,13 @@ public class ThreadController {
 		return new ResponseEntity<DeleteByThreadIdDtoRes>(deleteById, HttpStatus.OK);
 	}
 	
-	@GetMapping("{id}")
+	@GetMapping("user/{id}")
 	public ResponseEntity<GetThreadByUserDtoRes> getByUser(@PathVariable("id") String id) throws Exception{
 		GetThreadByUserDtoRes getByUser = threadService.findByUser(id);
 		return new ResponseEntity<GetThreadByUserDtoRes>(getByUser, HttpStatus.OK);
 	}
 	
-	@GetMapping("{id}")
+	@GetMapping("category/{id}")
 	public ResponseEntity<GetThreadByCategoryDtoRes> getByCategory(@PathVariable("id") String[] id) throws Exception{
 		GetThreadByCategoryDtoRes getByCategory = threadService.findByCategory(id);
 		return new ResponseEntity<GetThreadByCategoryDtoRes>(getByCategory, HttpStatus.OK);

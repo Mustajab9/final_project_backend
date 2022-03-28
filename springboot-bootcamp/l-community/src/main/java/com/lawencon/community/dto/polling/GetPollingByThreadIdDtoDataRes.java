@@ -1,15 +1,15 @@
 package com.lawencon.community.dto.polling;
 
-public class GetByThreadIdDtoDataRes {
+import java.time.LocalDateTime;
+
+public class GetPollingByThreadIdDtoDataRes {
 	private String id;
-	private String pollingCode;
 	private String pollingName;
 	private String threadId;
 	private String threadTitle;
-	private String threadContent;
-	private String threadTypeId;
-	private String threadTypeCode;
-	private String threadTypeName;
+	private Boolean isPremium;
+	private String createdBy;
+	private LocalDateTime createdAt;
 	private Integer version;
 	private Boolean isActive;
 
@@ -19,14 +19,6 @@ public class GetByThreadIdDtoDataRes {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getPollingCode() {
-		return pollingCode;
-	}
-
-	public void setPollingCode(String pollingCode) {
-		this.pollingCode = pollingCode;
 	}
 
 	public String getPollingName() {
@@ -53,36 +45,28 @@ public class GetByThreadIdDtoDataRes {
 		this.threadTitle = threadTitle;
 	}
 
-	public String getThreadContent() {
-		return threadContent;
+	public Boolean getIsPremium() {
+		return isPremium;
 	}
 
-	public void setThreadContent(String threadContent) {
-		this.threadContent = threadContent;
-	}
-	
-	public String getThreadTypeId() {
-		return threadTypeId;
+	public void setIsPremium(Boolean isPremium) {
+		this.isPremium = isPremium;
 	}
 
-	public void setThreadTypeId(String threadTypeId) {
-		this.threadTypeId = threadTypeId;
+	public String getCreatedBy() {
+		return createdBy;
 	}
 
-	public String getThreadTypeCode() {
-		return threadTypeCode;
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
-	public void setThreadTypeCode(String threadTypeCode) {
-		this.threadTypeCode = threadTypeCode;
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
 
-	public String getThreadTypeName() {
-		return threadTypeName;
-	}
-
-	public void setThreadTypeName(String threadTypeName) {
-		this.threadTypeName = threadTypeName;
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	public Integer getVersion() {

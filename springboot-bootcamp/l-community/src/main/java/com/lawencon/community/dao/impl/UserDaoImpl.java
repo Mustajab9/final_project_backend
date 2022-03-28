@@ -36,7 +36,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
 	@Override
 	public User findByUser(String email) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT u.id, u.email, u.password, u.verification_code, r.id, r.role_code, r.role_name, u.version, u.is_active");
+		builder.append("SELECT u.id, u.email, u.password, u.verification_code, r.id AS role_id, r.role_code, r.role_name, u.version, u.is_active");
 		builder.append(" FROM users u");
 		builder.append(" INNER JOIN roles r ON r.id = u.role_id");
 		builder.append(" WHERE u.email = :email");

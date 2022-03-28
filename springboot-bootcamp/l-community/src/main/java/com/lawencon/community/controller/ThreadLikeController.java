@@ -55,7 +55,7 @@ public class ThreadLikeController {
 		return new ResponseEntity<DeleteByThreadLikeIdDtoRes>(deleteById, HttpStatus.OK);
 	}
 	
-	@GetMapping("{id}")
+	@GetMapping("thread/{id}")
 	public ResponseEntity<GetThreadLikeByThreadDtoRes> getByThread(@PathVariable("id") String id) throws Exception{
 		GetThreadLikeByThreadDtoRes getByThread = threadLikeService.findByThread(id);
 		return new ResponseEntity<GetThreadLikeByThreadDtoRes>(getByThread, HttpStatus.OK);

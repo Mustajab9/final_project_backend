@@ -1,8 +1,8 @@
 package com.lawencon.community.dto.polling;
 
-public class GetByThreadIdDtoRes {
+public class GetPollingByThreadIdDtoRes {
 	private String msg;
-	private GetByThreadIdDtoDataRes data;
+	private GetPollingByThreadIdDtoDataRes data;
 	
 	public String getMsg() {
 		return msg;
@@ -10,10 +10,10 @@ public class GetByThreadIdDtoRes {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	public GetByThreadIdDtoDataRes getData() {
+	public GetPollingByThreadIdDtoDataRes getData() {
 		return data;
 	}
-	public void setData(GetByThreadIdDtoDataRes data) {
+	public void setData(GetPollingByThreadIdDtoDataRes data) {
 		this.data = data;
 	}
 	

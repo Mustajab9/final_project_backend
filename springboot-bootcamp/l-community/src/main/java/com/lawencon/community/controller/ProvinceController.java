@@ -35,8 +35,8 @@ private ProvinceService provinceService;
 	}
 	
 	@GetMapping
-	public ResponseEntity<GetAllProvinceDtoRes> getAll(@RequestParam int startPage, @RequestParam int maxPage) throws Exception {
-		GetAllProvinceDtoRes provinces = provinceService.findAll(startPage, maxPage);
+	public ResponseEntity<GetAllProvinceDtoRes> getAll(@RequestParam int start, @RequestParam int max) throws Exception {
+		GetAllProvinceDtoRes provinces = provinceService.findAll(start, max);
 		return new ResponseEntity<GetAllProvinceDtoRes>(provinces, HttpStatus.OK);
 	}
 	
@@ -45,12 +45,6 @@ private ProvinceService provinceService;
 		GetByProvinceIdDtoRes province = provinceService.findById(id);
 		return new ResponseEntity<GetByProvinceIdDtoRes>(province, HttpStatus.OK);
 	}
-	
-//	@GetMapping("code-{code}")
-//	public ResponseEntity<GetByRoleCodeDtoRes> getByCode(@PathVariable("code") String code) throws Exception {
-//		GetByRoleCodeDtoRes role = provinceService.findIdByCode(code);
-//		return new ResponseEntity<GetByRoleCodeDtoRes>(role, HttpStatus.OK);
-//	}
 	
 	@DeleteMapping("{id}")
 	public ResponseEntity<DeleteByProvinceIdDtoRes> deleteById(@PathVariable("id") String id) throws Exception {

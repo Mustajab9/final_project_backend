@@ -36,8 +36,8 @@ public class RoleController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<GetAllRoleDtoRes> getAll(@RequestParam int startPage, @RequestParam int maxPage) throws Exception {
-		GetAllRoleDtoRes roles = roleService.findAll(startPage, maxPage);
+	public ResponseEntity<GetAllRoleDtoRes> getAll(@RequestParam int start, @RequestParam int max) throws Exception {
+		GetAllRoleDtoRes roles = roleService.findAll(start, max);
 		return new ResponseEntity<GetAllRoleDtoRes>(roles, HttpStatus.OK);
 	}
 	

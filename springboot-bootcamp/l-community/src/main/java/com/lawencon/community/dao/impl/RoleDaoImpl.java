@@ -53,7 +53,9 @@ public class RoleDaoImpl extends BaseDao<Role> implements RoleDao {
 			data.setId(obj[0].toString());
 			data.setRoleName(obj[1].toString());
 			data.setRoleCode(obj[2].toString());
-			data.setCreatedBy(obj[3].toString());
+			if(obj[3] != null) {				
+				data.setCreatedBy(obj[3].toString());
+			}
 			data.setCreatedAt(((Timestamp)obj[4]).toLocalDateTime());
 			data.setVersion(Integer.valueOf(obj[5].toString()));
 			data.setIsActive(Boolean.valueOf(obj[6].toString()));

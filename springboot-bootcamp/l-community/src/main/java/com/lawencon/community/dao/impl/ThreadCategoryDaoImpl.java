@@ -36,7 +36,7 @@ public class ThreadCategoryDaoImpl extends BaseDao<ThreadCategory> implements Th
 	@Override
 	public List<ThreadCategory> findByThread(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT tc.id, c.id, c.category_name, t.id, t.thread_title, t.thread_content, tc.version, tc.is_active");
+		builder.append("SELECT tc.id, c.id AS category_id, c.category_name, t.id AS thread_id, t.thread_title, t.thread_content, tc.version, tc.is_active");
 		builder.append(" FROM thread_categories tc");
 		builder.append(" JOIN threads t ON t.id = tc.thread_id");
 		builder.append(" JOIN categories c ON c.id = tc.category_id");

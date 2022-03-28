@@ -8,8 +8,8 @@ public class UpdateUserDtoReq {
 	@NotNull(message = "Id is Empty")
 	private String id;
 
-	@NotEmpty(message = "Username is Empty")
-	@Size(max = 50, min = 5, message = "Username min 5 Character and max 30 Character")
+	@NotEmpty(message = "Email is Empty")
+	@Size(max = 50, min = 5, message = "Email min 5 Character and max 30 Character")
 	private String email;
 
 	@NotEmpty(message = "Password is Empty")

@@ -46,12 +46,6 @@ private ProfileSosmedService profileSosmedService;
 		return new ResponseEntity<GetByProfileSosmedIdDtoRes>(profileSosmed, HttpStatus.OK);
 	}
 	
-//	@GetMapping("code-{code}")
-//	public ResponseEntity<GetByRoleCodeDtoRes> getByCode(@PathVariable("code") String code) throws Exception {
-//		GetByRoleCodeDtoRes role = profileSosmedService.findIdByCode(code);
-//		return new ResponseEntity<GetByRoleCodeDtoRes>(role, HttpStatus.OK);
-//	}
-	
 	@DeleteMapping("{id}")
 	public ResponseEntity<DeleteByProfileSosmedIdDtoRes> deleteById(@PathVariable("id") String id) throws Exception {
 		DeleteByProfileSosmedIdDtoRes deleteProfileSosmed = profileSosmedService.deleteById(id);

@@ -25,13 +25,13 @@ import com.lawencon.community.model.SubscriptionDetail;
 import com.lawencon.community.service.SubscriptionDetailService;
 
 @Service
-public class SubscriptionDetailDaoImpl extends BaseService implements SubscriptionDetailService {
+public class SubscriptionDetailServiceImpl extends BaseService implements SubscriptionDetailService {
 	private SubscriptionDetailDao subscriptionDetailDao;
 	private SubscriptionDao subscriptionDao;
 	private PriceListMemberDao priceListMemberDao;
 
 	@Autowired
-	public SubscriptionDetailDaoImpl(SubscriptionDetailDao subscriptionDetailDao, SubscriptionDao subscriptionDao,
+	public SubscriptionDetailServiceImpl(SubscriptionDetailDao subscriptionDetailDao, SubscriptionDao subscriptionDao,
 									PriceListMemberDao priceListMemberDao) {
 		this.subscriptionDetailDao = subscriptionDetailDao;
 		this.subscriptionDao = subscriptionDao;

@@ -2,6 +2,7 @@ package com.lawencon.community.dto.profilesosmed;
 
 public class GetByProfileSosmedIdDtoDataRes {
 	private String id;
+	private String accountName;
 	private String profileId;
 	private String profileCode;
 	private String profileName;
@@ -21,6 +22,14 @@ public class GetByProfileSosmedIdDtoDataRes {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getAccountName() {
+		return accountName;
+	}
+
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
 	}
 
 	public String getProfileId() {

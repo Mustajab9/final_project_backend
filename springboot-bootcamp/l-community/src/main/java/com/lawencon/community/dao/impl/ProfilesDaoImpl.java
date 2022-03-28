@@ -38,8 +38,8 @@ public class ProfilesDaoImpl extends BaseDaoImpl<Profiles> implements ProfilesDa
 	@Override
 	public Profiles findByUser(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT p.profile_name, p.profile_company, a.id, a.attachment_extension, i.id, i.industry_name,");
-		builder.append(" po.id, po.position_name, pr.id, pr.province_name p.version, p.is_active");
+		builder.append("SELECT p.id, p.profile_name, p.profile_company, a.id AS attachment_id, a.attachment_extension, i.id AS industry_id, i.industry_name,");
+		builder.append(" po.id AS position_id, po.position_name, pr.id AS province_id, pr.province_name p.version, p.is_active");
 		builder.append(" FROM profiles AS p");
 		builder.append(" LEFT JOIN attachment AS a ON a.id = p.profile_image");
 		builder.append(" INNER JOIN industries AS i ON i.id = p.industry_id");
@@ -56,33 +56,34 @@ public class ProfilesDaoImpl extends BaseDaoImpl<Profiles> implements ProfilesDa
 		
 		
 		Profiles profile = new Profiles();
-		profile.setProfileName(obj[0].toString());
-		profile.setProfileCompany(obj[1].toString());
+		profile.setId(obj[0].toString());
+		profile.setProfileName(obj[1].toString());
+		profile.setProfileCompany(obj[2].toString());
 		
 		if(obj[2] != null) {
 			Attachment attachment = new Attachment();
-			attachment.setId(obj[2].toString());
-			attachment.setAttachmentExtension(obj[3].toString());
+			attachment.setId(obj[3].toString());
+			attachment.setAttachmentExtension(obj[4].toString());
 			profile.setProfileImage(attachment);
 		}
 		
 		Industry industry = new Industry();
-		industry.setId(obj[4].toString());
-		industry.setIndustryName(obj[5].toString());
+		industry.setId(obj[5].toString());
+		industry.setIndustryName(obj[6].toString());
 		profile.setIndustryId(industry);
 		
 		Position position = new Position();
-		position.setId(obj[6].toString());
-		position.setPositionName(obj[7].toString());
+		position.setId(obj[7].toString());
+		position.setPositionName(obj[8].toString());
 		profile.setPositionId(position);
 		
 		Province province = new Province();
-		province.setId(obj[8].toString());
-		province.setProvinceName(obj[9].toString());
+		province.setId(obj[9].toString());
+		province.setProvinceName(obj[10].toString());
 		profile.setProvinceId(province);
 		
-		profile.setVersion(Integer.valueOf(obj[10].toString()));
-		profile.setIsActive(Boolean.valueOf(obj[11].toString()));
+		profile.setVersion(Integer.valueOf(obj[11].toString()));
+		profile.setIsActive(Boolean.valueOf(obj[12].toString()));
 
 		return profile;
 	}

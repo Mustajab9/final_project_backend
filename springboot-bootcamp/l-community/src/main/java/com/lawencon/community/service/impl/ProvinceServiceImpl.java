@@ -83,6 +83,7 @@ public class ProvinceServiceImpl extends BaseService implements ProvinceService 
 			Province province = new Province();
 			province.setProvinceName(data.getProvinceName());
 			province.setProvinceCode(data.getProvinceCode());
+			province.setCreatedBy(getId());
 
 			begin();
 			Province provinceInsert = provinceDao.save(province);
@@ -112,7 +113,6 @@ public class ProvinceServiceImpl extends BaseService implements ProvinceService 
 
 				province.setProvinceName(data.getProvinceName());
 				province.setVersion(data.getVersion());
-
 				province.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {

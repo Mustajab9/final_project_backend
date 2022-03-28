@@ -35,7 +35,7 @@ public class PaymentMethodController {
 	}
 
 	@GetMapping
-	public ResponseEntity<GetAllPaymentMethodDtoRes> getAll(@RequestParam("start") Integer start, @RequestParam("max") Integer max) throws Exception {
+	public ResponseEntity<GetAllPaymentMethodDtoRes> getAll(@RequestParam int start, @RequestParam int max) throws Exception {
 		GetAllPaymentMethodDtoRes result = paymentMethodService.findAll(start, max);
 		return new ResponseEntity<GetAllPaymentMethodDtoRes>(result, HttpStatus.OK);
 	}

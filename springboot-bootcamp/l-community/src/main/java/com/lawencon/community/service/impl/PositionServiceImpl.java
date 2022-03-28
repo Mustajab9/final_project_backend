@@ -83,6 +83,7 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 			Position position = new Position();
 			position.setPositionName(data.getPositionName());
 			position.setPositionCode(data.getPositionCode());
+			position.setCreatedBy(getId());
 
 			begin();
 			Position positionInsert = positionDao.save(position);
@@ -112,7 +113,6 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 
 				position.setPositionName(data.getPositionName());
 				position.setVersion(data.getVersion());
-
 				position.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {

@@ -80,6 +80,9 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
 
 		try {
 			Attachment attach = new Attachment();
+			
+			String code = getAlphaNumericString(5);
+			attach.setAttachmentCode(code);
 			attach.setAttachmentContent(file.getBytes());
 			
 			String extensionName = fileExtensionName(file);

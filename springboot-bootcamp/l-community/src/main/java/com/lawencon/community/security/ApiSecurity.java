@@ -55,7 +55,7 @@ public class ApiSecurity extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers(HttpMethod.POST, "/users", "/students")
+		web.ignoring().antMatchers(HttpMethod.POST, "/users")
 					.antMatchers(HttpMethod.GET, "/files/**");
 	}
 }

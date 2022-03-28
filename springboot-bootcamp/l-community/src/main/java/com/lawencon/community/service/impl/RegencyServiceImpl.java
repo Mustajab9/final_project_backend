@@ -96,6 +96,7 @@ public class RegencyServiceImpl extends BaseService implements RegencyService {
 			
 			Province province = provinceDao.findById(data.getProvinceId());
 			regency.setProvinceId(province);
+			regency.setCreatedBy(getId());
 			
 			begin();
 			Regency regencyInsert = regencyDao.save(regency);
@@ -125,7 +126,6 @@ public class RegencyServiceImpl extends BaseService implements RegencyService {
 				
 				regency.setRegencyName(data.getRegencyName());
 				regency.setVersion(data.getVersion());
-
 				regency.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {

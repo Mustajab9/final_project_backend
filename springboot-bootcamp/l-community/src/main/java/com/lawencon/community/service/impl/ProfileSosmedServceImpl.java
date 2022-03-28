@@ -14,6 +14,8 @@ import com.lawencon.community.dto.profilesosmed.GetAllProfileSosmedDtoDataRes;
 import com.lawencon.community.dto.profilesosmed.GetAllProfileSosmedDtoRes;
 import com.lawencon.community.dto.profilesosmed.GetByProfileSosmedIdDtoDataRes;
 import com.lawencon.community.dto.profilesosmed.GetByProfileSosmedIdDtoRes;
+import com.lawencon.community.dto.profilesosmed.GetProfileSosmedByUserDtoDataRes;
+import com.lawencon.community.dto.profilesosmed.GetProfileSosmedByUserDtoRes;
 import com.lawencon.community.dto.profilesosmed.InsertProfileSosmedDtoDataRes;
 import com.lawencon.community.dto.profilesosmed.InsertProfileSosmedDtoReq;
 import com.lawencon.community.dto.profilesosmed.InsertProfileSosmedDtoRes;
@@ -26,13 +28,13 @@ import com.lawencon.community.model.SocialMedia;
 import com.lawencon.community.service.ProfileSosmedService;
 
 @Service
-public class ProfileSosmedDaoImpl extends BaseService implements ProfileSosmedService {
+public class ProfileSosmedServceImpl extends BaseService implements ProfileSosmedService {
 	private ProfileSosmedDao profileSosmedDao;
 	private ProfilesDao profileDao;
 	private SocialMediaDao socialMediaDao;
 
 	@Autowired
-	public ProfileSosmedDaoImpl(ProfileSosmedDao profileSosmedDao, ProfilesDao profileDao, SocialMediaDao socialMediaDao) {
+	public ProfileSosmedServceImpl(ProfileSosmedDao profileSosmedDao, ProfilesDao profileDao, SocialMediaDao socialMediaDao) {
 		this.profileSosmedDao = profileSosmedDao;
 		this.profileDao = profileDao;
 		this.socialMediaDao = socialMediaDao;
@@ -50,6 +52,7 @@ public class ProfileSosmedDaoImpl extends BaseService implements ProfileSosmedSe
 			GetAllProfileSosmedDtoDataRes data = new GetAllProfileSosmedDtoDataRes();
 
 			data.setId(profileSosmed.getId());
+			data.setAccountName(profileSosmed.getAccountName());
 			data.setProfileId(profileSosmed.getProfileId().getId());
 			data.setProfileCode(profileSosmed.getProfileId().getProfileCode());
 			data.setProfileName(profileSosmed.getProfileId().getProfileName());
@@ -81,6 +84,7 @@ public class ProfileSosmedDaoImpl extends BaseService implements ProfileSosmedSe
 		GetByProfileSosmedIdDtoDataRes data = new GetByProfileSosmedIdDtoDataRes();
 
 		data.setId(profileSosmed.getId());
+		data.setAccountName(profileSosmed.getAccountName());
 		data.setProfileId(profileSosmed.getProfileId().getId());
 		data.setProfileCode(profileSosmed.getProfileId().getProfileCode());
 		data.setProfileName(profileSosmed.getProfileId().getProfileName());
@@ -106,11 +110,14 @@ public class ProfileSosmedDaoImpl extends BaseService implements ProfileSosmedSe
 
 		try {
 			ProfileSosmed profileSosmed = new ProfileSosmed();
+			profileSosmed.setAccountName(data.getAccountName());
+			
 			Profiles profile = profileDao.findById(data.getProfileId());
 			profileSosmed.setProfileId(profile);
 
 			SocialMedia socialMedia = socialMediaDao.findById(data.getSocialMediaId());
 			profileSosmed.setSocialMediaId(socialMedia);
+			profileSosmed.setCreatedBy(getId());
 			
 			begin();
 			ProfileSosmed profileSosmedInsert = profileSosmedDao.save(profileSosmed);
@@ -140,7 +147,6 @@ public class ProfileSosmedDaoImpl extends BaseService implements ProfileSosmedSe
 
 				profileSosmed.setAccountName(data.getAccountName());
 				profileSosmed.setVersion(data.getVersion());
-
 				profileSosmed.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {
@@ -188,8 +194,31 @@ public class ProfileSosmedDaoImpl extends BaseService implements ProfileSosmedSe
 	}
 	
 	@Override
-	public List<ProfileSosmed> findByUser(String id) throws Exception {
-		List<ProfileSosmed> getByUserId = profileSosmedDao.findByUser(id);
-		return getByUserId;
+	public GetProfileSosmedByUserDtoRes findByUser(String id) throws Exception {
+		GetProfileSosmedByUserDtoRes getByUser = new GetProfileSosmedByUserDtoRes();
+
+		List<ProfileSosmed> profileSosmeds = profileSosmedDao.findByUser(id);
+		List<GetProfileSosmedByUserDtoDataRes> profileList = new ArrayList<>();
+
+		for (int i = 0; i < profileSosmeds.size(); i++) {
+			ProfileSosmed profileSosmed = profileSosmeds.get(i);
+			GetProfileSosmedByUserDtoDataRes data = new GetProfileSosmedByUserDtoDataRes();
+
+			data.setId(profileSosmed.getId());
+			data.setAccountName(profileSosmed.getAccountName());
+			data.setProfileId(profileSosmed.getProfileId().getId());
+			data.setProfileName(profileSosmed.getProfileId().getProfileName());
+			data.setSocialMediaid(profileSosmed.getSocialMediaId().getId());
+			data.setSocialMediaName(profileSosmed.getSocialMediaId().getSocialMediaName());
+			data.setVersion(profileSosmed.getVersion());
+			data.setIsActive(profileSosmed.getIsActive());
+
+			profileList.add(data);
+		}
+
+		getByUser.setData(profileList);
+		getByUser.setMsg(null);
+
+		return getByUser;
 	}
 }

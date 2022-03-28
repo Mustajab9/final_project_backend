@@ -12,6 +12,7 @@ import com.lawencon.community.dao.ThreadAttachmentDao;
 import com.lawencon.community.dao.ThreadCategoryDao;
 import com.lawencon.community.dao.ThreadDao;
 import com.lawencon.community.dao.ThreadTypeDao;
+import com.lawencon.community.dto.attachment.InsertAttachmentDtoRes;
 import com.lawencon.community.dto.thread.DeleteByThreadIdDtoRes;
 import com.lawencon.community.dto.thread.GetAllThreadDtoDataRes;
 import com.lawencon.community.dto.thread.GetAllThreadDtoRes;
@@ -27,11 +28,14 @@ import com.lawencon.community.dto.thread.InsertThreadDtoRes;
 import com.lawencon.community.dto.thread.UpdateThreadDtoDataRes;
 import com.lawencon.community.dto.thread.UpdateThreadDtoReq;
 import com.lawencon.community.dto.thread.UpdateThreadDtoRes;
+import com.lawencon.community.dto.threadattachment.InsertThreadAttachmentDtoReq;
 import com.lawencon.community.dto.threadcategory.InsertThreadCategoryDtoReq;
 import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadAttachment;
 import com.lawencon.community.model.ThreadCategory;
 import com.lawencon.community.model.ThreadType;
+import com.lawencon.community.service.AttachmentService;
+import com.lawencon.community.service.ThreadAttachmentService;
 import com.lawencon.community.service.ThreadCategoryService;
 import com.lawencon.community.service.ThreadService;
 
@@ -41,6 +45,8 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 	private ThreadTypeDao threadTypeDao;
 	private ThreadAttachmentDao threadAttachmentDao;
 	private ThreadCategoryDao threadCategoryDao;
+	private AttachmentService attachmentService;
+	private ThreadAttachmentService threadAttachmentService;
 	private ThreadCategoryService threadCategoryService;
 
 	@Autowired
@@ -49,6 +55,16 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 		this.threadTypeDao = threadTypeDao;
 		this.threadAttachmentDao = threadAttachmentDao;
 		this.threadCategoryDao = threadCategoryDao;
+	}
+	
+	@Autowired
+	public void setAttachmentService(AttachmentService attachmentService) {
+		this.attachmentService = attachmentService;
+	}
+	
+	@Autowired
+	public void setThreadAttachmentService(ThreadAttachmentService threadAttachmentService) {
+		this.threadAttachmentService = threadAttachmentService;
 	}
 	
 	@Autowired
@@ -210,6 +226,20 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 					categoryReq.setCategoryId(data.getCategoryId().get(i));
 					
 					threadCategoryService.insert(categoryReq);
+				}
+				
+				if(file != null) {
+					for(int j = 0; j < file.length; j++) {
+						InsertAttachmentDtoRes attachmentRes = attachmentService.insert(file[j]);
+						
+						if(attachmentRes != null) {
+							InsertThreadAttachmentDtoReq attachmentReq = new InsertThreadAttachmentDtoReq();
+							attachmentReq.setAttachmentId(attachmentRes.getData().getId());
+							attachmentReq.setThreadId(threadInsert.getId());
+							
+							threadAttachmentService.insert(attachmentReq);
+						}
+					}
 				}
 			}
 			

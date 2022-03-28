@@ -16,6 +16,8 @@ import com.lawencon.community.dto.profiles.GetAllProfilesDtoDataRes;
 import com.lawencon.community.dto.profiles.GetAllProfilesDtoRes;
 import com.lawencon.community.dto.profiles.GetByProfilesIdDtoDataRes;
 import com.lawencon.community.dto.profiles.GetByProfilesIdDtoRes;
+import com.lawencon.community.dto.profiles.GetProfileByUserDtoDataRes;
+import com.lawencon.community.dto.profiles.GetProfileByUserDtoRes;
 import com.lawencon.community.dto.profiles.InsertProfilesDtoDataRes;
 import com.lawencon.community.dto.profiles.InsertProfilesDtoReq;
 import com.lawencon.community.dto.profiles.InsertProfilesDtoRes;
@@ -62,8 +64,12 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			data.setProfileName(profile.getProfileName());
 			data.setProfileCompany(profile.getProfileCompany());
 			data.setProfilePortalCode(profile.getProfilePortalCode());
-			data.setProfileImageId(profile.getProfileImage().getId());
-			data.setProfileImageExtension(profile.getProfileImage().getAttachmentExtension());
+			
+			if(profile.getProfileImage() != null) {				
+				data.setProfileImageId(profile.getProfileImage().getId());
+				data.setProfileImageExtension(profile.getProfileImage().getAttachmentExtension());
+			}
+			
 			data.setUserId(profile.getUserId().getId());
 			data.setEmail(profile.getUserId().getEmail());
 			data.setPassword(profile.getUserId().getPassword());
@@ -99,8 +105,12 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 		data.setProfileName(profile.getProfileName());
 		data.setProfileCompany(profile.getProfileCompany());
 		data.setProfilePortalCode(profile.getProfilePortalCode());
-		data.setProfileImageId(profile.getProfileImage().getId());
-		data.setProfileImageExtension(profile.getProfileImage().getAttachmentExtension());
+		
+		if(profile.getProfileImage() != null) {				
+			data.setProfileImageId(profile.getProfileImage().getId());
+			data.setProfileImageExtension(profile.getProfileImage().getAttachmentExtension());
+		}
+		
 		data.setUserId(profile.getUserId().getId());
 		data.setEmail(profile.getUserId().getEmail());
 		data.setPassword(profile.getUserId().getPassword());
@@ -142,6 +152,7 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			
 			Province province = provinceDao.findById(data.getProvinceId());
 			profile.setProvinceId(province);
+			profile.setCreatedBy(getId());
 			
 			begin();
 			Profiles profileInsert = profilesDao.save(profile);
@@ -181,7 +192,6 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 				Province province = provinceDao.findById(data.getProvinceId());
 				profile.setProvinceId(province);
 				profile.setVersion(data.getVersion());
-
 				profile.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {
@@ -229,8 +239,33 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 	}
 	
 	@Override
-	public Profiles findByUser(String id) throws Exception {
-		Profiles getByUserId = profilesDao.findByUser(id);
-		return getByUserId;
+	public GetProfileByUserDtoRes findByUser(String id) throws Exception {
+		GetProfileByUserDtoRes getByUser = new GetProfileByUserDtoRes();
+
+		Profiles profile = profilesDao.findByUser(id);
+		GetProfileByUserDtoDataRes data = new GetProfileByUserDtoDataRes();
+
+		data.setId(profile.getId());
+		data.setProfileName(profile.getProfileName());
+		data.setProfileCompany(profile.getProfileCompany());
+		
+		if(profile.getProfileImage() != null) {				
+			data.setProfileImageId(profile.getProfileImage().getId());
+			data.setProfileImageExtension(profile.getProfileImage().getAttachmentExtension());
+		}
+		
+		data.setIndustryId(profile.getIndustryId().getId());
+		data.setIndustyName(profile.getIndustryId().getIndustryName());
+		data.setPositionId(profile.getPositionId().getId());
+		data.setPositionName(profile.getPositionId().getPositionName());
+		data.setProvinceId(profile.getProvinceId().getId());
+		data.setProvinceName(profile.getProvinceId().getProvinceName());
+		data.setVersion(profile.getVersion());
+		data.setIsActive(profile.getIsActive());
+
+		getByUser.setData(data);
+		getByUser.setMsg(null);
+
+		return getByUser;
 	}
 }

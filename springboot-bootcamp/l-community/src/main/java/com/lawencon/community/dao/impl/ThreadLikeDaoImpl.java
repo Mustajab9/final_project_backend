@@ -15,12 +15,12 @@ public class ThreadLikeDaoImpl extends BaseDao<ThreadLike> implements ThreadLike
 	
 	@Override
 	public List<ThreadLike> findAll() throws Exception {
-		return null;
+		return super.getAll();
 	}
 	
 	@Override
 	public ThreadLike findById(String id) throws Exception {
-		return null;
+		return super.getById(id);
 	}
 	
 	@Override
@@ -30,7 +30,7 @@ public class ThreadLikeDaoImpl extends BaseDao<ThreadLike> implements ThreadLike
 	
 	@Override
 	public boolean deleteById(String id) throws Exception {
-		return false;
+		return super.deleteById(id);
 	}
 	
 	@Override
