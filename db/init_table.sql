@@ -416,6 +416,7 @@ CREATE TABLE enroll_events(
 	enroll_invoice varchar(20),
 	is_approve boolean NOT NULL,
 	profile_id varchar(36) NOT NULL,
+	event_id varchar(36) NOT NULL,
 	attachment_id varchar(36),
 	payment_id varchar(36),
 	created_by varchar(36) NOT NULL,
@@ -427,15 +428,20 @@ CREATE TABLE enroll_events(
 );
 
 ALTER TABLE enroll_events ADD CONSTRAINT enroll_pk PRIMARY KEY(id);
-ALTER TABLE enroll_events ADD CONSTRAINT enroll_ck UNIQUE(profile_id, payment_id);
+ALTER TABLE enroll_events ADD CONSTRAINT enroll_bk UNIQUE(enroll_code);
+ALTER TABLE enroll_events ADD CONSTRAINT enroll_ck UNIQUE(profile_id, event_id);
 ALTER TABLE enroll_events ADD CONSTRAINT enroll_profile_fk FOREIGN KEY(profile_id) REFERENCES profiles(id);
+ALTER TABLE enroll_events ADD CONSTRAINT enroll_event_fk FOREIGN KEY(event_id) REFERENCES events(id);
 ALTER TABLE enroll_events ADD CONSTRAINT enroll_attachment_fk FOREIGN KEY(attachment_id) REFERENCES attachments(id);
 ALTER TABLE enroll_events ADD CONSTRAINT enroll_payment_fk FOREIGN KEY(payment_id) REFERENCES payment_method(id);
 
-CREATE TABLE enroll_detail(
+CREATE TABLE payment_events(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
-	event_id varchar(36),
-	enroll_id varchar(36),
+	payment_events_code varchar(5) NOT NULL,
+	payment_events_invoice varchar(20),
+	is_approve boolean NOT NULL,
+	attachment_id varchar(36),
+	payment_id varchar(36),
 	created_by varchar(36) NOT NULL,
 	created_at timestamp without time zone NOT NULL,
 	updated_by varchar(36),
@@ -444,10 +450,27 @@ CREATE TABLE enroll_detail(
 	is_active boolean
 );
 
-ALTER TABLE enroll_detail ADD CONSTRAINT detail_pk PRIMARY KEY(id);
-ALTER TABLE enroll_detail ADD CONSTRAINT detail_ck UNIQUE(event_id, enroll_id);
-ALTER TABLE enroll_detail ADD CONSTRAINT detail_event_fk FOREIGN KEY(event_id) REFERENCES events(id);
-ALTER TABLE enroll_detail ADD CONSTRAINT detail_enroll_fk FOREIGN KEY(enroll_id) REFERENCES enroll_events(id);
+ALTER TABLE payment_events ADD CONSTRAINT payment_event_pk PRIMARY KEY(id);
+ALTER TABLE payment_events ADD CONSTRAINT payment_events_bk UNIQUE(payment_events_code);
+ALTER TABLE payment_events ADD CONSTRAINT payment_events_attachment_fk FOREIGN KEY(attachment_id) REFERENCES attachments(id);
+ALTER TABLE payment_events ADD CONSTRAINT payment_events_payment_fk FOREIGN KEY(payment_id) REFERENCES payment_method(id);
+
+CREATE TABLE payment_event_detail(
+	id varchar(36) DEFAULT uuid_generate_v4 (),
+	event_id varchar(36),
+	payment_event_id varchar(36),
+	created_by varchar(36) NOT NULL,
+	created_at timestamp without time zone NOT NULL,
+	updated_by varchar(36),
+	updated_at timestamp without time zone,
+	"version" int NOT NULL,
+	is_active boolean
+);
+
+ALTER TABLE payment_event_detail ADD CONSTRAINT detail_pk PRIMARY KEY(id);
+ALTER TABLE payment_event_detail ADD CONSTRAINT detail_ck UNIQUE(event_id, payment_event_id);
+ALTER TABLE payment_event_detail ADD CONSTRAINT detail_event_fk FOREIGN KEY(event_id) REFERENCES events(id);
+ALTER TABLE payment_event_detail ADD CONSTRAINT detail_payment_fk FOREIGN KEY(payment_event_id) REFERENCES payment_events(id);
 
 CREATE TABLE price_list_member(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
@@ -496,7 +519,6 @@ CREATE TABLE subscription_detail(
 );
 
 ALTER TABLE subscription_detail ADD CONSTRAINT detail_subs_pk PRIMARY KEY(id);
-ALTER TABLE subscription_detail ADD CONSTRAINT detail_subs_ck UNIQUE(price_id, subscription_id);
 ALTER TABLE subscription_detail ADD CONSTRAINT detail_subs_fk FOREIGN KEY(subscription_id) REFERENCES subscriptions(id);
 ALTER TABLE subscription_detail ADD CONSTRAINT detail_price_fk FOREIGN KEY(price_id) REFERENCES price_list_member(id);
 
@@ -533,3 +555,22 @@ ALTER TABLE profile_sosmed ADD CONSTRAINT profile_sosmed_pk PRIMARY KEY(id);
 ALTER TABLE profile_sosmed ADD CONSTRAINT profile_sosmed_ck UNIQUE(profile_id, social_media_id);
 ALTER TABLE profile_sosmed ADD CONSTRAINT profile_fk FOREIGN KEY(profile_id) REFERENCES profiles(id);
 ALTER TABLE profile_sosmed ADD CONSTRAINT social_media_fk FOREIGN KEY(social_media_id) REFERENCES social_media(id);
+
+
+SELECT p.polling_name, pc.choice_name, COUNT(cv.choice_id) AS count_vote
+FROM choice_votes cv
+LEFT JOIN polling_choices pc ON pc.id = cv.choice_id
+LEFT JOIN pollings p ON p.id = pc.polling_id
+WHERE cv.choice_id IN 
+	(SELECT pc.id FROM polling_choices pc WHERE pc.polling_id IN 
+		(SELECT p.id FROM pollings p WHERE p.thread_id = :id))
+GROUP BY pc.choice_name, p.polling_name;
+
+UPDATE subscriptions
+SET subscription_duration = :date + (:lenghtDay || ' day')::interval,
+	"version" = "version" + 1, 
+	updated_by = :userId, 
+	updated_at = NOW()
+WHERE id = :id;
+
+SELECT NOW() + (:lenghtDay || ' day')::interval;
