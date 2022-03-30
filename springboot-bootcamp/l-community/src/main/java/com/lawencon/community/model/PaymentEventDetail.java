@@ -9,8 +9,8 @@ import javax.persistence.UniqueConstraint;
 import com.lawencon.base.BaseEntity;
 
 @Entity
-@Table(name = "enroll_detail", uniqueConstraints = @UniqueConstraint(name="detail_ck", columnNames = {"event_id", "enroll_id"}))
-public class EnrollDetail extends BaseEntity {
+@Table(name = "payment_event_detail", uniqueConstraints = @UniqueConstraint(name="detail_ck", columnNames = {"event_id", "payment_event_id"}))
+public class PaymentEventDetail extends BaseEntity {
 	
 	private static final long serialVersionUID = 1678004039513227174L;
 	
@@ -19,8 +19,8 @@ public class EnrollDetail extends BaseEntity {
 	private Event eventId;
 	
 	@ManyToOne
-	@JoinColumn(name = "enroll_id")
-	private EnrollEvent enrollId;
+	@JoinColumn(name = "payment_event_id")
+	private PaymentEvent paymentId;
 	
 	public Event getEventId() {
 		return eventId;
@@ -30,11 +30,11 @@ public class EnrollDetail extends BaseEntity {
 		this.eventId = eventId;
 	}
 
-	public EnrollEvent getEnrollId() {
-		return enrollId;
+	public PaymentEvent getPaymentId() {
+		return paymentId;
 	}
 
-	public void setEnrollId(EnrollEvent enrollId) {
-		this.enrollId = enrollId;
+	public void setPaymentId(PaymentEvent paymentId) {
+		this.paymentId = paymentId;
 	}
 }

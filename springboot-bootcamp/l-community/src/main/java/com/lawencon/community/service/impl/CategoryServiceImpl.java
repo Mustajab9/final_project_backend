@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.CategoryDao;
 import com.lawencon.community.dto.category.DeleteByCategoryIdDtoRes;
 import com.lawencon.community.dto.category.GetAllCategoryDtoDataRes;
@@ -93,7 +94,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 			dataDto.setId(categoryInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(CommonConstant.ACTION_ADD.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Category " + CommonConstant.HAS_BEEN_ADDED.getDetail());
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -126,7 +127,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 				dataDto.setVersion(categoryUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg("Update Success");
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Category " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -147,7 +148,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Category " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -2,9 +2,9 @@ package com.lawencon.community.dto.enrollevent;
 
 import java.util.List;
 
-public class GetByUserIdDtoRes {
+public class GetEnrollEventByUserDtoRes {
 	private String msg;
-	private List<GetByUserIdDtoDataRes> data;
+	private List<GetEnrollEventByUserDtoDataRes> data;
 	
 	public String getMsg() {
 		return msg;
@@ -12,10 +12,10 @@ public class GetByUserIdDtoRes {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	public List<GetByUserIdDtoDataRes> getData() {
+	public List<GetEnrollEventByUserDtoDataRes> getData() {
 		return data;
 	}
-	public void setData(List<GetByUserIdDtoDataRes> data) {
+	public void setData(List<GetEnrollEventByUserDtoDataRes> data) {
 		this.data = data;
 	}
 	

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.SocialMediaDao;
 import com.lawencon.community.dto.socialmedia.DeleteBySocialMediaIdDtoRes;
 import com.lawencon.community.dto.socialmedia.GetAllSocialMediaDtoDataRes;
@@ -94,7 +95,7 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 			dataDto.setId(socialMediaInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(CommonConstant.ACTION_ADD.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Social Media" + CommonConstant.HAS_BEEN_ADDED.getDetail());
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -128,7 +129,7 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 				dataDto.setVersion(socialMediaUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg("Update Success");
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Social Media " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,7 +150,7 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Social Media " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

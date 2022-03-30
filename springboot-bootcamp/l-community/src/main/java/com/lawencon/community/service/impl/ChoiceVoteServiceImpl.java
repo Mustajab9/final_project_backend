@@ -14,6 +14,8 @@ import com.lawencon.community.dto.choicevote.GetByChoiceVoteIdDtoDataRes;
 import com.lawencon.community.dto.choicevote.GetByChoiceVoteIdDtoRes;
 import com.lawencon.community.dto.choicevote.GetByPollingChoiceIdDtoDataRes;
 import com.lawencon.community.dto.choicevote.GetByPollingChoiceIdDtoRes;
+import com.lawencon.community.dto.choicevote.GetCountVoteByThreadDtoDataRes;
+import com.lawencon.community.dto.choicevote.GetCountVoteByThreadDtoRes;
 import com.lawencon.community.dto.choicevote.InsertChoiceVoteDtoDataRes;
 import com.lawencon.community.dto.choicevote.InsertChoiceVoteDtoReq;
 import com.lawencon.community.dto.choicevote.InsertChoiceVoteDtoRes;
@@ -114,7 +116,7 @@ public class ChoiceVoteServiceImpl extends BaseService implements ChoiceVoteServ
 			dataDto.setId(choiceVoteInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -156,5 +158,17 @@ public class ChoiceVoteServiceImpl extends BaseService implements ChoiceVoteServ
 		getByPollingChoice.setMsg(null);
 
 		return getByPollingChoice;
+	}
+	
+	@Override
+	public GetCountVoteByThreadDtoRes findCountByThread(String id) throws Exception {
+		GetCountVoteByThreadDtoRes getCountByThread = new GetCountVoteByThreadDtoRes();
+
+		List<GetCountVoteByThreadDtoDataRes> choiceVotes = choiceVoteDao.findCountByThread(id);
+
+		getCountByThread.setData(choiceVotes);
+		getCountByThread.setMsg(null);
+
+		return getCountByThread;
 	}
 }

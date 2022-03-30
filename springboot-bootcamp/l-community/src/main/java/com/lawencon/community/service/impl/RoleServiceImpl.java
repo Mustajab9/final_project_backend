@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.RoleDao;
 import com.lawencon.community.dto.role.DeleteByRoleIdDtoRes;
 import com.lawencon.community.dto.role.GetAllRoleDtoDataRes;
@@ -94,7 +95,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 			dataDto.setId(roleInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(CommonConstant.ACTION_ADD.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Role " + CommonConstant.HAS_BEEN_ADDED.getDetail());
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -129,7 +130,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 				dataDto.setVersion(roleUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg("Update Success");
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Role " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -150,7 +151,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Role " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

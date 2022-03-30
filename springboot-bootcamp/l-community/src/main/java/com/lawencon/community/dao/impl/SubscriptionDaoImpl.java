@@ -1,5 +1,6 @@
 package com.lawencon.community.dao.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -36,16 +37,18 @@ public class SubscriptionDaoImpl extends BaseDao<Subscription> implements Subscr
 	}
 	
 	@Override
-	public boolean update(Date date,Integer lenghtDay, String id) throws Exception {
+	public boolean update(Date date, Integer lenghtDay, String id, String userId) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		StringBuilder builder = new StringBuilder();
-		builder.append("UPDATE subscription s");
-		builder.append(" SET s.subscription_duration = :date + (:lenghtDay || ' day')::interval,");
-		builder.append(" s.version = s.version + 1, s.updated_by = :id, s.updated_at = NOW()");
-		builder.append(" WHERE s.id = :id");
+		builder.append("UPDATE subscriptions");
+		builder.append(" SET subscription_duration = DATE(:date) + (:lenghtDay || ' day')\\:\\:interval,");
+		builder.append(" version = version + 1, updated_by = :userId, updated_at = NOW()");
+		builder.append(" WHERE id = :id");
 		
 		Integer update = createNativeQuery(builder.toString())
-											.setParameter("date", date)
+											.setParameter("date", sdf.format(date))
 											.setParameter("lenghtDay", lenghtDay)
+											.setParameter("userId", userId)
 											.setParameter("id", id)
 											.executeUpdate();
 		boolean isSuccessUpdate = false;

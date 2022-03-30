@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.PositionDao;
 import com.lawencon.community.dto.position.DeleteByPositionIdDtoRes;
 import com.lawencon.community.dto.position.GetAllPositionDtoDataRes;
@@ -93,7 +94,7 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 			dataDto.setId(positionInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(CommonConstant.ACTION_ADD.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Position " + CommonConstant.HAS_BEEN_ADDED.getDetail());
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -127,7 +128,7 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 				dataDto.setVersion(updatePosition.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg("Update Success");
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Position " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -148,7 +149,7 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Position " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

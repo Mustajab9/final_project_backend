@@ -4,7 +4,6 @@ public class InsertPollingChoiceDtoReq {
 	private String choiceCode;
 	private String choiceName;
 	private String pollingId;
-	private String threadId;
 
 	public String getChoiceCode() {
 		return choiceCode;
@@ -28,14 +27,6 @@ public class InsertPollingChoiceDtoReq {
 
 	public void setPollingId(String pollingId) {
 		this.pollingId = pollingId;
-	}
-
-	public String getThreadId() {
-		return threadId;
-	}
-
-	public void setThreadId(String threadId) {
-		this.threadId = threadId;
 	}
 
 }

@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.AttachmentDao;
 import com.lawencon.community.dao.CategoryDao;
 import com.lawencon.community.dao.EventDao;
 import com.lawencon.community.dao.EventTypeDao;
+import com.lawencon.community.dao.PriceListEventDao;
 import com.lawencon.community.dto.event.DeleteByEventIdDtoRes;
 import com.lawencon.community.dto.event.GetAllEventDtoDataRes;
 import com.lawencon.community.dto.event.GetAllEventDtoRes;
@@ -26,6 +29,7 @@ import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.Category;
 import com.lawencon.community.model.Event;
 import com.lawencon.community.model.EventType;
+import com.lawencon.community.model.PriceListEvent;
 import com.lawencon.community.service.EventService;
 
 @Service
@@ -34,14 +38,16 @@ public class EventServiceImpl extends BaseService implements EventService {
 	private EventTypeDao eventTypeDao;
 	private CategoryDao categoryDao;
 	private AttachmentDao attachmentDao;
+	private PriceListEventDao priceListEventDao;
 
 	@Autowired
 	public EventServiceImpl(EventDao eventDao, EventTypeDao eventTypeDao, 
-			CategoryDao categoryDao, AttachmentDao attachmentDao) {
+			CategoryDao categoryDao, AttachmentDao attachmentDao, PriceListEventDao priceListEventDao) {
 		this.eventDao = eventDao;
 		this.eventTypeDao = eventTypeDao;
 		this.categoryDao = categoryDao;
 		this.attachmentDao = attachmentDao;
+		this.priceListEventDao = priceListEventDao;
 	}
 	
 	@Override
@@ -128,10 +134,10 @@ public class EventServiceImpl extends BaseService implements EventService {
 	
 	@Override
 	public InsertEventDtoRes insert(String data, MultipartFile file) throws Exception {
-		InsertEventDtoReq dataInsert = new InsertEventDtoReq();
 		InsertEventDtoRes insert = new InsertEventDtoRes();
 
 		try {
+			InsertEventDtoReq dataInsert = new ObjectMapper().readValue(data, InsertEventDtoReq.class);
 			Event event = new Event();
 			event.setEventCode(getAlphaNumericString(5));
 			event.setEventTitle(dataInsert.getEventTitle());
@@ -148,16 +154,23 @@ public class EventServiceImpl extends BaseService implements EventService {
 			Category category = categoryDao.findById(dataInsert.getCategoryId());
 			event.setCategoryId(category);
 			
+			PriceListEvent priceListEvent = priceListEventDao.findById(dataInsert.getPriceId());
+			event.setPriceId(priceListEvent);
+			
 			event.setCreatedBy(getId());
 			
 			if(file != null) {
 				Attachment attachment = new Attachment();
+				attachment.setAttachmentCode(getAlphaNumericString(5));
 				attachment.setAttachmentContent(file.getBytes());
 				
 				String extension = fileExtensionName(file);
 				attachment.setAttachmentExtension(extension);
+				attachment.setCreatedBy(getId());
 				
+				begin();
 				Attachment attachmentInsert = attachmentDao.save(attachment);
+				commit();
 				event.setAttachmentId(attachmentInsert);
 			}
 			
@@ -169,7 +182,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 			dataDto.setId(eventInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(CommonConstant.ACTION_ADD.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Event " + CommonConstant.HAS_BEEN_ADDED.getDetail());
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -186,12 +199,6 @@ public class EventServiceImpl extends BaseService implements EventService {
 		try {
 			if (data.getVersion() != null) {
 				Event event = eventDao.findById(data.getId());
-				event.setEventTitle(data.getEventTitle());
-				event.setEventPrice(data.getEventPrice());
-				event.setEventTimeStart(data.getEventTimeStart());
-				event.setEventTimeEnd(data.getEventTimeEnd());
-				event.setEventDateStart(data.getEventDateStart());
-				event.setEventDateEnd(data.getEventDateEnd());
 				event.setIsApprove(data.getIsApprove());
 				event.setUpdatedBy(getId());
 				event.setVersion(data.getVersion());
@@ -208,7 +215,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 				dataDto.setVersion(eventUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg("Update Success");
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Event " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -229,7 +236,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Evenet " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

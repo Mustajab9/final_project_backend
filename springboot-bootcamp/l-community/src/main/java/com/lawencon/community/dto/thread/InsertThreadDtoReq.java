@@ -8,6 +8,8 @@ public class InsertThreadDtoReq {
 	private Boolean isPremium;
 	private String typeId;
 	private List<String> categoryId;
+	private String pollingName;
+	private List<String> choiceName;
 
 	public String getThreadTitle() {
 		return threadTitle;
@@ -47,5 +49,21 @@ public class InsertThreadDtoReq {
 
 	public void setCategoryId(List<String> categoryId) {
 		this.categoryId = categoryId;
+	}
+
+	public String getPollingName() {
+		return pollingName;
+	}
+
+	public void setPollingName(String pollingName) {
+		this.pollingName = pollingName;
+	}
+
+	public List<String> getChoiceName() {
+		return choiceName;
+	}
+
+	public void setChoiceName(List<String> choiceName) {
+		this.choiceName = choiceName;
 	}
 }

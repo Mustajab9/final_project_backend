@@ -8,15 +8,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.AttachmentDao;
 import com.lawencon.community.dao.EnrollEventDao;
+import com.lawencon.community.dao.EventDao;
 import com.lawencon.community.dao.PaymentMethodDao;
-import com.lawencon.community.dto.enrolldetail.InsertEnrollDetailDtoReq;
 import com.lawencon.community.dto.enrollevent.DeleteByEnrollEventIdDtoRes;
 import com.lawencon.community.dto.enrollevent.GetAllEnrollEventDtoDataRes;
 import com.lawencon.community.dto.enrollevent.GetAllEnrollEventDtoRes;
 import com.lawencon.community.dto.enrollevent.GetByEnrollEventIdDtoDataRes;
 import com.lawencon.community.dto.enrollevent.GetByEnrollEventIdDtoRes;
+import com.lawencon.community.dto.enrollevent.GetEnrollEventByUserDtoDataRes;
+import com.lawencon.community.dto.enrollevent.GetEnrollEventByUserDtoRes;
 import com.lawencon.community.dto.enrollevent.InsertEnrollEventDtoDataRes;
 import com.lawencon.community.dto.enrollevent.InsertEnrollEventDtoReq;
 import com.lawencon.community.dto.enrollevent.InsertEnrollEventDtoRes;
@@ -25,29 +28,23 @@ import com.lawencon.community.dto.enrollevent.UpdateEnrollEventDtoReq;
 import com.lawencon.community.dto.enrollevent.UpdateEnrollEventDtoRes;
 import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.EnrollEvent;
+import com.lawencon.community.model.Event;
 import com.lawencon.community.model.PaymentMethod;
-import com.lawencon.community.service.EnrollDetailService;
 import com.lawencon.community.service.EnrollEventService;
-import com.lawencon.community.dto.enrollevent.GetByUserIdDtoDataRes;
-import com.lawencon.community.dto.enrollevent.GetByUserIdDtoRes;
 
 @Service
 public class EnrollEventServiceImpl extends BaseService implements EnrollEventService {
 	private EnrollEventDao enrollEventDao;
 	private PaymentMethodDao paymentMethodDao;
 	private AttachmentDao attachmentDao;
-	private EnrollDetailService enrollDetailService;
+	private EventDao eventDao;
 
 	@Autowired
-	public EnrollEventServiceImpl(EnrollEventDao enrollEventDao, PaymentMethodDao paymentMethodDao, AttachmentDao attachmentDao) {
+	public EnrollEventServiceImpl(EnrollEventDao enrollEventDao, PaymentMethodDao paymentMethodDao, AttachmentDao attachmentDao, EventDao eventDao) {
 		this.enrollEventDao = enrollEventDao;
 		this.paymentMethodDao = paymentMethodDao;
 		this.attachmentDao = attachmentDao;
-	}
-	
-	@Autowired
-	public void setEnrollDetailService(EnrollDetailService enrollDetailService) {
-		this.enrollDetailService = enrollDetailService;
+		this.eventDao = eventDao;
 	}
 	
 	@Override
@@ -68,6 +65,22 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 			data.setProfileId(enrollEvent.getProfileId().getId());
 			data.setProfileName(enrollEvent.getProfileId().getProfileName());
 			data.setEmail(enrollEvent.getProfileId().getUserId().getEmail());
+			data.setEventId(enrollEvent.getEventId().getId());
+			data.setEventCode(enrollEvent.getEventId().getEventCode());
+			data.setEventTitle(enrollEvent.getEventId().getEventTitle());
+			data.setEventProvider(enrollEvent.getEventId().getEventProvider());
+			data.setEventPrice(enrollEvent.getEventId().getEventPrice());
+			data.setEventTimeStart(enrollEvent.getEventId().getEventTimeStart());
+			data.setEventTimeEnd(enrollEvent.getEventId().getEventTimeEnd());
+			data.setEventDateStart(enrollEvent.getEventId().getEventDateStart());
+			data.setEventDateEnd(enrollEvent.getEventId().getEventDateEnd());
+			data.setIsEventApprove(enrollEvent.getEventId().getIsApprove());
+			data.setCategoryId(enrollEvent.getEventId().getCategoryId().getId());
+			data.setCategoryName(enrollEvent.getEventId().getCategoryId().getCategoryName());
+			data.setTypeId(enrollEvent.getEventId().getTypeId().getId());
+			data.setTypeName(enrollEvent.getEventId().getTypeId().getTypeName());
+			data.setPriceId(enrollEvent.getEventId().getPriceId().getId());
+			data.setPriceName(enrollEvent.getEventId().getPriceId().getPriceName());
 			
 			if(enrollEvent.getAttachmentId() != null) {
 				data.setAttachmentId(enrollEvent.getAttachmentId().getId());
@@ -102,6 +115,22 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 		data.setProfileId(enrollEvent.getProfileId().getId());
 		data.setProfileName(enrollEvent.getProfileId().getProfileName());
 		data.setEmail(enrollEvent.getProfileId().getUserId().getEmail());
+		data.setEventId(enrollEvent.getEventId().getId());
+		data.setEventCode(enrollEvent.getEventId().getEventCode());
+		data.setEventTitle(enrollEvent.getEventId().getEventTitle());
+		data.setEventProvider(enrollEvent.getEventId().getEventProvider());
+		data.setEventPrice(enrollEvent.getEventId().getEventPrice());
+		data.setEventTimeStart(enrollEvent.getEventId().getEventTimeStart());
+		data.setEventTimeEnd(enrollEvent.getEventId().getEventTimeEnd());
+		data.setEventDateStart(enrollEvent.getEventId().getEventDateStart());
+		data.setEventDateEnd(enrollEvent.getEventId().getEventDateEnd());
+		data.setIsEventApprove(enrollEvent.getEventId().getIsApprove());
+		data.setCategoryId(enrollEvent.getEventId().getCategoryId().getId());
+		data.setCategoryName(enrollEvent.getEventId().getCategoryId().getCategoryName());
+		data.setTypeId(enrollEvent.getEventId().getTypeId().getId());
+		data.setTypeName(enrollEvent.getEventId().getTypeId().getTypeName());
+		data.setPriceId(enrollEvent.getEventId().getPriceId().getId());
+		data.setPriceName(enrollEvent.getEventId().getPriceId().getPriceName());
 		
 		if(enrollEvent.getAttachmentId() != null) {
 			data.setAttachmentId(enrollEvent.getAttachmentId().getId());
@@ -127,6 +156,9 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 		try {
 			EnrollEvent enrollEvent = new EnrollEvent();
 			enrollEvent.setEnrollCode(getAlphaNumericString(5));
+			
+			Event event = eventDao.findById(enrollEventDto.getEventId());
+			enrollEvent.setEventId(event);
 
 			PaymentMethod paymentMethod = paymentMethodDao.findById(enrollEventDto.getPaymentId());
 			enrollEvent.setPaymentId(paymentMethod);
@@ -151,16 +183,8 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 			InsertEnrollEventDtoDataRes dataDto = new InsertEnrollEventDtoDataRes();
 			dataDto.setId(enrollEventInsert.getId());
 			
-			if(dataDto != null) {
-				InsertEnrollDetailDtoReq detailInsert = new InsertEnrollDetailDtoReq();
-				detailInsert.setEnrollEventId(enrollEventInsert.getId());
-				detailInsert.setEventId(enrollEventDto.getEventId());
-				
-				enrollDetailService.insert(detailInsert);
-			}
-
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg("You " + CommonConstant.SUCCESS.getDetail() + " Enroll Event");
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -194,7 +218,7 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 				dataDto.setVersion(enrollEventUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg("Update Success");
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Enroll Event " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -215,7 +239,7 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Enroll Event " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -227,15 +251,15 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 	}
 	
 	@Override
-	public GetByUserIdDtoRes findByUser(String id) throws Exception {
-		GetByUserIdDtoRes getByUser = new GetByUserIdDtoRes();
+	public GetEnrollEventByUserDtoRes findByUser(String id) throws Exception {
+		GetEnrollEventByUserDtoRes getByUser = new GetEnrollEventByUserDtoRes();
 
 		List<EnrollEvent> enrollEvents = enrollEventDao.findByUser(id);
-		List<GetByUserIdDtoDataRes> listEnrollEvent = new ArrayList<>();
+		List<GetEnrollEventByUserDtoDataRes> listEnrollEvent = new ArrayList<>();
 
 		for (int i = 0; i < enrollEvents.size(); i++) {
 			EnrollEvent enrollEvent = enrollEvents.get(i);
-			GetByUserIdDtoDataRes data = new GetByUserIdDtoDataRes();
+			GetEnrollEventByUserDtoDataRes data = new GetEnrollEventByUserDtoDataRes();
 			
 			data.setId(enrollEvent.getId());
 			data.setEnrollCode(enrollEvent.getEnrollCode());
