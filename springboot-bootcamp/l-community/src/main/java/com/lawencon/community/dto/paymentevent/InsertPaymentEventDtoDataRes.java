@@ -1,6 +1,6 @@
-package com.lawencon.community.dto.enrolldetail;
+package com.lawencon.community.dto.paymentevent;
 
-public class InsertEnrollDetailDtoDataRes {
+public class InsertPaymentEventDtoDataRes {
 	private String id;
 
 	public String getId() {

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.IndustryDao;
 import com.lawencon.community.dto.industry.DeleteByIndustryIdDtoRes;
 import com.lawencon.community.dto.industry.GetAllIndustryDtoDataRes;
@@ -93,7 +94,7 @@ public class IndustryServiceImpl extends BaseService implements IndustryService 
 			dataDto.setId(industryInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(CommonConstant.ACTION_ADD.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Industry " + CommonConstant.HAS_BEEN_ADDED.getDetail());
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -125,7 +126,7 @@ public class IndustryServiceImpl extends BaseService implements IndustryService 
 				dataDto.setVersion(userUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg("Update Success");
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Industry " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -146,7 +147,7 @@ public class IndustryServiceImpl extends BaseService implements IndustryService 
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Industry " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -12,44 +12,44 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lawencon.community.dto.enrolldetail.GetAllEnrollDetailDtoRes;
-import com.lawencon.community.dto.enrolldetail.GetByEnrollDetailIdDtoRes;
-import com.lawencon.community.dto.enrolldetail.GetByEventIdDtoRes;
-import com.lawencon.community.dto.enrolldetail.InsertEnrollDetailDtoReq;
-import com.lawencon.community.dto.enrolldetail.InsertEnrollDetailDtoRes;
-import com.lawencon.community.service.EnrollDetailService;
+import com.lawencon.community.dto.paymenteventdetail.GetAllPaymentEventDetailDtoRes;
+import com.lawencon.community.dto.paymenteventdetail.GetByPaymentEventDetailIdDtoRes;
+import com.lawencon.community.dto.paymenteventdetail.GetPaymentEventDetailByEventDtoRes;
+import com.lawencon.community.dto.paymenteventdetail.InsertPaymentEventDetailDtoReq;
+import com.lawencon.community.dto.paymenteventdetail.InsertPaymentEventDetailDtoRes;
+import com.lawencon.community.service.PaymentEventDetailService;
 
 @RestController
 @RequestMapping("enroll-details")
 public class EnrollDetailController {
-	private EnrollDetailService enrollDetailService;
+	private PaymentEventDetailService enrollDetailService;
 
 	@Autowired
-	public void setBookmarkService(EnrollDetailService enrollDetailService) {
+	public void setBookmarkService(PaymentEventDetailService enrollDetailService) {
 		this.enrollDetailService = enrollDetailService;
 	}
 
 	@GetMapping
-	public ResponseEntity<GetAllEnrollDetailDtoRes> getAll() throws Exception {
-		GetAllEnrollDetailDtoRes result = enrollDetailService.findAll();
-		return new ResponseEntity<GetAllEnrollDetailDtoRes>(result, HttpStatus.OK);
+	public ResponseEntity<GetAllPaymentEventDetailDtoRes> getAll() throws Exception {
+		GetAllPaymentEventDetailDtoRes result = enrollDetailService.findAll();
+		return new ResponseEntity<GetAllPaymentEventDetailDtoRes>(result, HttpStatus.OK);
 	}
 
 	@GetMapping("{id}")
-	public ResponseEntity<GetByEnrollDetailIdDtoRes> getById(@PathVariable("id") String id) throws Exception {
-		GetByEnrollDetailIdDtoRes data = enrollDetailService.findById(id);
-		return new ResponseEntity<GetByEnrollDetailIdDtoRes>(data, HttpStatus.OK);
+	public ResponseEntity<GetByPaymentEventDetailIdDtoRes> getById(@PathVariable("id") String id) throws Exception {
+		GetByPaymentEventDetailIdDtoRes data = enrollDetailService.findById(id);
+		return new ResponseEntity<GetByPaymentEventDetailIdDtoRes>(data, HttpStatus.OK);
 	}
 	
 	@GetMapping("event/{id}")
-	public ResponseEntity<GetByEventIdDtoRes> getByEvent(@PathVariable("id") String id) throws Exception {
-		GetByEventIdDtoRes data = enrollDetailService.findByEvent(id);
-		return new ResponseEntity<GetByEventIdDtoRes>(data, HttpStatus.OK);
+	public ResponseEntity<GetPaymentEventDetailByEventDtoRes> getByEvent(@PathVariable("id") String id) throws Exception {
+		GetPaymentEventDetailByEventDtoRes data = enrollDetailService.findByEvent(id);
+		return new ResponseEntity<GetPaymentEventDetailByEventDtoRes>(data, HttpStatus.OK);
 	}
 
 	@PostMapping
-	public ResponseEntity<InsertEnrollDetailDtoRes> insertData(@RequestBody @Valid InsertEnrollDetailDtoReq data) throws Exception {
-		InsertEnrollDetailDtoRes insert = enrollDetailService.insert(data);
-		return new ResponseEntity<InsertEnrollDetailDtoRes>(insert, HttpStatus.CREATED);
+	public ResponseEntity<InsertPaymentEventDetailDtoRes> insertData(@RequestBody @Valid InsertPaymentEventDetailDtoReq data) throws Exception {
+		InsertPaymentEventDetailDtoRes insert = enrollDetailService.insert(data);
+		return new ResponseEntity<InsertPaymentEventDetailDtoRes>(insert, HttpStatus.CREATED);
 	}
 }

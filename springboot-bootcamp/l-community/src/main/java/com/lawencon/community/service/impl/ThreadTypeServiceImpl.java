@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.ThreadTypeDao;
 import com.lawencon.community.dto.threadtype.DeleteByThreadTypeIdDtoRes;
 import com.lawencon.community.dto.threadtype.GetAllThreadTypeDtoDataRes;
@@ -94,7 +95,7 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 			dataDto.setId(insertUser.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(CommonConstant.ACTION_ADD + " " + CommonConstant.SUCCESS + ", Thread Type " + CommonConstant.HAS_BEEN_ADDED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -128,7 +129,7 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 				dataDto.setVersion(threadTypeUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg("Update Success");
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Thread Type " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,7 +150,7 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Thread Type " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

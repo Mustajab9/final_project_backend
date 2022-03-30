@@ -47,9 +47,7 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 		builder.append(" JOIN categories c ON c.id = e.category_id");
 		builder.append(" JOIN event_types t ON t.id = e.type_id");
 		builder.append(" LEFT JOIN attachments a ON a.id = e.attachment_id");
-		builder.append(" WHERE e.id IN (SELECT ed.event_id FROM enroll_detail ed WHERE ed.enroll_id IN");
-		builder.append(" (SELECT ee.id FROM enroll_events ee JOIN profiles p ON p.id = ee.profile_id");
-		builder.append(" WHERE p.user_id = :id))");
+		builder.append(" WHERE e.id IN (SELECT ee.id FROM enroll_events ee JOIN profiles p ON p.id = ee.profile_id WHERE p.user_id = :id)");
 		builder.append(" AND e.is_approve = true");
 		
 		List<?> results = createNativeQuery(builder.toString())
@@ -111,9 +109,7 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 		builder.append(" JOIN categories c ON c.id = e.category_id");
 		builder.append(" JOIN event_types t ON t.id = e.type_id");
 		builder.append(" LEFT JOIN attachments a ON a.id = e.attachment_id");
-		builder.append(" WHERE e.id NOT IN (SELECT ed.event_id FROM enroll_detail ed WHERE ed.enroll_id IN");
-		builder.append(" (SELECT ee.id FROM enroll_events ee JOIN profiles p ON p.id = ee.profile_id");
-		builder.append(" WHERE p.user_id = :id))");
+		builder.append(" WHERE e.id NOT IN (SELECT ee.id FROM enroll_events ee JOIN profiles p ON p.id = ee.profile_id WHERE p.user_id = :id)");
 		builder.append(" AND e.is_approve = true");
 
 		List<?> results = createNativeQuery(builder.toString())

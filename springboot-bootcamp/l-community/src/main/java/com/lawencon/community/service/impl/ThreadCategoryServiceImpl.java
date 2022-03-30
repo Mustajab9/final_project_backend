@@ -110,7 +110,7 @@ public class ThreadCategoryServiceImpl extends BaseService implements ThreadCate
 			dataDto.setId(threadCategoryInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -130,7 +130,7 @@ public class ThreadCategoryServiceImpl extends BaseService implements ThreadCate
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

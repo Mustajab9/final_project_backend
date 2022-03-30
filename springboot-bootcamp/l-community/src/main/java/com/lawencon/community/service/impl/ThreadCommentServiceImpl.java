@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.ThreadCommentDao;
 import com.lawencon.community.dao.ThreadDao;
 import com.lawencon.community.dto.threadcomment.DeleteByThreadCommentIdDtoRes;
@@ -107,7 +108,7 @@ public class ThreadCommentServiceImpl extends BaseService implements ThreadComme
 			dataDto.setId(threadCommentInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -127,7 +128,7 @@ public class ThreadCommentServiceImpl extends BaseService implements ThreadComme
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Your Comment " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

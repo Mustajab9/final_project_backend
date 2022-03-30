@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.PaymentMethodDao;
 import com.lawencon.community.dto.paymentmethod.DeleteByPaymentMethodIdDtoRes;
 import com.lawencon.community.dto.paymentmethod.GetAllPaymentMethodDtoDataRes;
@@ -93,7 +94,7 @@ public class PaymentMethodServiceImpl extends BaseService implements PaymentMeth
 			dataDto.setId(paymentMethodInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(CommonConstant.ACTION_ADD.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Payment Method " + CommonConstant.HAS_BEEN_ADDED.getDetail());
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -126,7 +127,7 @@ public class PaymentMethodServiceImpl extends BaseService implements PaymentMeth
 				dataDto.setVersion(userUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg("Update Success");
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Payment Method " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -147,7 +148,7 @@ public class PaymentMethodServiceImpl extends BaseService implements PaymentMeth
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Payment Method " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

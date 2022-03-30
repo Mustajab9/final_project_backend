@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.BookmarkDao;
 import com.lawencon.community.dao.ThreadDao;
 import com.lawencon.community.dto.bookmark.DeleteByBookmarkIdDtoRes;
@@ -101,7 +102,7 @@ public class BookmarkServiceImpl extends BaseService implements BookmarkService 
 			dataDto.setId(bookmarkInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(CommonConstant.SUCCESS.getDetail() + " " + CommonConstant.ACTION_ADD.getDetail() + " to Your Bookmark");
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -121,7 +122,7 @@ public class BookmarkServiceImpl extends BaseService implements BookmarkService 
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(CommonConstant.SUCCESS.getDetail() + " " + CommonConstant.ACTION_DELETE.getDetail() + " to Your Bookmark");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

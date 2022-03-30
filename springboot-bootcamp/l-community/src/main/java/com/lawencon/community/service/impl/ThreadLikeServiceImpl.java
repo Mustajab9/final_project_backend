@@ -104,7 +104,7 @@ public class ThreadLikeServiceImpl extends BaseService implements ThreadLikeServ
 			dataDto.setId(threadLikeInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -124,7 +124,7 @@ public class ThreadLikeServiceImpl extends BaseService implements ThreadLikeServ
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

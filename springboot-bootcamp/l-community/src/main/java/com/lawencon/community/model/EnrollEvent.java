@@ -10,32 +10,39 @@ import javax.persistence.UniqueConstraint;
 import com.lawencon.base.BaseEntity;
 
 @Entity
-@Table(name = "enroll_events", uniqueConstraints = @UniqueConstraint(name="enroll_ck", columnNames = {"profile_id","payment_id"}))
+@Table(name = "enroll_events", uniqueConstraints = { 
+		@UniqueConstraint(name = "enroll_bk", columnNames = "enroll_code"),
+		@UniqueConstraint(name = "enroll_ck", columnNames = { "profile_id", "event_id" }) 
+})
 public class EnrollEvent extends BaseEntity {
-	
+
 	private static final long serialVersionUID = -2392366745534807997L;
-	
-	@Column(name = "enroll_invoice", length=20)
+
+	@Column(name = "enroll_invoice", length = 20)
 	private String enrollInvoice;
-	
-	@Column(name = "enroll_code", length=5)
+
+	@Column(name = "enroll_code", length = 5)
 	private String enrollCode;
-	
+
 	@Column(name = "is_approve")
 	private Boolean isApprove = false;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "profile_id")
 	private Profiles profileId;
-	
+
+	@ManyToOne
+	@JoinColumn(name = "event_id")
+	private Event eventId;
+
 	@ManyToOne
 	@JoinColumn(name = "attachment_id")
 	private Attachment attachmentId;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "payment_id")
 	private PaymentMethod paymentId;
-	
+
 	public String getEnrollInvoice() {
 		return enrollInvoice;
 	}
@@ -66,6 +73,14 @@ public class EnrollEvent extends BaseEntity {
 
 	public void setProfileId(Profiles profileId) {
 		this.profileId = profileId;
+	}
+
+	public Event getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(Event eventId) {
+		this.eventId = eventId;
 	}
 
 	public Attachment getAttachmentId() {

@@ -6,7 +6,6 @@ import java.sql.Time;
 
 public class InsertEventDtoReq {
 	private String eventTitle;
-	private String eventCode;
 	private String eventProvider;
 	private BigInteger eventPrice;
 	private Time eventTimeStart;
@@ -15,6 +14,7 @@ public class InsertEventDtoReq {
 	private Date eventDateEnd;
 	private String eventTypeId;
 	private String categoryId;
+	private String priceId;
 
 	public String getEventTitle() {
 		return eventTitle;
@@ -22,14 +22,6 @@ public class InsertEventDtoReq {
 
 	public void setEventTitle(String eventTitle) {
 		this.eventTitle = eventTitle;
-	}
-
-	public String getEventCode() {
-		return eventCode;
-	}
-
-	public void setEventCode(String eventCode) {
-		this.eventCode = eventCode;
 	}
 
 	public String getEventProvider() {
@@ -96,4 +88,11 @@ public class InsertEventDtoReq {
 		this.categoryId = categoryId;
 	}
 
+	public String getPriceId() {
+		return priceId;
+	}
+
+	public void setPriceId(String priceId) {
+		this.priceId = priceId;
+	}
 }

@@ -1,10 +1,10 @@
-package com.lawencon.community.dto.enrolldetail;
+package com.lawencon.community.dto.paymenteventdetail;
 
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Time;
 
-public class GetAllEnrollDetailDtoDataRes {
+public class GetByPaymentEventDetailIdDtoDataRes {
 	private String id;
 	private String eventId;
 	private String eventCode;
@@ -24,15 +24,12 @@ public class GetAllEnrollDetailDtoDataRes {
 	private String priceName;
 	private String attachmentEventId;
 	private String attachmentEventExtension;
-	private String enrollId;
-	private String enrollCode;
-	private String enrollInvoice;
-	private Boolean isEnrollApprove;
-	private String profileId;
-	private String profileName;
-	private String email;
-	private String attachmentEnrollId;
-	private String attachmentEnrollExtension;
+	private String paymentEventId;
+	private String paymentEventCode;
+	private String paymentEventInvoice;
+	private Boolean ispaymentEventApprove;
+	private String attachmentpaymentEventId;
+	private String attachmentpaymentEventExtension;
 	private String paymentId;
 	private String paymentName;
 	private Integer version;
@@ -190,76 +187,52 @@ public class GetAllEnrollDetailDtoDataRes {
 		this.attachmentEventExtension = attachmentEventExtension;
 	}
 
-	public String getEnrollId() {
-		return enrollId;
+	public String getPaymentEventId() {
+		return paymentEventId;
 	}
 
-	public void setEnrollId(String enrollId) {
-		this.enrollId = enrollId;
+	public void setPaymentEventId(String paymentEventId) {
+		this.paymentEventId = paymentEventId;
 	}
 
-	public String getEnrollCode() {
-		return enrollCode;
+	public String getPaymentEventCode() {
+		return paymentEventCode;
 	}
 
-	public void setEnrollCode(String enrollCode) {
-		this.enrollCode = enrollCode;
+	public void setPaymentEventCode(String paymentEventCode) {
+		this.paymentEventCode = paymentEventCode;
 	}
 
-	public String getEnrollInvoice() {
-		return enrollInvoice;
+	public String getPaymentEventInvoice() {
+		return paymentEventInvoice;
 	}
 
-	public void setEnrollInvoice(String enrollInvoice) {
-		this.enrollInvoice = enrollInvoice;
+	public void setPaymentEventInvoice(String paymentEventInvoice) {
+		this.paymentEventInvoice = paymentEventInvoice;
 	}
 
-	public Boolean getIsEnrollApprove() {
-		return isEnrollApprove;
+	public Boolean getIspaymentEventApprove() {
+		return ispaymentEventApprove;
 	}
 
-	public void setIsEnrollApprove(Boolean isEnrollApprove) {
-		this.isEnrollApprove = isEnrollApprove;
+	public void setIspaymentEventApprove(Boolean ispaymentEventApprove) {
+		this.ispaymentEventApprove = ispaymentEventApprove;
 	}
 
-	public String getProfileId() {
-		return profileId;
+	public String getAttachmentpaymentEventId() {
+		return attachmentpaymentEventId;
 	}
 
-	public void setProfileId(String profileId) {
-		this.profileId = profileId;
+	public void setAttachmentpaymentEventId(String attachmentpaymentEventId) {
+		this.attachmentpaymentEventId = attachmentpaymentEventId;
 	}
 
-	public String getProfileName() {
-		return profileName;
+	public String getAttachmentpaymentEventExtension() {
+		return attachmentpaymentEventExtension;
 	}
 
-	public void setProfileName(String profileName) {
-		this.profileName = profileName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getAttachmentEnrollId() {
-		return attachmentEnrollId;
-	}
-
-	public void setAttachmentEnrollId(String attachmentEnrollId) {
-		this.attachmentEnrollId = attachmentEnrollId;
-	}
-
-	public String getAttachmentEnrollExtension() {
-		return attachmentEnrollExtension;
-	}
-
-	public void setAttachmentEnrollExtension(String attachmentEnrollExtension) {
-		this.attachmentEnrollExtension = attachmentEnrollExtension;
+	public void setAttachmentpaymentEventExtension(String attachmentpaymentEventExtension) {
+		this.attachmentpaymentEventExtension = attachmentpaymentEventExtension;
 	}
 
 	public String getPaymentId() {

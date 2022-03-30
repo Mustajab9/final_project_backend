@@ -18,19 +18,27 @@ import com.lawencon.community.dto.polling.GetPollingByThreadIdDtoRes;
 import com.lawencon.community.dto.polling.InsertPollingDtoDataRes;
 import com.lawencon.community.dto.polling.InsertPollingDtoReq;
 import com.lawencon.community.dto.polling.InsertPollingDtoRes;
+import com.lawencon.community.dto.pollingchoice.InsertPollingChoiceDtoReq;
 import com.lawencon.community.model.Polling;
 import com.lawencon.community.model.Thread;
+import com.lawencon.community.service.PollingChoiceService;
 import com.lawencon.community.service.PollingService;
 
 @Service
 public class PollingServiceImpl extends BaseService implements PollingService {
 	private PollingDao pollingDao;
 	private ThreadDao threadDao;
+	private PollingChoiceService pollingChoiceService;
 
 	@Autowired
 	public PollingServiceImpl(PollingDao pollingDao, ThreadDao threadDao) {
 		this.pollingDao = pollingDao;
 		this.threadDao = threadDao;
+	}
+	
+	@Autowired
+	public void setPollingChoiceService(PollingChoiceService pollingChoiceService) {
+		this.pollingChoiceService = pollingChoiceService;
 	}
 	
 	@Override
@@ -90,8 +98,10 @@ public class PollingServiceImpl extends BaseService implements PollingService {
 
 		try {
 			Polling polling = new Polling();
+			String code = getAlphaNumericString(5);
+			polling.setPollingCode(code);
 			polling.setPollingName(data.getPollingName());
-			polling.setPollingCode(data.getPollingCode());
+			
 			Thread thread = threadDao.findById(data.getThreadId());
 			polling.setThreadId(thread);
 			polling.setCreatedBy(getId());
@@ -102,9 +112,19 @@ public class PollingServiceImpl extends BaseService implements PollingService {
 
 			InsertPollingDtoDataRes dataDto = new InsertPollingDtoDataRes();
 			dataDto.setId(pollingInsert.getId());
+			
+			if(pollingInsert != null) {
+				for (int i = 0; i < data.getChoiceName().size(); i++) {
+					InsertPollingChoiceDtoReq choiceReq = new InsertPollingChoiceDtoReq();
+					choiceReq.setChoiceName(data.getChoiceName().get(i));
+					choiceReq.setPollingId(pollingInsert.getId());
+					
+					pollingChoiceService.insert(choiceReq);
+				}
+			}
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -124,7 +144,7 @@ public class PollingServiceImpl extends BaseService implements PollingService {
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

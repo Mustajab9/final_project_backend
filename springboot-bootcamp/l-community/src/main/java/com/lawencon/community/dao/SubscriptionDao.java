@@ -10,6 +10,6 @@ public interface SubscriptionDao {
 	public Subscription findById(String id) throws Exception;
 	public Subscription save(Subscription data) throws Exception;
 	public boolean deleteById(String id) throws Exception;
-	public boolean update(Date date, Integer lenghtDay, String id) throws Exception;
+	public boolean update(Date date, Integer lenghtDay, String id, String userId) throws Exception;
 	public Subscription findByUser(String id) throws Exception;
 }

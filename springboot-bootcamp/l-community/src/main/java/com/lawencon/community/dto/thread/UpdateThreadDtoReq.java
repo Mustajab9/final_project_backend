@@ -5,7 +5,6 @@ public class UpdateThreadDtoReq {
 	private String threadTitle;
 	private String threadContent;
 	private Boolean isPremium;
-	private String typeId;
 	private Integer version;
 	private Boolean isActive;
 
@@ -39,14 +38,6 @@ public class UpdateThreadDtoReq {
 
 	public void setIsPremium(Boolean isPremium) {
 		this.isPremium = isPremium;
-	}
-
-	public String getTypeId() {
-		return typeId;
-	}
-
-	public void setTypeId(String typeId) {
-		this.typeId = typeId;
 	}
 
 	public Integer getVersion() {

@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.PriceListMemberDao;
 import com.lawencon.community.dao.SubscriptionDao;
 import com.lawencon.community.dao.SubscriptionDetailDao;
@@ -132,22 +133,22 @@ public class SubscriptionDetailServiceImpl extends BaseService implements Subscr
 			
 			if(detailInsert != null) {
 				Integer LenghtDay = priceListMember.getDuration();
-				if(subscription.getSubscriptionDuration().compareTo(new Date()) <= 0){
+				if(subscription.getSubscriptionDuration().compareTo(new Date()) >= 0){
 					java.sql.Date date = subscription.getSubscriptionDuration();
 					
 					begin();
-					subscriptionDao.update(date, LenghtDay, subscription.getId());
+					subscriptionDao.update(date, LenghtDay, subscription.getId(), getId());
 					commit();
 					
 				}else {
 					begin();
-					subscriptionDao.update(new Date(), LenghtDay, subscription.getId());
+					subscriptionDao.update(new Date(), LenghtDay, subscription.getId(), getId());
 					commit();
 				}
 			}
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg("You " + CommonConstant.SUCCESS.getDetail() + " Update Your Membership");
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();

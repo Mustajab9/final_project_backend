@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.IndustryDao;
 import com.lawencon.community.dao.PositionDao;
 import com.lawencon.community.dao.ProfilesDao;
@@ -137,8 +138,9 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 
 		try {
 			Profiles profile = new Profiles();
+			String code = getAlphaNumericString(5);
+			profile.setProfileCode(code);
 			profile.setProfileName(data.getProfileName());
-			profile.setProfileCode(data.getProfileCode());
 			profile.setProfileCompany(data.getProfileCompany());
 			
 			User user = userDao.findById(data.getUserId());
@@ -162,7 +164,7 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			dataDto.setId(profileInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -206,7 +208,7 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 				dataDto.setVersion(profileUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg("Update Success");
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Profile " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -227,7 +229,7 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Profiles " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

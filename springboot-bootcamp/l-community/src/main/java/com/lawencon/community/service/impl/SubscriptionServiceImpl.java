@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.ProfilesDao;
 import com.lawencon.community.dao.SubscriptionDao;
 import com.lawencon.community.dto.subscription.DeleteBySubscriptionIdDtoRes;
@@ -113,10 +114,11 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 		try {
 			Subscription subscription = new Subscription();
 			String code = getAlphaNumericString(5);
-			Date date = new Date();
+			Date now = new Date();
+			java.sql.Date date = new java.sql.Date(now.getTime());
 			
 			subscription.setSubscriptionCode(code);
-			subscription.setSubscriptionDuration((java.sql.Date) date);		
+			subscription.setSubscriptionDuration(date);		
 			
 			Profiles profiles = profileDao.findById(data.getProfileId());
 			subscription.setProfileId(profiles);
@@ -138,7 +140,7 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 			}
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg("You " + CommonConstant.SUCCESS.getDetail() + " Upgrade to Membership");
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -155,20 +157,22 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 		try {
 			if (data.getVersion() != null) {
 				Subscription subscription = subscriptionDao.findById(data.getId());
+				
+				InsertSubscriptionDetailDtoReq detailReq = new InsertSubscriptionDetailDtoReq();
+				detailReq.setSubscriptionId(subscription.getId());
+				detailReq.setPriceId(data.getPriceId());
+				
+				subscriptionDetailService.insert(detailReq);
 
 				subscription.setVersion(data.getVersion());
 				subscription.setUpdatedBy(getId());
 				subscription.setIsActive(data.getIsActive());
 
-				begin();
-				Subscription subscriptionUpdate = subscriptionDao.save(subscription);
-				commit();
-
 				UpdateSubscriptionDtoDataRes dataDto = new UpdateSubscriptionDtoDataRes();
-				dataDto.setVersion(subscriptionUpdate.getVersion());
+				dataDto.setVersion(subscription.getVersion() + 1);
 
 				update.setData(dataDto);
-				update.setMsg("Update Success");
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Subscription " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -100,7 +100,7 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
 			dataDto.setId(fileInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -120,7 +120,7 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
 			commit();
 			
 			if(delete) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

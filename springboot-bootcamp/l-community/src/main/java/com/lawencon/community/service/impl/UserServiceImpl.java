@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.RoleDao;
 import com.lawencon.community.dao.UserDao;
 import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
@@ -38,6 +39,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 	private static final String text = "Password Akun Anda : ";
 	private static final String subject = "Password App E-Learning";
 	private static final String email = "mustajabsa@gmail.com";
+	private static final Boolean isActive = false;
 	private UserDao userDao;
 	private RoleDao roleDao;
 	private PasswordEncoder passwordEncoder;
@@ -112,7 +114,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 			User user = new User();
 			user.setEmail(data.getUsername());
 
-			String password = getAlphaNumericString(5);
+			String password = data.getPassword();
 
 			String passwordEncode = passwordEncoder.encode(password);
 			user.setPassword(passwordEncode);
@@ -122,7 +124,8 @@ public class UserServiceImpl extends BaseService implements UserService {
 
 			Role role = roleDao.findById(data.getRoleId());
 			user.setRoleId(role);
-
+			user.setIsActive(isActive);
+			
 			begin();
 			User insertUser = userDao.save(user);
 			commit();
@@ -132,7 +135,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
 			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + password, true);
+			messageHelper.setText(text + verificationCode, true);
 			messageHelper.setSubject(subject);
 			messageHelper.setFrom(email);
 
@@ -147,7 +150,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 			dataDto.setId(insertUser.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg("Registrasi " + CommonConstant.SUCCESS.getDetail());
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -166,7 +169,6 @@ public class UserServiceImpl extends BaseService implements UserService {
 				User user = userDao.findById(data.getId());
 
 				user.setEmail(data.getEmail());
-				
 								
 				String passwordEncode = passwordEncoder.encode(data.getPassword());
 				user.setPassword(passwordEncode);
@@ -186,7 +188,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 				dataDto.setVersion(userUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg("Update Success");
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Passowrd " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -207,7 +209,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", User " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -232,7 +234,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 			user = findByUser(username);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new UsernameNotFoundException("Invalid Username Or Password");
+			throw new UsernameNotFoundException(CommonConstant.INVALID_LOGIN.getDetail());
 		}
 
 		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),

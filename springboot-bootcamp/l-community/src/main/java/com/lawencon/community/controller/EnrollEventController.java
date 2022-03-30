@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.lawencon.community.dto.enrollevent.DeleteByEnrollEventIdDtoRes;
 import com.lawencon.community.dto.enrollevent.GetAllEnrollEventDtoRes;
 import com.lawencon.community.dto.enrollevent.GetByEnrollEventIdDtoRes;
-import com.lawencon.community.dto.enrollevent.GetByUserIdDtoRes;
+import com.lawencon.community.dto.enrollevent.GetEnrollEventByUserDtoRes;
 import com.lawencon.community.dto.enrollevent.InsertEnrollEventDtoRes;
 import com.lawencon.community.dto.enrollevent.UpdateEnrollEventDtoReq;
 import com.lawencon.community.dto.enrollevent.UpdateEnrollEventDtoRes;
@@ -48,9 +48,9 @@ public class EnrollEventController {
 	}
 	
 	@GetMapping("user/{id}")
-	public ResponseEntity<GetByUserIdDtoRes> getByUser(@PathVariable("id") String id) throws Exception {
-		GetByUserIdDtoRes data = enrollEventService.findByUser(id);
-		return new ResponseEntity<GetByUserIdDtoRes>(data, HttpStatus.OK);
+	public ResponseEntity<GetEnrollEventByUserDtoRes> getByUser(@PathVariable("id") String id) throws Exception {
+		GetEnrollEventByUserDtoRes data = enrollEventService.findByUser(id);
+		return new ResponseEntity<GetEnrollEventByUserDtoRes>(data, HttpStatus.OK);
 	}
 
 	@DeleteMapping("{id}")

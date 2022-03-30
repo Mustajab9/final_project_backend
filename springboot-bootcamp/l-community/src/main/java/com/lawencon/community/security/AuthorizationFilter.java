@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dto.user.AuthorizationDtoRes;
 
 import io.jsonwebtoken.ClaimJwtException;
@@ -40,13 +41,13 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 		try {
 			id = jwtBuilderComponent.getClaimId(token);
 		} catch (ExpiredJwtException e) {
-			dtoRes.setMsg("Token Expired");
+			dtoRes.setMsg(CommonConstant.TOKEN_EXIRED.getDetail());
 			response.setStatus(HttpStatus.UNAUTHORIZED.value());
 		} catch (ClaimJwtException e) {
-			dtoRes.setMsg("Invalid Token");
+			dtoRes.setMsg(CommonConstant.INVALID_TOKEN.getDetail());
 			response.setStatus(HttpStatus.UNAUTHORIZED.value());
 		} catch (SignatureException e) {
-			dtoRes.setMsg("Invalid Token");
+			dtoRes.setMsg(CommonConstant.INVALID_TOKEN.getDetail());
 			response.setStatus(HttpStatus.UNAUTHORIZED.value());
 		}
 		

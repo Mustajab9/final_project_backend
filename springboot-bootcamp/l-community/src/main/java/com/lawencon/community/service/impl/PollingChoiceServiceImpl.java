@@ -104,7 +104,6 @@ public class PollingChoiceServiceImpl extends BaseService implements PollingChoi
 			
 			Polling polling = pollingDao.findById(data.getPollingId());
 			pollingChoice.setPollingId(polling);
-			
 			pollingChoice.setCreatedBy(getId());
 
 			begin();
@@ -115,7 +114,7 @@ public class PollingChoiceServiceImpl extends BaseService implements PollingChoi
 			dataDto.setId(pollingChoiceInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -147,7 +146,7 @@ public class PollingChoiceServiceImpl extends BaseService implements PollingChoi
 				dataDto.setVersion(pollingChoiceUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg("Update Success");
+				update.setMsg(null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -168,7 +167,7 @@ public class PollingChoiceServiceImpl extends BaseService implements PollingChoi
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

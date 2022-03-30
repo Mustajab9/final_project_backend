@@ -8,11 +8,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lawencon.community.constant.CommonConstant;
+import com.lawencon.community.constant.ThreadTypeConstant;
+import com.lawencon.community.dao.ChoiceVoteDao;
 import com.lawencon.community.dao.ThreadAttachmentDao;
 import com.lawencon.community.dao.ThreadCategoryDao;
 import com.lawencon.community.dao.ThreadDao;
 import com.lawencon.community.dao.ThreadTypeDao;
 import com.lawencon.community.dto.attachment.InsertAttachmentDtoRes;
+import com.lawencon.community.dto.choicevote.GetCountVoteByThreadDtoDataRes;
+import com.lawencon.community.dto.polling.InsertPollingDtoReq;
 import com.lawencon.community.dto.thread.DeleteByThreadIdDtoRes;
 import com.lawencon.community.dto.thread.GetAllThreadDtoDataRes;
 import com.lawencon.community.dto.thread.GetAllThreadDtoRes;
@@ -35,6 +40,7 @@ import com.lawencon.community.model.ThreadAttachment;
 import com.lawencon.community.model.ThreadCategory;
 import com.lawencon.community.model.ThreadType;
 import com.lawencon.community.service.AttachmentService;
+import com.lawencon.community.service.PollingService;
 import com.lawencon.community.service.ThreadAttachmentService;
 import com.lawencon.community.service.ThreadCategoryService;
 import com.lawencon.community.service.ThreadService;
@@ -45,16 +51,19 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 	private ThreadTypeDao threadTypeDao;
 	private ThreadAttachmentDao threadAttachmentDao;
 	private ThreadCategoryDao threadCategoryDao;
+	private ChoiceVoteDao choiceVoteDao;
 	private AttachmentService attachmentService;
 	private ThreadAttachmentService threadAttachmentService;
 	private ThreadCategoryService threadCategoryService;
+	private PollingService pollingService;
 
 	@Autowired
-	public ThreadServiceImpl(ThreadDao threadDao, ThreadTypeDao threadTypeDao, ThreadAttachmentDao threadAttachmentDao, ThreadCategoryDao threadCategoryDao) {
+	public ThreadServiceImpl(ThreadDao threadDao, ThreadTypeDao threadTypeDao, ThreadAttachmentDao threadAttachmentDao, ThreadCategoryDao threadCategoryDao, ChoiceVoteDao choiceVoteDao) {
 		this.threadDao = threadDao;
 		this.threadTypeDao = threadTypeDao;
 		this.threadAttachmentDao = threadAttachmentDao;
 		this.threadCategoryDao = threadCategoryDao;
+		this.choiceVoteDao = choiceVoteDao;
 	}
 	
 	@Autowired
@@ -70,6 +79,11 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 	@Autowired
 	public void setThreadCategoryService(ThreadCategoryService threadCategoryService) {
 		this.threadCategoryService = threadCategoryService;
+	}
+	
+	@Autowired
+	public void setPollingService(PollingService pollingService) {
+		this.pollingService = pollingService;
 	}
 	
 	@Override
@@ -109,8 +123,8 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 			if(attachments != null) {
 				List<String> listAttachmentId = new ArrayList<>();
 				List<String> listAttachemntExtension = new ArrayList<>();
-				for(int x = 0; x < attachments.size(); x++) {
-					ThreadAttachment attcahment = attachments.get(x);
+				for(int y = 0; y < attachments.size(); y++) {
+					ThreadAttachment attcahment = attachments.get(y);
 					
 					String attachmentId = attcahment.getAttachmentId().getId();
 					String attachemntExtension = attcahment.getAttachmentId().getAttachmentExtension();
@@ -122,6 +136,31 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				data.setAttachmentId(listAttachmentId);
 				data.setAttachemntExtension(listAttachemntExtension);
 			}
+			
+			if(thread.getTypeId().getTypeCode().equals(ThreadTypeConstant.POLLING.getCode())) {
+				List<GetCountVoteByThreadDtoDataRes> listChoice = choiceVoteDao.findCountByThread(thread.getId());
+				data.setPollingName(listChoice.get(0).getPollingName());
+				
+				List<String> listChoiceName = new ArrayList<>();
+				List<Integer> listCountVote = new ArrayList<>();
+				Integer totalVote = 0;
+				for(int z = 0; z < listChoice.size(); z++) {
+					GetCountVoteByThreadDtoDataRes choiceVote = listChoice.get(z);
+					
+					String choiceName = choiceVote.getChoiceName();
+					Integer countVote = choiceVote.getCountVote();
+					
+					listChoiceName.add(choiceName);
+					listCountVote.add(countVote);
+					totalVote = totalVote + choiceVote.getCountVote();
+					
+				}
+				
+				data.setChoiceName(listChoiceName);
+				data.setCountVote(listCountVote);
+				data.setTotalVote(totalVote);
+			}
+			
 						 
 			data.setVersion(thread.getVersion());
 			data.setIsActive(thread.getIsActive());
@@ -180,6 +219,30 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 			
 			data.setAttachmentId(listAttachmentId);
 			data.setAttachemntExtension(listAttachemntExtension);
+		}
+		
+		if(thread.getTypeId().getTypeCode().equals(ThreadTypeConstant.POLLING.getCode())) {
+			List<GetCountVoteByThreadDtoDataRes> listChoice = choiceVoteDao.findCountByThread(thread.getId());
+			data.setPollingName(listChoice.get(0).getPollingName());
+			
+			List<String> listChoiceName = new ArrayList<>();
+			List<Integer> listCountVote = new ArrayList<>();
+			Integer totalVote = 0;
+			for(int z = 0; z < listChoice.size(); z++) {
+				GetCountVoteByThreadDtoDataRes choiceVote = listChoice.get(z);
+				
+				String choiceName = choiceVote.getChoiceName();
+				Integer countVote = choiceVote.getCountVote();
+				
+				listChoiceName.add(choiceName);
+				listCountVote.add(countVote);
+				totalVote = totalVote + choiceVote.getCountVote();
+				
+			}
+			
+			data.setChoiceName(listChoiceName);
+			data.setCountVote(listCountVote);
+			data.setTotalVote(totalVote);
 		}
 					 
 		data.setVersion(thread.getVersion());
@@ -241,10 +304,19 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 						}
 					}
 				}
+				
+				if(threadInsert.getTypeId().getTypeCode().equals(ThreadTypeConstant.POLLING.getCode())) {
+					InsertPollingDtoReq pollingReq = new InsertPollingDtoReq();
+					pollingReq.setPollingName(data.getPollingName());
+					pollingReq.setChoiceName(data.getChoiceName());
+					pollingReq.setThreadId(threadInsert.getId());
+					
+					pollingService.insert(pollingReq);
+				}
 			}
 			
 			insert.setData(dataDto);
-			insert.setMsg("Insert Success");
+			insert.setMsg(CommonConstant.ACTION_ADD.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Thread " + CommonConstant.HAS_BEEN_ADDED.getDetail());
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -264,10 +336,7 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 
 				thread.setThreadTitle(data.getThreadTitle());
 				thread.setThreadContent(data.getThreadContent());
-				thread.setIsPremium(data.getIsPremium());
-				
-				ThreadType type = threadTypeDao.findById(data.getTypeId());
-				thread.setTypeId(type);				
+				thread.setIsPremium(data.getIsPremium());	
 				thread.setUpdatedBy(getId());
 
 				if (data.getIsActive() != null) {
@@ -282,7 +351,7 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				dataDto.setVersion(threadUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg("Update Success");
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Thread " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -303,7 +372,7 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg("Delete Success");
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Thread " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -363,6 +432,30 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				
 				data.setAttachmentId(listAttachmentId);
 				data.setAttachemntExtension(listAttachemntExtension);
+			}
+			
+			if(thread.getTypeId().getTypeCode().equals(ThreadTypeConstant.POLLING.getCode())) {
+				List<GetCountVoteByThreadDtoDataRes> listChoice = choiceVoteDao.findCountByThread(thread.getId());
+				data.setPollingName(listChoice.get(0).getPollingName());
+				
+				List<String> listChoiceName = new ArrayList<>();
+				List<Integer> listCountVote = new ArrayList<>();
+				Integer totalVote = 0;
+				for(int z = 0; z < listChoice.size(); z++) {
+					GetCountVoteByThreadDtoDataRes choiceVote = listChoice.get(z);
+					
+					String choiceName = choiceVote.getChoiceName();
+					Integer countVote = choiceVote.getCountVote();
+					
+					listChoiceName.add(choiceName);
+					listCountVote.add(countVote);
+					totalVote = totalVote + choiceVote.getCountVote();
+					
+				}
+				
+				data.setChoiceName(listChoiceName);
+				data.setCountVote(listCountVote);
+				data.setTotalVote(totalVote);
 			}
 						 
 			data.setVersion(thread.getVersion());
@@ -426,6 +519,30 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				
 				data.setAttachmentId(listAttachmentId);
 				data.setAttachemntExtension(listAttachemntExtension);
+			}
+			
+			if(thread.getTypeId().getTypeCode().equals(ThreadTypeConstant.POLLING.getCode())) {
+				List<GetCountVoteByThreadDtoDataRes> listChoice = choiceVoteDao.findCountByThread(thread.getId());
+				data.setPollingName(listChoice.get(0).getPollingName());
+				
+				List<String> listChoiceName = new ArrayList<>();
+				List<Integer> listCountVote = new ArrayList<>();
+				Integer totalVote = 0;
+				for(int z = 0; z < listChoice.size(); z++) {
+					GetCountVoteByThreadDtoDataRes choiceVote = listChoice.get(z);
+					
+					String choiceName = choiceVote.getChoiceName();
+					Integer countVote = choiceVote.getCountVote();
+					
+					listChoiceName.add(choiceName);
+					listCountVote.add(countVote);
+					totalVote = totalVote + choiceVote.getCountVote();
+					
+				}
+				
+				data.setChoiceName(listChoiceName);
+				data.setCountVote(listCountVote);
+				data.setTotalVote(totalVote);
 			}
 						 
 			data.setVersion(thread.getVersion());

@@ -2,6 +2,7 @@ package com.lawencon.community.dto.subscription;
 
 public class UpdateSubscriptionDtoReq {
 	private String id;
+	private String priceId;
 	private Integer version;
 	private Boolean isActive;
 
@@ -11,6 +12,14 @@ public class UpdateSubscriptionDtoReq {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getPriceId() {
+		return priceId;
+	}
+
+	public void setPriceId(String priceId) {
+		this.priceId = priceId;
 	}
 
 	public Integer getVersion() {

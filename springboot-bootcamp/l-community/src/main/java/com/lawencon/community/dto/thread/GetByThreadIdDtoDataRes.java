@@ -11,6 +11,10 @@ public class GetByThreadIdDtoDataRes {
 	private List<String> categoryName;
 	private List<String> attachmentId;
 	private List<String> attachemntExtension;
+	private String pollingName;
+	private List<String> choiceName;
+	private List<Integer> countVote;
+	private Integer totalVote;
 	private Integer version;
 	private Boolean isActive;
 
@@ -76,6 +80,38 @@ public class GetByThreadIdDtoDataRes {
 
 	public void setAttachemntExtension(List<String> attachemntExtension) {
 		this.attachemntExtension = attachemntExtension;
+	}
+
+	public String getPollingName() {
+		return pollingName;
+	}
+
+	public void setPollingName(String pollingName) {
+		this.pollingName = pollingName;
+	}
+
+	public List<String> getChoiceName() {
+		return choiceName;
+	}
+
+	public void setChoiceName(List<String> choiceName) {
+		this.choiceName = choiceName;
+	}
+
+	public List<Integer> getCountVote() {
+		return countVote;
+	}
+
+	public void setCountVote(List<Integer> countVote) {
+		this.countVote = countVote;
+	}
+
+	public Integer getTotalVote() {
+		return totalVote;
+	}
+
+	public void setTotalVote(Integer totalVote) {
+		this.totalVote = totalVote;
 	}
 
 	public Integer getVersion() {
