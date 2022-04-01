@@ -27,7 +27,11 @@ public class Profiles extends BaseEntity {
 	@Column(name = "profile_company", length=100)
 	private String profileCompany;
 	
-	private Integer profilePortalCode;
+	@Column(name = "profile_postal_code")
+	private Integer profilePostalCode;
+	
+	@Column(name = "profile_phone", length=13)
+	private String profilePhone;
 	
 	@ManyToOne
 	@JoinColumn(name = "profile_image")
@@ -73,12 +77,20 @@ public class Profiles extends BaseEntity {
 		this.profileCompany = profileCompany;
 	}
 
-	public Integer getProfilePortalCode() {
-		return profilePortalCode;
+	public Integer getProfilePostalCode() {
+		return profilePostalCode;
 	}
 
-	public void setProfilePortalCode(Integer profilePortalCode) {
-		this.profilePortalCode = profilePortalCode;
+	public void setProfilePostalCode(Integer profilePostalCode) {
+		this.profilePostalCode = profilePostalCode;
+	}
+
+	public String getProfilePhone() {
+		return profilePhone;
+	}
+
+	public void setProfilePhone(String profilePhone) {
+		this.profilePhone = profilePhone;
 	}
 
 	public Attachment getProfileImage() {

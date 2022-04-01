@@ -11,4 +11,5 @@ public interface EventDao {
 	public boolean deleteById(String id) throws Exception;
 	public List<Event> findEnrollEvent(String id) throws Exception;
 	public List<Event> findNotEnrollEvent(String id) throws Exception;
+	public List<Event> getReportEnrolls(String eventId) throws Exception;
 }

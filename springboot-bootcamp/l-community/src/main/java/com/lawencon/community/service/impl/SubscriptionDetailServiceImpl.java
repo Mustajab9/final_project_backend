@@ -63,7 +63,7 @@ public class SubscriptionDetailServiceImpl extends BaseService implements Subscr
 			data.setProfileCode(detail.getSubscriptionId().getProfileId().getProfileCode());
 			data.setProfileName(detail.getSubscriptionId().getProfileId().getProfileName());
 			data.setProfileCompany(detail.getSubscriptionId().getProfileId().getProfileCompany());
-			data.setProfilePortalCode(detail.getSubscriptionId().getProfileId().getProfilePortalCode());
+			data.setProfilePortalCode(detail.getSubscriptionId().getProfileId().getProfilePostalCode());
 			data.setUserId(detail.getSubscriptionId().getProfileId().getUserId().getId());
 			data.setEmail(detail.getSubscriptionId().getProfileId().getUserId().getEmail());
 			data.setVersion(detail.getVersion());
@@ -98,7 +98,7 @@ public class SubscriptionDetailServiceImpl extends BaseService implements Subscr
 		data.setProfileCode(detail.getSubscriptionId().getProfileId().getProfileCode());
 		data.setProfileName(detail.getSubscriptionId().getProfileId().getProfileName());
 		data.setProfileCompany(detail.getSubscriptionId().getProfileId().getProfileCompany());
-		data.setProfilePortalCode(detail.getSubscriptionId().getProfileId().getProfilePortalCode());
+		data.setProfilePortalCode(detail.getSubscriptionId().getProfileId().getProfilePostalCode());
 		data.setUserId(detail.getSubscriptionId().getProfileId().getUserId().getId());
 		data.setEmail(detail.getSubscriptionId().getProfileId().getUserId().getEmail());
 		data.setVersion(detail.getVersion());
@@ -182,7 +182,7 @@ public class SubscriptionDetailServiceImpl extends BaseService implements Subscr
 			data.setProfileCode(detail.getSubscriptionId().getProfileId().getProfileCode());
 			data.setProfileName(detail.getSubscriptionId().getProfileId().getProfileName());
 			data.setProfileCompany(detail.getSubscriptionId().getProfileId().getProfileCompany());
-			data.setProfilePortalCode(detail.getSubscriptionId().getProfileId().getProfilePortalCode());
+			data.setProfilePortalCode(detail.getSubscriptionId().getProfileId().getProfilePostalCode());
 			
 			if(detail.getSubscriptionId().getProfileId().getProfileImage() != null) {
 				data.setProfileImage(detail.getSubscriptionId().getProfileId().getProfileImage().getId());

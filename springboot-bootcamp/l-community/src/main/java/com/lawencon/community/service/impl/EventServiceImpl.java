@@ -19,6 +19,7 @@ import com.lawencon.community.dto.event.GetAllEventDtoDataRes;
 import com.lawencon.community.dto.event.GetAllEventDtoRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoDataRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoRes;
+import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
 import com.lawencon.community.dto.event.InsertEventDtoDataRes;
 import com.lawencon.community.dto.event.InsertEventDtoReq;
 import com.lawencon.community.dto.event.InsertEventDtoRes;
@@ -336,4 +337,12 @@ public class EventServiceImpl extends BaseService implements EventService {
 
 		return getNotEnrollEvent;
 	}
+	
+	@Override
+	public GetReportProfileAttendanceEventDto getReportEnroll(String eventId) throws Exception {
+		
+		return null;
+	}
+	
+	
 }

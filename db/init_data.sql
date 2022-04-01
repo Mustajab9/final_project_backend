@@ -6,6 +6,13 @@ INSERT INTO roles(role_code, role_name, created_at, "version", is_active) VALUES
 
 INSERT INTO users(email, "password", verification_code, role_id, created_at, "version", is_active) VALUES
 	('admin@gmail.com', 'admin', 'ABCDE', (SELECT roles.id FROM roles WHERE roles.role_code = 'R01'), now(), 0, true);
+INSERT INTO users(email, "password", verification_code, role_id, created_at, "version", is_active) VALUES
+	('member1@gmail.com', 'member1', 'ABCDE', (SELECT roles.id FROM roles WHERE roles.role_code = 'R02'), now(), 0, true),
+	('member2@gmail.com', 'member2', 'ABCDE', (SELECT roles.id FROM roles WHERE roles.role_code = 'R02'), now(), 0, true),
+	('member3@gmail.com', 'member3', 'ABCDE', (SELECT roles.id FROM roles WHERE roles.role_code = 'R02'), now(), 0, true),
+	('member4@gmail.com', 'member4', 'ABCDE', (SELECT roles.id FROM roles WHERE roles.role_code = 'R02'), now(), 0, true),
+	('member5@gmail.com', 'member5', 'ABCDE', (SELECT roles.id FROM roles WHERE roles.role_code = 'R02'), now(), 0, true);
+
 
 INSERT INTO industries(industry_code, industry_name, created_by, created_at, "version", is_active) VALUES
 	('I01', 'Akuntansi / Keuangan', (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true),
@@ -622,11 +629,38 @@ INSERT INTO regencies (regency_code, province_id, regency_name, created_by, crea
 ('9212',	(SELECT provinces.id FROM provinces WHERE provinces.province_code = '92'),	'KAB. PEGUNUNGAN ARFAK', (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true),
 ('9271',	(SELECT provinces.id FROM provinces WHERE provinces.province_code = '92'),	'KOTA SORONG', (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true);
 
-INSERT INTO profiles(profile_code, profile_name, profile_company, profile_portal_code,user_id, industry_id, position_id, province_id, created_by, created_at, "version", is_active) VALUES
-	('P01', 'Admin', 'PT. Linov', 14076, (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), 
+INSERT INTO profiles(profile_code, profile_name, profile_company, profile_phone, profile_postal_code,user_id, industry_id, position_id, regency_id, created_by, created_at, "version", is_active) VALUES
+	('P01', 'Admin', 'PT. Linov', '082123456789', 14076, (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), 
 		(SELECT industries.id FROM industries WHERE industries.industry_code = 'I09'), 
 		(SELECT positions.id FROM positions WHERE positions.position_code = 'PO43'), 
-		(SELECT provinces.id FROM provinces WHERE provinces.province_code = '31'), 
+		(SELECT regencies.id FROM regencies WHERE regencies.regency_code = '3174'), 
+		(SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true);
+	
+INSERT INTO profiles(profile_code, profile_name, profile_company, profile_phone, profile_postal_code,user_id, industry_id, position_id, regency_id, created_by, created_at, "version", is_active) VALUES
+	('P02', 'Member 1', 'PT. Linov', '082123456789', 14076, (SELECT users.id FROM users WHERE users.email = 'member1@gmail.com'), 
+		(SELECT industries.id FROM industries WHERE industries.industry_code = 'I09'), 
+		(SELECT positions.id FROM positions WHERE positions.position_code = 'PO43'), 
+		(SELECT regencies.id FROM regencies WHERE regencies.regency_code = '3174'), 
+		(SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true),
+	('P03', 'Member 2', 'PT. Linov', '082123456789', 14076, (SELECT users.id FROM users WHERE users.email = 'member2@gmail.com'), 
+		(SELECT industries.id FROM industries WHERE industries.industry_code = 'I09'), 
+		(SELECT positions.id FROM positions WHERE positions.position_code = 'PO43'), 
+		(SELECT regencies.id FROM regencies WHERE regencies.regency_code = '3174'), 
+		(SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true),
+	('P04', 'Member 3', 'PT. Linov', '082123456789', 14076, (SELECT users.id FROM users WHERE users.email = 'member3@gmail.com'), 
+		(SELECT industries.id FROM industries WHERE industries.industry_code = 'I09'), 
+		(SELECT positions.id FROM positions WHERE positions.position_code = 'PO43'), 
+		(SELECT regencies.id FROM regencies WHERE regencies.regency_code = '3174'), 
+		(SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true),
+	('P05', 'Member 4', 'PT. Linov', '082123456789', 14076, (SELECT users.id FROM users WHERE users.email = 'member4@gmail.com'), 
+		(SELECT industries.id FROM industries WHERE industries.industry_code = 'I09'), 
+		(SELECT positions.id FROM positions WHERE positions.position_code = 'PO43'), 
+		(SELECT regencies.id FROM regencies WHERE regencies.regency_code = '3174'), 
+		(SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true),
+	('P06', 'Member 5', 'PT. Linov', '082123456789', 14076, (SELECT users.id FROM users WHERE users.email = 'member5@gmail.com'), 
+		(SELECT industries.id FROM industries WHERE industries.industry_code = 'I09'), 
+		(SELECT positions.id FROM positions WHERE positions.position_code = 'PO43'), 
+		(SELECT regencies.id FROM regencies WHERE regencies.regency_code = '3174'), 
 		(SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true);
 
 INSERT INTO categories(category_code, category_name, created_by, created_at, "version", is_active) VALUES
@@ -641,7 +675,8 @@ INSERT INTO categories(category_code, category_name, created_by, created_at, "ve
 
 INSERT INTO thread_types (type_code , type_name , created_by, created_at, "version", is_active) VALUES
 	('TY01', 'Polling', (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true),
-	('TY02', 'Thread', (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true);
+	('TY02', 'Thread', (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true),
+	('TY03', 'Article', (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true);
 
 INSERT INTO price_list_event (price_code, price_name, price_nominal, created_by, created_at, "version", is_active) VALUES
 	('PR01', 'Event', 30000, (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true),
@@ -666,4 +701,9 @@ INSERT INTO event_types (type_code , type_name , created_by, created_at, "versio
 INSERT INTO social_media (social_media_code, social_media_name, created_by, created_at, "version", is_active) VALUES
 	('SM01', 'Instagram', (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true),
 	('SM02', 'LinkedIn', (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true),
-	('SM03', 'Facebook', (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true); 
+	('SM03', 'Facebook', (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true);
+	
+
+
+--	
+--INSERT INTO thread_types (type_code , type_name , created_by, created_at, "version", is_active) VALUES ('TY03', 'Article', (SELECT users.id FROM users WHERE users.email = 'admin@gmail.com'), now(), 0, true);

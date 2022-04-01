@@ -64,7 +64,7 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			data.setProfileCode(profile.getProfileCode());
 			data.setProfileName(profile.getProfileName());
 			data.setProfileCompany(profile.getProfileCompany());
-			data.setProfilePortalCode(profile.getProfilePortalCode());
+			data.setProfilePortalCode(profile.getProfilePostalCode());
 			
 			if(profile.getProfileImage() != null) {				
 				data.setProfileImageId(profile.getProfileImage().getId());
@@ -105,7 +105,7 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 		data.setProfileCode(profile.getProfileCode());
 		data.setProfileName(profile.getProfileName());
 		data.setProfileCompany(profile.getProfileCompany());
-		data.setProfilePortalCode(profile.getProfilePortalCode());
+		data.setProfilePortalCode(profile.getProfilePostalCode());
 		
 		if(profile.getProfileImage() != null) {				
 			data.setProfileImageId(profile.getProfileImage().getId());

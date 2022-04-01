@@ -160,4 +160,69 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 		
 		return listResult;
 	}
+	
+	@Override
+	public List<Event> getReportEnrolls(String eventId) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT e.event_title AS eventTitle, e.event_provider AS eventProvider,");
+		builder.append(" e.event_price AS eventPrice, e.event_date_start AS eventDateStart,");
+		builder.append(" e.event_date_end AS eventDateEnd, e.event_time_start AS eventTimeStart,");
+		builder.append(" e.event_time_end AS eventTimeEnd, p.profile_name AS profileName,");
+		builder.append(" p.profile_company AS profileCompany, p.profile_phone AS profilePhone,");
+		builder.append(" u.email AS email, r.regency_name AS regencyName,");
+		builder.append(" pr.province_name AS provinceName");
+		builder.append(" FROM profiles p");
+		builder.append(" INNER JOIN users u ON u.id = p.user_id");
+		builder.append(" INNER JOIN regencies r ON r.id = p.regency_id");
+		builder.append(" INNER JOIN provinces pr ON pr.id = r.province_id");
+		builder.append(" INNER JOIN events e ON e.id = :eventId");
+		builder.append(" WHERE p.id IN (SELECT profile_id FROM enroll_events WHERE enroll_events.event_id = :eventId)");
+		List<?> results = createNativeQuery(builder.toString())
+				.setParameter("eventId", eventId)
+				.getResultList();
+		List<Event> listResult = new ArrayList<>();
+		results.forEach(result -> {
+			Object[] obj = (Object[]) result;
+			Event data = new Event();
+			
+			data.setId(obj[0].toString());
+			data.setEventCode(obj[1].toString());
+			data.setEventTitle(obj[2].toString());
+			data.setEventProvider(obj[3].toString());
+			data.setEventPrice(BigInteger.valueOf(((Number) obj[4]).longValue()));
+			data.setEventTimeStart((Time) obj[5]);
+			data.setEventTimeEnd((Time) obj[6]);
+			data.setEventDateStart((Date) obj[7]);
+			data.setEventDateEnd((Date) obj[8]);
+			data.setIsApprove(Boolean.valueOf(obj[9].toString()));
+			
+			Category category = new Category();
+			category.setId(obj[10].toString());
+			category.setCategoryCode(obj[11].toString());
+			category.setCategoryName(obj[12].toString());
+			data.setCategoryId(category);
+			
+			EventType type = new EventType();
+			type.setId(obj[13].toString());
+			type.setTypeCode(obj[14].toString());
+			type.setTypeName(obj[15].toString());
+			data.setTypeId(type);
+			
+			if(obj[16] != null) {
+				Attachment attachment = new Attachment();
+				attachment.setId(obj[16].toString());
+				attachment.setAttachmentExtension(obj[17].toString());
+				data.setAttachmentId(attachment);
+			}
+			
+			data.setCreatedBy(obj[18].toString());
+			data.setVersion(Integer.valueOf(obj[19].toString()));
+			data.setIsActive(Boolean.valueOf(obj[20].toString()));
+			
+			listResult.add(data);
+		});
+		
+		return listResult;
+	}
+	
 }

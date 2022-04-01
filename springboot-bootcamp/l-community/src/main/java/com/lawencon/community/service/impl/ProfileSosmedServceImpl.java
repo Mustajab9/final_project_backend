@@ -58,7 +58,7 @@ public class ProfileSosmedServceImpl extends BaseService implements ProfileSosme
 			data.setProfileCode(profileSosmed.getProfileId().getProfileCode());
 			data.setProfileName(profileSosmed.getProfileId().getProfileName());
 			data.setProfileCompany(profileSosmed.getProfileId().getProfileCompany());
-			data.setProfilePortalCode(profileSosmed.getProfileId().getProfilePortalCode());
+			data.setProfilePortalCode(profileSosmed.getProfileId().getProfilePostalCode());
 			data.setUserId(profileSosmed.getProfileId().getUserId().getId());
 			data.setEmail(profileSosmed.getProfileId().getUserId().getEmail());
 			data.setSocialMediaid(profileSosmed.getSocialMediaId().getId());
@@ -90,7 +90,7 @@ public class ProfileSosmedServceImpl extends BaseService implements ProfileSosme
 		data.setProfileCode(profileSosmed.getProfileId().getProfileCode());
 		data.setProfileName(profileSosmed.getProfileId().getProfileName());
 		data.setProfileCompany(profileSosmed.getProfileId().getProfileCompany());
-		data.setProfilePortalCode(profileSosmed.getProfileId().getProfilePortalCode());
+		data.setProfilePortalCode(profileSosmed.getProfileId().getProfilePostalCode());
 		data.setUserId(profileSosmed.getProfileId().getUserId().getId());
 		data.setEmail(profileSosmed.getProfileId().getUserId().getEmail());
 		data.setSocialMediaid(profileSosmed.getSocialMediaId().getId());

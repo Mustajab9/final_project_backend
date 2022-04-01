@@ -65,7 +65,7 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 			data.setProfileCode(subscription.getProfileId().getProfileCode());
 			data.setProfileName(subscription.getProfileId().getProfileName());
 			data.setProfileCompany(subscription.getProfileId().getProfileCompany());
-			data.setProfilePortalCode(subscription.getProfileId().getProfilePortalCode());
+			data.setProfilePortalCode(subscription.getProfileId().getProfilePostalCode());
 			data.setUserId(subscription.getProfileId().getUserId().getId());
 			data.setEmail(subscription.getProfileId().getUserId().getEmail());
 			data.setVersion(subscription.getVersion());
@@ -95,7 +95,7 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 		data.setProfileCode(subscription.getProfileId().getProfileCode());
 		data.setProfileName(subscription.getProfileId().getProfileName());
 		data.setProfileCompany(subscription.getProfileId().getProfileCompany());
-		data.setProfilePortalCode(subscription.getProfileId().getProfilePortalCode());
+		data.setProfilePortalCode(subscription.getProfileId().getProfilePostalCode());
 		data.setUserId(subscription.getProfileId().getUserId().getId());
 		data.setEmail(subscription.getProfileId().getUserId().getEmail());
 		data.setVersion(subscription.getVersion());
