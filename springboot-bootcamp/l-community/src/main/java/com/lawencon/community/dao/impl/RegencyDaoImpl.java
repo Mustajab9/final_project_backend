@@ -3,11 +3,8 @@ package com.lawencon.community.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.search.mapper.orm.Search;
-import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.ConnHandler;
 import com.lawencon.community.dao.RegencyDao;
 import com.lawencon.community.model.Province;
 import com.lawencon.community.model.Regency;
@@ -17,10 +14,7 @@ import com.lawencon.model.SearchQuery;
 public class RegencyDaoImpl extends BaseDao<Regency> implements RegencyDao {
 	
 	@Override
-	public SearchQuery<Regency> findAll(String query, Integer startPage, Integer maxPage) throws Exception {
-		SearchSession fullTextEntityManager = Search.session(ConnHandler.getManager());
-		fullTextEntityManager.massIndexer().startAndWait();
-		
+	public SearchQuery<Regency> findAll(String query, Integer startPage, Integer maxPage) throws Exception {		
 		SearchQuery<Regency> sq = new SearchQuery<>();
 		List<Regency> data = null;
 		
