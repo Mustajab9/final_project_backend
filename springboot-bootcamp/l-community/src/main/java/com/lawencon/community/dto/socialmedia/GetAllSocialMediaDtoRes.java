@@ -5,6 +5,7 @@ import java.util.List;
 public class GetAllSocialMediaDtoRes {
 	private String msg;
 	private List<GetAllSocialMediaDtoDataRes> data;
+	private Long total;
 
 	public String getMsg() {
 		return msg;
@@ -20,5 +21,13 @@ public class GetAllSocialMediaDtoRes {
 
 	public void setData(List<GetAllSocialMediaDtoDataRes> data) {
 		this.data = data;
+	}
+
+	public Long getTotal() {
+		return total;
+	}
+
+	public void setTotal(Long total) {
+		this.total = total;
 	}
 }

@@ -12,13 +12,32 @@ import org.springframework.stereotype.Repository;
 import com.lawencon.community.dao.SubscriptionDao;
 import com.lawencon.community.model.Profiles;
 import com.lawencon.community.model.Subscription;
+import com.lawencon.model.SearchQuery;
 
 @Repository
 public class SubscriptionDaoImpl extends BaseDao<Subscription> implements SubscriptionDao {
 	
 	@Override
-	public List<Subscription> findAll(int startPage, int maxPage) throws Exception {
-		return super.getAll(startPage, maxPage);
+	public SearchQuery<Subscription> findAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<Subscription> sq = new SearchQuery<>();
+		List<Subscription> data = null;
+		
+		if(startPage == null || maxPage == null) {
+			data = getAll();
+			sq.setData(data);
+		}else {
+			if(query == null) {
+				data = getAll(startPage, maxPage);
+				int count = countAll().intValue();
+				
+				sq.setData(data);
+				sq.setCount(count);
+			}else {
+				return super.getAll(query, startPage, maxPage, "subscriptionCode", "profileId.profileName", "profileId.userId.email", "profileId.profileCompany", "profileId.profilePhone");
+			}
+		}
+		
+		return sq;
 	}
 	
 	@Override
@@ -34,6 +53,11 @@ public class SubscriptionDaoImpl extends BaseDao<Subscription> implements Subscr
 	@Override
 	public boolean deleteById(String id) throws Exception {
 		return super.deleteById(id);
+	}
+	
+	@Override
+	public Long countAll() {
+		return super.countAll();
 	}
 	
 	@Override

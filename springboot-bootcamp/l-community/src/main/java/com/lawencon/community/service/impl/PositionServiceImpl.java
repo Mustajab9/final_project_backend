@@ -21,6 +21,7 @@ import com.lawencon.community.dto.position.UpdatePositionDtoReq;
 import com.lawencon.community.dto.position.UpdatePositionDtoRes;
 import com.lawencon.community.model.Position;
 import com.lawencon.community.service.PositionService;
+import com.lawencon.model.SearchQuery;
 
 @Service
 public class PositionServiceImpl extends BaseService implements PositionService {
@@ -32,14 +33,15 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 	}
 	
 	@Override
-	public GetAllPositionDtoRes findAll(int startPage, int maxPage) throws Exception {
+	public GetAllPositionDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllPositionDtoRes getAll = new GetAllPositionDtoRes();
+		Long totalPage = positionDao.countAll();
 
-		List<Position> positions = positionDao.findAll(startPage, maxPage);
+		SearchQuery<Position> positions = positionDao.findAll(query, startPage, maxPage);
 		List<GetAllPositionDtoDataRes> positionList = new ArrayList<>();
 
-		for (int i = 0; i < positions.size(); i++) {
-			Position position = positions.get(i);
+		for (int i = 0; i < positions.getData().size(); i++) {
+			Position position = positions.getData().get(i);
 			GetAllPositionDtoDataRes data = new GetAllPositionDtoDataRes();
 
 			data.setId(position.getId());
@@ -53,6 +55,7 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 
 		getAll.setData(positionList);
 		getAll.setMsg(null);
+		getAll.setTotal(totalPage);
 
 		return getAll;
 	}

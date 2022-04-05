@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.community.dto.socialmedia.DeleteBySocialMediaIdDtoRes;
@@ -47,8 +46,8 @@ public class SocialMediaController {
 	}
 
 	@GetMapping
-	public ResponseEntity<GetAllSocialMediaDtoRes> getAll(@RequestParam int start, @RequestParam int max) throws Exception {
-		GetAllSocialMediaDtoRes getAll = socialMediaService.findAll(start, max);
+	public ResponseEntity<GetAllSocialMediaDtoRes> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		GetAllSocialMediaDtoRes getAll = socialMediaService.findAll(query, startPage, maxPage);
 		return new ResponseEntity<GetAllSocialMediaDtoRes>(getAll, HttpStatus.OK);
 	}
 

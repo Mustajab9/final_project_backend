@@ -5,6 +5,7 @@ import java.util.List;
 public class GetAllProvinceDtoRes {
 	private String msg;
 	private List<GetAllProvinceDtoDataRes> data;
+	private Long total;
 
 	public String getMsg() {
 		return msg;
@@ -20,5 +21,13 @@ public class GetAllProvinceDtoRes {
 
 	public void setData(List<GetAllProvinceDtoDataRes> data) {
 		this.data = data;
+	}
+
+	public Long getTotal() {
+		return total;
+	}
+
+	public void setTotal(Long total) {
+		this.total = total;
 	}
 }

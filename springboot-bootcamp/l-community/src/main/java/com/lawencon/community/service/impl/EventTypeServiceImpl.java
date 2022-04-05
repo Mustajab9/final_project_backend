@@ -21,6 +21,7 @@ import com.lawencon.community.dto.eventtype.UpdateEventTypeDtoReq;
 import com.lawencon.community.dto.eventtype.UpdateEventTypeDtoRes;
 import com.lawencon.community.model.EventType;
 import com.lawencon.community.service.EventTypeService;
+import com.lawencon.model.SearchQuery;
 
 @Service
 public class EventTypeServiceImpl extends BaseService implements EventTypeService {
@@ -32,14 +33,15 @@ public class EventTypeServiceImpl extends BaseService implements EventTypeServic
 	}
 	
 	@Override
-	public GetAllEventTypeDtoRes findAll(int startPage, int maxPage) throws Exception {
+	public GetAllEventTypeDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllEventTypeDtoRes getAll = new GetAllEventTypeDtoRes();
+		Long totalPage = typeDao.countAll();
 
-		List<EventType> eventTypes = typeDao.findAll(startPage, maxPage);
+		SearchQuery<EventType> eventTypes = typeDao.findAll(query, startPage, maxPage);
 		List<GetAllEventTypeDtoDataRes> listEventType = new ArrayList<>();
 
-		for (int i = 0; i < eventTypes.size(); i++) {
-			EventType eventType = eventTypes.get(i);
+		for (int i = 0; i < eventTypes.getData().size(); i++) {
+			EventType eventType = eventTypes.getData().get(i);
 			GetAllEventTypeDtoDataRes data = new GetAllEventTypeDtoDataRes();
 
 			data.setId(eventType.getId());
@@ -53,6 +55,7 @@ public class EventTypeServiceImpl extends BaseService implements EventTypeServic
 
 		getAll.setData(listEventType);
 		getAll.setMsg(null);
+		getAll.setTotal(totalPage);
 
 		return getAll;
 	}

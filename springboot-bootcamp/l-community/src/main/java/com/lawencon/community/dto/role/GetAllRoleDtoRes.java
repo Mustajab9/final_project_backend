@@ -5,6 +5,7 @@ import java.util.List;
 public class GetAllRoleDtoRes {
 	private String msg;
 	private List<GetAllRoleDtoDataRes> data;
+	private Long total;
 
 	public String getMsg() {
 		return msg;
@@ -20,5 +21,13 @@ public class GetAllRoleDtoRes {
 
 	public void setData(List<GetAllRoleDtoDataRes> data) {
 		this.data = data;
+	}
+
+	public Long getTotal() {
+		return total;
+	}
+
+	public void setTotal(Long total) {
+		this.total = total;
 	}
 }

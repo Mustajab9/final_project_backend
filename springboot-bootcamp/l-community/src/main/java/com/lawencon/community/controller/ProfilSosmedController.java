@@ -27,7 +27,7 @@ import com.lawencon.community.service.ProfileSosmedService;
 @RequestMapping("profile-sosmeds")
 public class ProfilSosmedController {
 
-private ProfileSosmedService profileSosmedService;
+	private ProfileSosmedService profileSosmedService;
 	
 	@Autowired
 	public ProfilSosmedController(ProfileSosmedService profileSosmedService) {

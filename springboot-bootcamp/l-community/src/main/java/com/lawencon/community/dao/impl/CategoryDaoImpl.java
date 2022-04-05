@@ -6,13 +6,32 @@ import org.springframework.stereotype.Repository;
 
 import com.lawencon.community.dao.CategoryDao;
 import com.lawencon.community.model.Category;
+import com.lawencon.model.SearchQuery;
 
 @Repository
 public class CategoryDaoImpl extends BaseDao<Category> implements CategoryDao {
 	
 	@Override
-	public List<Category> findAll(int startPage, int maxPage) throws Exception {
-		return super.getAll(startPage, maxPage);
+	public SearchQuery<Category> findAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<Category> sq = new SearchQuery<>();
+		List<Category> data = null;
+		
+		if(startPage == null || maxPage == null) {
+			data = getAll();
+			sq.setData(data);
+		}else {
+			if(query == null) {
+				data = getAll(startPage, maxPage);
+				int count = countAll().intValue();
+				
+				sq.setData(data);
+				sq.setCount(count);
+			}else {
+				return super.getAll(query, startPage, maxPage, "categoryName", "categoryCode");
+			}
+		}
+		
+		return sq;
 	}
 	
 	@Override
@@ -28,5 +47,10 @@ public class CategoryDaoImpl extends BaseDao<Category> implements CategoryDao {
 	@Override
 	public boolean deleteById(String id) throws Exception {
 		return super.deleteById(id);
+	}
+	
+	@Override
+	public Long countAll() {
+		return super.countAll();
 	}
 }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.community.dto.pricelistevent.DeleteByPriceListEventIdDtoRes;
@@ -36,8 +35,8 @@ private PriceListEventService priceListEventService;
 	}
 	
 	@GetMapping
-	public ResponseEntity<GetAllPriceListEventDtoRes> getAll(@RequestParam int start, @RequestParam int max) throws Exception {
-		GetAllPriceListEventDtoRes priceListEvents = priceListEventService.findAll(start, max);
+	public ResponseEntity<GetAllPriceListEventDtoRes> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		GetAllPriceListEventDtoRes priceListEvents = priceListEventService.findAll(query, startPage, maxPage);
 		return new ResponseEntity<GetAllPriceListEventDtoRes>(priceListEvents, HttpStatus.OK);
 	}
 	

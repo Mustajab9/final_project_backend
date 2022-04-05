@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.community.dto.eventtype.DeleteByEventTypeIdDtoRes;
@@ -30,13 +29,13 @@ public class EventTypeController {
 	private EventTypeService eventTypeService;
 
 	@Autowired
-	public void setBookmarkService(EventTypeService eventTypeService) {
+	public void setEventTypeService(EventTypeService eventTypeService) {
 		this.eventTypeService = eventTypeService;
 	}
 
 	@GetMapping
-	public ResponseEntity<GetAllEventTypeDtoRes> getAll(@RequestParam int start, @RequestParam int max) throws Exception {
-		GetAllEventTypeDtoRes result = eventTypeService.findAll(start, max);
+	public ResponseEntity<GetAllEventTypeDtoRes> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		GetAllEventTypeDtoRes result = eventTypeService.findAll(query, startPage, maxPage);
 		return new ResponseEntity<GetAllEventTypeDtoRes>(result, HttpStatus.OK);
 	}
 

@@ -7,9 +7,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+
 import com.lawencon.base.BaseEntity;
 
 @Entity
+@Indexed
 @Table(name = "regencies", uniqueConstraints = {
 		@UniqueConstraint(
 				name="regency_bk",
@@ -23,14 +28,17 @@ public class Regency extends BaseEntity {
 	
 	private static final long serialVersionUID = -7409702483893214502L;
 	
+	@FullTextField
 	@Column(name = "regency_name", length=50)
 	private String regencyName;
 	
+	@FullTextField
 	@Column(name = "regency_code", length=5)
 	private String regencyCode;
 	
 	@ManyToOne
 	@JoinColumn(name = "province_id")
+	@IndexedEmbedded
 	private Province provinceId;
 	
 	public String getRegencyName() {

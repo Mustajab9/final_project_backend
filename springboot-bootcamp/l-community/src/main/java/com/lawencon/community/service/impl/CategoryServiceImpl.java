@@ -21,6 +21,7 @@ import com.lawencon.community.dto.category.UpdateCategoryDtoReq;
 import com.lawencon.community.dto.category.UpdateCategoryDtoRes;
 import com.lawencon.community.model.Category;
 import com.lawencon.community.service.CategoryService;
+import com.lawencon.model.SearchQuery;
 
 @Service
 public class CategoryServiceImpl extends BaseService implements CategoryService {
@@ -32,14 +33,15 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 	}
 	
 	@Override
-	public GetAllCategoryDtoRes findAll(int startPage, int maxPage) throws Exception {
+	public GetAllCategoryDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllCategoryDtoRes getAll = new GetAllCategoryDtoRes();
+		Long totalPage = categoryDao.countAll();
 
-		List<Category> categories = categoryDao.findAll(startPage, maxPage);
+		SearchQuery<Category> categories = categoryDao.findAll(query, startPage, maxPage);
 		List<GetAllCategoryDtoDataRes> listCategory = new ArrayList<>();
 
-		for (int i = 0; i < categories.size(); i++) {
-			Category category = categories.get(i);
+		for (int i = 0; i < categories.getData().size(); i++) {
+			Category category = categories.getData().get(i);
 			GetAllCategoryDtoDataRes data = new GetAllCategoryDtoDataRes();
 			
 			data.setId(category.getId());
@@ -53,6 +55,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 
 		getAll.setData(listCategory);
 		getAll.setMsg(null);
+		getAll.setTotal(totalPage);
 
 		return getAll;
 	}

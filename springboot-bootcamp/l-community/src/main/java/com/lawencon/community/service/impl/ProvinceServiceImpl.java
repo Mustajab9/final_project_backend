@@ -21,6 +21,7 @@ import com.lawencon.community.dto.province.UpdateProvinceDtoReq;
 import com.lawencon.community.dto.province.UpdateProvinceDtoRes;
 import com.lawencon.community.model.Province;
 import com.lawencon.community.service.ProvinceService;
+import com.lawencon.model.SearchQuery;
 
 @Service
 public class ProvinceServiceImpl extends BaseService implements ProvinceService {
@@ -32,14 +33,15 @@ public class ProvinceServiceImpl extends BaseService implements ProvinceService 
 	}
 	
 	@Override
-	public GetAllProvinceDtoRes findAll(int startPage, int maxPage) throws Exception {
+	public GetAllProvinceDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllProvinceDtoRes getAll = new GetAllProvinceDtoRes();
+		Long totalPage = provinceDao.countAll();
 
-		List<Province> provinces = provinceDao.findAll(startPage, maxPage);
+		SearchQuery<Province> provinces = provinceDao.findAll(query, startPage, maxPage);
 		List<GetAllProvinceDtoDataRes> provinceList = new ArrayList<>();
 
-		for (int i = 0; i < provinces.size(); i++) {
-			Province province = provinces.get(i);
+		for (int i = 0; i < provinces.getData().size(); i++) {
+			Province province = provinces.getData().get(i);
 			GetAllProvinceDtoDataRes data = new GetAllProvinceDtoDataRes();
 
 			data.setId(province.getId());
@@ -53,6 +55,7 @@ public class ProvinceServiceImpl extends BaseService implements ProvinceService 
 
 		getAll.setData(provinceList);
 		getAll.setMsg(null);
+		getAll.setTotal(totalPage);
 
 		return getAll;
 	}

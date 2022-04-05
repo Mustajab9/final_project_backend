@@ -5,6 +5,7 @@ import java.util.List;
 public class GetAllThreadTypeDtoRes {
 	private String msg;
 	private List<GetAllThreadTypeDtoDataRes> data;
+	private Long total;
 
 	public String getMsg() {
 		return msg;
@@ -20,5 +21,13 @@ public class GetAllThreadTypeDtoRes {
 
 	public void setData(List<GetAllThreadTypeDtoDataRes> data) {
 		this.data = data;
+	}
+
+	public Long getTotal() {
+		return total;
+	}
+
+	public void setTotal(Long total) {
+		this.total = total;
 	}
 }

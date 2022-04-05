@@ -23,6 +23,7 @@ import com.lawencon.community.dto.role.UpdateRoleDtoReq;
 import com.lawencon.community.dto.role.UpdateRoleDtoRes;
 import com.lawencon.community.model.Role;
 import com.lawencon.community.service.RoleService;
+import com.lawencon.model.SearchQuery;
 
 @Service
 public class RoleServiceImpl extends BaseService implements RoleService {
@@ -34,14 +35,15 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	}
 	
 	@Override
-	public GetAllRoleDtoRes findAll(int startPage, int maxPage) throws Exception {
+	public GetAllRoleDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllRoleDtoRes getAll = new GetAllRoleDtoRes();
+		Long totalPage = roleDao.countAll();
 
-		List<Role> roles = roleDao.findAll(startPage, maxPage);
+		SearchQuery<Role> roles = roleDao.findAll(query, startPage, maxPage);
 		List<GetAllRoleDtoDataRes> roleList = new ArrayList<>();
 
-		for (int i = 0; i < roles.size(); i++) {
-			Role role = roles.get(i);
+		for (int i = 0; i < roles.getData().size(); i++) {
+			Role role = roles.getData().get(i);
 			GetAllRoleDtoDataRes data = new GetAllRoleDtoDataRes();
 
 			data.setId(role.getId());
@@ -55,6 +57,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 
 		getAll.setData(roleList);
 		getAll.setMsg(null);
+		getAll.setTotal(totalPage);
 
 		return getAll;
 	}

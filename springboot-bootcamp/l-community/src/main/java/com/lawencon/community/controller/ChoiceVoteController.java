@@ -25,7 +25,7 @@ public class ChoiceVoteController {
 	private ChoiceVoteService choiceVoteService;
 
 	@Autowired
-	public void setBookmarkService(ChoiceVoteService choiceVoteService) {
+	public void setChoiceVoteService(ChoiceVoteService choiceVoteService) {
 		this.choiceVoteService = choiceVoteService;
 	}
 

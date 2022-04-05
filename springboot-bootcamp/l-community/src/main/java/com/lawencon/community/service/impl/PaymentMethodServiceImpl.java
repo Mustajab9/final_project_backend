@@ -21,6 +21,7 @@ import com.lawencon.community.dto.paymentmethod.UpdatePaymentMethodDtoReq;
 import com.lawencon.community.dto.paymentmethod.UpdatePaymentMethodDtoRes;
 import com.lawencon.community.model.PaymentMethod;
 import com.lawencon.community.service.PaymentMethodService;
+import com.lawencon.model.SearchQuery;
 
 @Service
 public class PaymentMethodServiceImpl extends BaseService implements PaymentMethodService {
@@ -32,14 +33,15 @@ public class PaymentMethodServiceImpl extends BaseService implements PaymentMeth
 	}
 	
 	@Override
-	public GetAllPaymentMethodDtoRes findAll(int startPage, int maxPage) throws Exception {
+	public GetAllPaymentMethodDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllPaymentMethodDtoRes getAll = new GetAllPaymentMethodDtoRes();
+		Long totalPage = paymentMethodDao.countAll();
 
-		List<PaymentMethod> paymentMethods = paymentMethodDao.findAll(startPage, maxPage);
+		SearchQuery<PaymentMethod> paymentMethods = paymentMethodDao.findAll(query, startPage, maxPage);
 		List<GetAllPaymentMethodDtoDataRes> listPaymentMethod = new ArrayList<>();
 
-		for (int i = 0; i < paymentMethods.size(); i++) {
-			PaymentMethod paymentMethod = paymentMethods.get(i);
+		for (int i = 0; i < paymentMethods.getData().size(); i++) {
+			PaymentMethod paymentMethod = paymentMethods.getData().get(i);
 			GetAllPaymentMethodDtoDataRes data = new GetAllPaymentMethodDtoDataRes();
 
 			data.setId(paymentMethod.getId());
@@ -53,6 +55,7 @@ public class PaymentMethodServiceImpl extends BaseService implements PaymentMeth
 
 		getAll.setData(listPaymentMethod);
 		getAll.setMsg(null);
+		getAll.setTotal(totalPage);
 
 		return getAll;
 	}

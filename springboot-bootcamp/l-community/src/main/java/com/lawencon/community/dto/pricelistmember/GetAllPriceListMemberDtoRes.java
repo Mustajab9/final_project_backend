@@ -5,6 +5,7 @@ import java.util.List;
 public class GetAllPriceListMemberDtoRes {
 	private String msg;
 	private List<GetAllPriceListMemberDtoDataRes> data;
+	private Long total;
 
 	public String getMsg() {
 		return msg;
@@ -20,5 +21,13 @@ public class GetAllPriceListMemberDtoRes {
 
 	public void setData(List<GetAllPriceListMemberDtoDataRes> data) {
 		this.data = data;
+	}
+
+	public Long getTotal() {
+		return total;
+	}
+
+	public void setTotal(Long total) {
+		this.total = total;
 	}
 }

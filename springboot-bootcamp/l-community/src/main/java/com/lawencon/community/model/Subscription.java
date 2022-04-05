@@ -9,14 +9,20 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+
 import com.lawencon.base.BaseEntity;
 
 @Entity
+@Indexed
 @Table(name = "subscriptions", uniqueConstraints = @UniqueConstraint(name = "subs_bk", columnNames = "subscription_code"))
 public class Subscription extends BaseEntity {
 
 	private static final long serialVersionUID = -7204808085626448204L;
 
+	@FullTextField
 	@Column(name = "subscription_code", length = 5)
 	private String subscriptionCode;
 
@@ -28,6 +34,7 @@ public class Subscription extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "profile_id")
+	@IndexedEmbedded
 	private Profiles profileId;
 
 	public String getSubscriptionCode() {

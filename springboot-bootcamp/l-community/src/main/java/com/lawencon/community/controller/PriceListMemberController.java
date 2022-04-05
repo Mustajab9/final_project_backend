@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.community.dto.pricelistmember.DeleteByPriceListMemberIdDtoRes;
@@ -36,8 +35,8 @@ private PriceListMemberService priceListMemberService;
 	}
 	
 	@GetMapping
-	public ResponseEntity<GetAllPriceListMemberDtoRes> getAll(@RequestParam int start, @RequestParam int max) throws Exception {
-		GetAllPriceListMemberDtoRes priceListMembers = priceListMemberService.findAll(start, max);
+	public ResponseEntity<GetAllPriceListMemberDtoRes> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		GetAllPriceListMemberDtoRes priceListMembers = priceListMemberService.findAll(query, startPage, maxPage);
 		return new ResponseEntity<GetAllPriceListMemberDtoRes>(priceListMembers, HttpStatus.OK);
 	}
 	

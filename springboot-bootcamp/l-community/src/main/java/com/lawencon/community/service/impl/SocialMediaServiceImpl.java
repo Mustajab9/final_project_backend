@@ -21,6 +21,7 @@ import com.lawencon.community.dto.socialmedia.UpdateSocialMediaDtoReq;
 import com.lawencon.community.dto.socialmedia.UpdateSocialMediaDtoRes;
 import com.lawencon.community.model.SocialMedia;
 import com.lawencon.community.service.SocialMediaService;
+import com.lawencon.model.SearchQuery;
 
 @Service
 public class SocialMediaServiceImpl extends BaseService implements SocialMediaService {
@@ -32,14 +33,15 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 	}
 	
 	@Override
-	public GetAllSocialMediaDtoRes findAll(int startPage, int maxPage) throws Exception {
+	public GetAllSocialMediaDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllSocialMediaDtoRes getAll = new GetAllSocialMediaDtoRes();
+		Long totalPage = socialMediaDao.countAll();
 
-		List<SocialMedia> socialMedias = socialMediaDao.findAll(startPage, maxPage);
+		SearchQuery<SocialMedia> socialMedias = socialMediaDao.findAll(query, startPage, maxPage);
 		List<GetAllSocialMediaDtoDataRes> listSocialMedia = new ArrayList<>();
 
-		for (int i = 0; i < socialMedias.size(); i++) {
-			SocialMedia socialMedia = socialMedias.get(i);
+		for (int i = 0; i < socialMedias.getData().size(); i++) {
+			SocialMedia socialMedia = socialMedias.getData().get(i);
 			GetAllSocialMediaDtoDataRes data = new GetAllSocialMediaDtoDataRes();
 
 			data.setId(socialMedia.getId());
@@ -53,6 +55,7 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 
 		getAll.setData(listSocialMedia);
 		getAll.setMsg(null);
+		getAll.setTotal(totalPage);
 
 		return getAll;
 	}

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
@@ -47,8 +46,8 @@ public class UserController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<GetAllUserDtoRes> getAll(@RequestParam int start, @RequestParam int max) throws Exception{
-		GetAllUserDtoRes getAll = userService.findAll(start, max);
+	public ResponseEntity<GetAllUserDtoRes> getAll(String query, Integer startPage, Integer maxPage) throws Exception{
+		GetAllUserDtoRes getAll = userService.findAll(query, startPage, maxPage);
 		return new ResponseEntity<GetAllUserDtoRes>(getAll, HttpStatus.OK);
 	}
 	

@@ -5,6 +5,7 @@ import java.util.List;
 public class GetAllSubscriptionDtoRes {
 	private String msg;
 	private List<GetAllSubscriptionDtoDataRes> data;
+	private Long total;
 
 	public String getMsg() {
 		return msg;
@@ -20,5 +21,13 @@ public class GetAllSubscriptionDtoRes {
 
 	public void setData(List<GetAllSubscriptionDtoDataRes> data) {
 		this.data = data;
+	}
+
+	public Long getTotal() {
+		return total;
+	}
+
+	public void setTotal(Long total) {
+		this.total = total;
 	}
 }

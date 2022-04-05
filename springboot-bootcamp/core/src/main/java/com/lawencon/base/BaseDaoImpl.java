@@ -6,8 +6,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.hibernate.search.engine.search.query.SearchFetchable;
+import org.hibernate.search.mapper.orm.Search;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.stereotype.Repository;
+
+import com.lawencon.model.SearchQuery;
 
 /**
  * 
@@ -42,6 +46,21 @@ public class BaseDaoImpl<T extends BaseEntity> {
                 .setMaxResults(maxPage)
                 .getResultList();
     }
+	
+	protected SearchQuery<T> getAll(String query, int startPage, int maxPage, String... fields) {
+		SearchFetchable<T> searchObj = Search.session(ConnHandler.getManager()).search(clazz)
+				.where(f -> f.match().fields(fields).matching(query));
+
+		List<T> result = searchObj.fetch(startPage, maxPage).hits();
+		List<T> resultAll = searchObj.fetchAllHits();
+
+		SearchQuery<T> data = new SearchQuery<>();
+		data.setData(result);
+		data.setCount(resultAll.size());
+
+		return data;
+	}
+
 
 	protected T save(T entity) throws Exception {
 		if (entity.getId() != null) {

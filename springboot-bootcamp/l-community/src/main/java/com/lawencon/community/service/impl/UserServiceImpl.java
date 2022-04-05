@@ -33,6 +33,7 @@ import com.lawencon.community.dto.user.UpdateUserDtoRes;
 import com.lawencon.community.model.Role;
 import com.lawencon.community.model.User;
 import com.lawencon.community.service.UserService;
+import com.lawencon.model.SearchQuery;
 
 @Service
 public class UserServiceImpl extends BaseService implements UserService {
@@ -58,14 +59,15 @@ public class UserServiceImpl extends BaseService implements UserService {
 	}
 
 	@Override
-	public GetAllUserDtoRes findAll(int startPage, int maxPage) throws Exception {
+	public GetAllUserDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
+		Long totalPage = userDao.countAll();
 
-		List<User> users = userDao.findAll(startPage, maxPage);
+		SearchQuery<User> users = userDao.findAll(query, startPage, maxPage);
 		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
 
-		for (int i = 0; i < users.size(); i++) {
-			User user = users.get(i);
+		for (int i = 0; i < users.getData().size(); i++) {
+			User user = users.getData().get(i);
 			GetAllUserDtoDataRes data = new GetAllUserDtoDataRes();
 
 			data.setId(user.getId());
@@ -81,7 +83,8 @@ public class UserServiceImpl extends BaseService implements UserService {
 
 		getAll.setData(listUser);
 		getAll.setMsg(null);
-
+		getAll.setTotal(totalPage);
+		
 		return getAll;
 	}
 

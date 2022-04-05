@@ -21,6 +21,7 @@ import com.lawencon.community.dto.industry.UpdateIndustryDtoReq;
 import com.lawencon.community.dto.industry.UpdateIndustryDtoRes;
 import com.lawencon.community.model.Industry;
 import com.lawencon.community.service.IndustryService;
+import com.lawencon.model.SearchQuery;
 
 @Service
 public class IndustryServiceImpl extends BaseService implements IndustryService {
@@ -32,14 +33,14 @@ public class IndustryServiceImpl extends BaseService implements IndustryService 
 	}
 	
 	@Override
-	public GetAllIndustryDtoRes findAll(int startPage, int maxPage) throws Exception {
+	public GetAllIndustryDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllIndustryDtoRes getAll = new GetAllIndustryDtoRes();
 
-		List<Industry> industries = industryDao.findAll(startPage, maxPage);
+		SearchQuery<Industry> industries = industryDao.findAll(query, startPage, maxPage);
 		List<GetAllIndustryDtoDataRes> listIndustry = new ArrayList<>();
 
-		for (int i = 0; i < industries.size(); i++) {
-			Industry industry = industries.get(i);
+		for (int i = 0; i < industries.getData().size(); i++) {
+			Industry industry = industries.getData().get(i);
 			GetAllIndustryDtoDataRes data = new GetAllIndustryDtoDataRes();
 
 			data.setId(industry.getId());

@@ -21,6 +21,7 @@ import com.lawencon.community.dto.pricelistmember.UpdatePriceListMemberDtoReq;
 import com.lawencon.community.dto.pricelistmember.UpdatePriceListMemberDtoRes;
 import com.lawencon.community.model.PriceListMember;
 import com.lawencon.community.service.PriceListMemberService;
+import com.lawencon.model.SearchQuery;
 
 @Service
 public class PriceListMemberServiceImpl extends BaseService implements PriceListMemberService {
@@ -32,14 +33,15 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 	}
 	
 	@Override
-	public GetAllPriceListMemberDtoRes findAll(int startPage, int maxPage) throws Exception {
+	public GetAllPriceListMemberDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllPriceListMemberDtoRes getAll = new GetAllPriceListMemberDtoRes();
+		Long totalPage = priceListMemberDao.countAll();
 
-		List<PriceListMember> priceListMembers = priceListMemberDao.findAll(startPage, maxPage);
+		SearchQuery<PriceListMember> priceListMembers = priceListMemberDao.findAll(query, startPage, maxPage);
 		List<GetAllPriceListMemberDtoDataRes> priceListMemberList = new ArrayList<>();
 
-		for (int i = 0; i < priceListMembers.size(); i++) {
-			PriceListMember priceListMember = priceListMembers.get(i);
+		for (int i = 0; i < priceListMembers.getData().size(); i++) {
+			PriceListMember priceListMember = priceListMembers.getData().get(i);
 			GetAllPriceListMemberDtoDataRes data = new GetAllPriceListMemberDtoDataRes();
 
 			data.setId(priceListMember.getId());
@@ -54,6 +56,7 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 
 		getAll.setData(priceListMemberList);
 		getAll.setMsg(null);
+		getAll.setTotal(totalPage);
 
 		return getAll;
 	}

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.community.dto.province.DeleteByProvinceIdDtoRes;
@@ -35,8 +34,8 @@ private ProvinceService provinceService;
 	}
 	
 	@GetMapping
-	public ResponseEntity<GetAllProvinceDtoRes> getAll(@RequestParam int start, @RequestParam int max) throws Exception {
-		GetAllProvinceDtoRes provinces = provinceService.findAll(start, max);
+	public ResponseEntity<GetAllProvinceDtoRes> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		GetAllProvinceDtoRes provinces = provinceService.findAll(query, startPage, maxPage);
 		return new ResponseEntity<GetAllProvinceDtoRes>(provinces, HttpStatus.OK);
 	}
 	

@@ -1,11 +1,17 @@
 package com.lawencon.community.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
 import com.lawencon.base.BaseEntity;
 
@@ -18,18 +24,21 @@ public class Profiles extends BaseEntity {
 	
 	private static final long serialVersionUID = -6298603040813065280L;
 	
+	@FullTextField
 	@Column(name = "profile_name", length=100)
 	private String profileName;
 	
 	@Column(name = "profile_code", length=5)
 	private String profileCode;
 	
+	@FullTextField
 	@Column(name = "profile_company", length=100)
 	private String profileCompany;
 	
 	@Column(name = "profile_postal_code")
 	private Integer profilePostalCode;
 	
+	@FullTextField
 	@Column(name = "profile_phone", length=13)
 	private String profilePhone;
 	
@@ -52,6 +61,9 @@ public class Profiles extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "province_id")
 	private Province provinceId;
+	
+	@OneToMany(mappedBy = "profileId")
+	private Set<Subscription> subscriptions = new HashSet<>();
 	
 	public String getProfileName() {
 		return profileName;
@@ -131,5 +143,13 @@ public class Profiles extends BaseEntity {
 
 	public void setProvinceId(Province provinceId) {
 		this.provinceId = provinceId;
+	}
+
+	public Set<Subscription> getSubscriptions() {
+		return subscriptions;
+	}
+
+	public void setSubscriptions(Set<Subscription> subscriptions) {
+		this.subscriptions = subscriptions;
 	}
 }

@@ -10,7 +10,7 @@ import com.lawencon.community.dto.regency.UpdateRegencyDtoReq;
 import com.lawencon.community.dto.regency.UpdateRegencyDtoRes;
 
 public interface RegencyService {
-	public GetAllRegencyDtoRes findAll(int startPage, int maxPage) throws Exception;
+	public GetAllRegencyDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
 	public GetByRegencyIdDtoRes findById(String id) throws Exception;
 	public InsertRegencyDtoRes insert(InsertRegencyDtoReq data) throws Exception;
 	public UpdateRegencyDtoRes update(UpdateRegencyDtoReq data) throws Exception;

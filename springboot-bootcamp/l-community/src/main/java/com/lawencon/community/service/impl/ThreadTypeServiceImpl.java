@@ -21,6 +21,7 @@ import com.lawencon.community.dto.threadtype.UpdateThreadTypeDtoReq;
 import com.lawencon.community.dto.threadtype.UpdateThreadTypeDtoRes;
 import com.lawencon.community.model.ThreadType;
 import com.lawencon.community.service.ThreadTypeService;
+import com.lawencon.model.SearchQuery;
 
 @Service
 public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeService {
@@ -32,14 +33,15 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 	}
 	
 	@Override
-	public GetAllThreadTypeDtoRes findAll(int startPage, int maxPage) throws Exception {
+	public GetAllThreadTypeDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllThreadTypeDtoRes getAll = new GetAllThreadTypeDtoRes();
+		Long totalPage = typeDao.countAll();
 
-		List<ThreadType> types = typeDao.findAll(startPage, maxPage);
+		SearchQuery<ThreadType> types = typeDao.findAll(query, startPage, maxPage);
 		List<GetAllThreadTypeDtoDataRes> listUser = new ArrayList<>();
 
-		for (int i = 0; i < types.size(); i++) {
-			ThreadType threadType = types.get(i);
+		for (int i = 0; i < types.getData().size(); i++) {
+			ThreadType threadType = types.getData().get(i);
 			GetAllThreadTypeDtoDataRes data = new GetAllThreadTypeDtoDataRes();
 
 			data.setId(threadType.getId());
@@ -53,6 +55,7 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 
 		getAll.setData(listUser);
 		getAll.setMsg(null);
+		getAll.setTotal(totalPage);
 
 		return getAll;
 	}

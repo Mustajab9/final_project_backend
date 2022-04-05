@@ -10,13 +10,32 @@ import org.springframework.stereotype.Repository;
 
 import com.lawencon.community.dao.RoleDao;
 import com.lawencon.community.model.Role;
+import com.lawencon.model.SearchQuery;
 
 @Repository
 public class RoleDaoImpl extends BaseDao<Role> implements RoleDao {
 	
 	@Override
-	public List<Role> findAll(int startPage, int maxPage) throws Exception {
-		return super.getAll(startPage, maxPage);
+	public SearchQuery<Role> findAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<Role> sq = new SearchQuery<>();
+		List<Role> data = null;
+		
+		if(startPage == null || maxPage == null) {
+			data = getAll();
+			sq.setData(data);
+		}else {
+			if(query == null) {
+				data = getAll(startPage, maxPage);
+				int count = countAll().intValue();
+				
+				sq.setData(data);
+				sq.setCount(count);
+			}else {
+				return super.getAll(query, startPage, maxPage, "roleName", "roleCode");
+			}
+		}
+		
+		return sq;
 	}
 	
 	@Override
@@ -32,6 +51,11 @@ public class RoleDaoImpl extends BaseDao<Role> implements RoleDao {
 	@Override
 	public boolean deleteById(String id) throws Exception {
 		return super.deleteById(id);
+	}
+	
+	@Override
+	public Long countAll() {
+		return super.countAll();
 	}
 	
 	@Override

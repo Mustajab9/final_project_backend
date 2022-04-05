@@ -32,7 +32,7 @@ public class PollingChoiceController {
 
 	@Autowired
 	public PollingChoiceController(PollingChoiceService pollingChoiceService) {
-		this.pollingChoiceService=pollingChoiceService;
+		this.pollingChoiceService = pollingChoiceService;
 	}
 
 	@GetMapping
@@ -47,7 +47,7 @@ public class PollingChoiceController {
 		return new ResponseEntity<GetByPollingChoiceIdDtoRes>(pollingChoice, HttpStatus.OK);
 	}
 
-	@GetMapping("pollingId-{pollingId}")
+	@GetMapping("polling/{pollingId}")
 	public ResponseEntity<GetByPollingIdDtoRes> getByCode(@PathVariable("pollingId") String pollingId) throws Exception {
 		GetByPollingIdDtoRes getByPollingId = pollingChoiceService.findByPolling(pollingId);
 		return new ResponseEntity<GetByPollingIdDtoRes>(getByPollingId, HttpStatus.OK);

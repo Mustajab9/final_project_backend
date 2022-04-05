@@ -3,18 +3,43 @@ package com.lawencon.community.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.stereotype.Repository;
 
+import com.lawencon.base.ConnHandler;
 import com.lawencon.community.dao.RegencyDao;
 import com.lawencon.community.model.Province;
 import com.lawencon.community.model.Regency;
+import com.lawencon.model.SearchQuery;
 
 @Repository
 public class RegencyDaoImpl extends BaseDao<Regency> implements RegencyDao {
 	
 	@Override
-	public List<Regency> findAll(int startPage, int maxPage) throws Exception {
-		return super.getAll(startPage, maxPage);
+	public SearchQuery<Regency> findAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		SearchSession fullTextEntityManager = Search.session(ConnHandler.getManager());
+		fullTextEntityManager.massIndexer().startAndWait();
+		
+		SearchQuery<Regency> sq = new SearchQuery<>();
+		List<Regency> data = null;
+		
+		if(startPage == null || maxPage == null) {
+			data = getAll();
+			sq.setData(data);
+		}else {
+			if(query == null) {
+				data = getAll(startPage, maxPage);
+				int count = countAll().intValue();
+				
+				sq.setData(data);
+				sq.setCount(count);
+			}else {
+				return super.getAll(query, startPage, maxPage, "regencyName", "regencyCode", "provinceId.provinceName", "provinceId.provinceCode");
+			}
+		}
+		
+		return sq;
 	}
 	
 	@Override
@@ -30,6 +55,11 @@ public class RegencyDaoImpl extends BaseDao<Regency> implements RegencyDao {
 	@Override
 	public boolean deleteById(String id) throws Exception {
 		return super.deleteById(id);
+	}
+	
+	@Override
+	public Long countAll() {
+		return super.countAll();
 	}
 	
 	@Override

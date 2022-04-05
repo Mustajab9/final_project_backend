@@ -31,7 +31,7 @@ public class EnrollEventController {
 	private EnrollEventService enrollEventService;
 
 	@Autowired
-	public void setBookmarkService(EnrollEventService enrollEventService) {
+	public void setEnrollEventService(EnrollEventService enrollEventService) {
 		this.enrollEventService = enrollEventService;
 	}
 

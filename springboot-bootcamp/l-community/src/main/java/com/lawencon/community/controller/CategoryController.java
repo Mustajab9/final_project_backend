@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.community.dto.category.DeleteByCategoryIdDtoRes;
@@ -35,8 +34,8 @@ public class CategoryController {
 	}
 
 	@GetMapping
-	public ResponseEntity<GetAllCategoryDtoRes> getAll(@RequestParam int start, @RequestParam int max) throws Exception {
-		GetAllCategoryDtoRes result = categoryService.findAll(start, max);
+	public ResponseEntity<GetAllCategoryDtoRes> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		GetAllCategoryDtoRes result = categoryService.findAll(query, startPage, maxPage);
 		return new ResponseEntity<GetAllCategoryDtoRes>(result, HttpStatus.OK);
 	}
 

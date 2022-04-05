@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.dto.polling.DeleteByPollingIdDtoRes;
 import com.lawencon.community.dto.polling.GetAllPollingDtoRes;
 import com.lawencon.community.dto.polling.GetByPollingIdDtoRes;
+import com.lawencon.community.dto.polling.GetPollingByThreadIdDtoRes;
 import com.lawencon.community.dto.polling.InsertPollingDtoReq;
 import com.lawencon.community.dto.polling.InsertPollingDtoRes;
 import com.lawencon.community.service.PollingService;
@@ -43,11 +44,11 @@ public class PollingController {
 		return new ResponseEntity<GetByPollingIdDtoRes>(polling, HttpStatus.OK);
 	}
 
-//	@GetMapping("threadId-{threadId}")
-//	public ResponseEntity<GetByThreadIdDtoRes> getByCode(@PathVariable("threadId") String threadId) throws Exception {
-//		GetByThreadIdDtoRes getByThreadId = pollingService.findByThread(threadId);
-//		return new ResponseEntity<GetByThreadIdDtoRes>(getByThreadId, HttpStatus.OK);
-//	}
+	@GetMapping("thread/{threadId}")
+	public ResponseEntity<GetPollingByThreadIdDtoRes> getByCode(@PathVariable("threadId") String threadId) throws Exception {
+		GetPollingByThreadIdDtoRes getByThreadId = pollingService.findByThread(threadId);
+		return new ResponseEntity<GetPollingByThreadIdDtoRes>(getByThreadId, HttpStatus.OK);
+	}
 
 	@DeleteMapping("{id}")
 	public ResponseEntity<DeleteByPollingIdDtoRes> deleteById(@PathVariable("id") String id) throws Exception {

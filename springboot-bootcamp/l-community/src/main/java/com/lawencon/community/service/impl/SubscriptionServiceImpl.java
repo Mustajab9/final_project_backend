@@ -28,6 +28,7 @@ import com.lawencon.community.model.Profiles;
 import com.lawencon.community.model.Subscription;
 import com.lawencon.community.service.SubscriptionDetailService;
 import com.lawencon.community.service.SubscriptionService;
+import com.lawencon.model.SearchQuery;
 
 @Service
 public class SubscriptionServiceImpl extends BaseService implements SubscriptionService {
@@ -47,14 +48,15 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 	}
 	
 	@Override
-	public GetAllSubscriptionDtoRes findAll(int startPage, int maxPage) throws Exception {
+	public GetAllSubscriptionDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllSubscriptionDtoRes getAll = new GetAllSubscriptionDtoRes();
+		Long totalPage = subscriptionDao.countAll();
 
-		List<Subscription> subscriptions = subscriptionDao.findAll(startPage, maxPage);
+		SearchQuery<Subscription> subscriptions = subscriptionDao.findAll(query, startPage, maxPage);
 		List<GetAllSubscriptionDtoDataRes> listSubscription = new ArrayList<>();
 
-		for (int i = 0; i < subscriptions.size(); i++) {
-			Subscription subscription = subscriptions.get(i);
+		for (int i = 0; i < subscriptions.getData().size(); i++) {
+			Subscription subscription = subscriptions.getData().get(i);
 			GetAllSubscriptionDtoDataRes data = new GetAllSubscriptionDtoDataRes();
 
 			data.setId(subscription.getId());
@@ -76,6 +78,7 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 
 		getAll.setData(listSubscription);
 		getAll.setMsg(null);
+		getAll.setTotal(totalPage);
 
 		return getAll;
 	}

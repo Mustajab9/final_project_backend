@@ -7,14 +7,19 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+
 import com.lawencon.base.BaseEntity;
 
 @Entity
+@Indexed
 @Table(name = "price_list_member", uniqueConstraints = @UniqueConstraint(name="price_member_bk", columnNames = "price_code"))
 public class PriceListMember extends BaseEntity {
 	
 	private static final long serialVersionUID = -6555299478346827003L;
 	
+	@FullTextField
 	@Column(name = "price_code", length=5)
 	private String priceCode;
 	

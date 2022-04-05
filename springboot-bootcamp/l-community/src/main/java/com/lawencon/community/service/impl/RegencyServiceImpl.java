@@ -25,6 +25,7 @@ import com.lawencon.community.dto.regency.UpdateRegencyDtoRes;
 import com.lawencon.community.model.Province;
 import com.lawencon.community.model.Regency;
 import com.lawencon.community.service.RegencyService;
+import com.lawencon.model.SearchQuery;
 
 @Service
 public class RegencyServiceImpl extends BaseService implements RegencyService {
@@ -37,14 +38,15 @@ public class RegencyServiceImpl extends BaseService implements RegencyService {
 	}
 	
 	@Override
-	public GetAllRegencyDtoRes findAll(int startPage, int maxPage) throws Exception {
+	public GetAllRegencyDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllRegencyDtoRes getAll = new GetAllRegencyDtoRes();
+		Long totalPage = regencyDao.countAll();
 
-		List<Regency> regencies = regencyDao.findAll(startPage, maxPage);
+		SearchQuery<Regency> regencies = regencyDao.findAll(query, startPage, maxPage);
 		List<GetAllRegencyDtoDataRes> regencyList = new ArrayList<>();
 
-		for (int i = 0; i < regencies.size(); i++) {
-			Regency regency = regencies.get(i);
+		for (int i = 0; i < regencies.getData().size(); i++) {
+			Regency regency = regencies.getData().get(i);
 			GetAllRegencyDtoDataRes data = new GetAllRegencyDtoDataRes();
 
 			data.setId(regency.getId());
@@ -60,6 +62,7 @@ public class RegencyServiceImpl extends BaseService implements RegencyService {
 		}
 		getAll.setData(regencyList);
 		getAll.setMsg(null);
+		getAll.setTotal(totalPage);
 
 		return getAll;
 	}

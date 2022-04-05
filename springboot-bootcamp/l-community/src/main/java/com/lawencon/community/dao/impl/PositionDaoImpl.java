@@ -6,13 +6,32 @@ import org.springframework.stereotype.Repository;
 
 import com.lawencon.community.dao.PositionDao;
 import com.lawencon.community.model.Position;
+import com.lawencon.model.SearchQuery;
 
 @Repository
 public class PositionDaoImpl extends BaseDao<Position> implements PositionDao {
 	
 	@Override
-	public List<Position> findAll(int startPage, int maxPage) throws Exception {
-		return super.getAll(startPage, maxPage);
+	public SearchQuery<Position> findAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<Position> sq = new SearchQuery<>();
+		List<Position> data = null;
+		
+		if(startPage == null || maxPage == null) {
+			data = getAll();
+			sq.setData(data);
+		}else {
+			if(query == null) {
+				data = getAll(startPage, maxPage);
+				int count = countAll().intValue();
+				
+				sq.setData(data);
+				sq.setCount(count);
+			}else {
+				return super.getAll(query, startPage, maxPage, "positionName", "positionCode");
+			}
+		}
+		
+		return sq;
 	}
 	
 	@Override
@@ -28,5 +47,10 @@ public class PositionDaoImpl extends BaseDao<Position> implements PositionDao {
 	@Override
 	public boolean deleteById(String id) throws Exception {
 		return super.deleteById(id);
+	}
+	
+	@Override
+	public Long countAll() {
+		return super.countAll();
 	}
 }

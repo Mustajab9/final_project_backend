@@ -1,12 +1,12 @@
 package com.lawencon.community.dao;
 
-import java.util.List;
-
 import com.lawencon.community.model.SocialMedia;
+import com.lawencon.model.SearchQuery;
 
 public interface SocialMediaDao {
-	public List<SocialMedia> findAll(int startPage, int maxPage) throws Exception;
+	public SearchQuery<SocialMedia> findAll(String query, Integer startPage, Integer maxPage) throws Exception;
 	public SocialMedia findById(String id) throws Exception;
 	public SocialMedia save(SocialMedia data) throws Exception;
 	public boolean deleteById(String id) throws Exception;
+	public Long countAll() throws Exception;
 }

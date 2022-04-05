@@ -20,36 +20,36 @@ import com.lawencon.community.dto.paymenteventdetail.InsertPaymentEventDetailDto
 import com.lawencon.community.service.PaymentEventDetailService;
 
 @RestController
-@RequestMapping("enroll-details")
-public class EnrollDetailController {
-	private PaymentEventDetailService enrollDetailService;
+@RequestMapping("payment-event-details")
+public class PaymentEventDetailController {
+	private PaymentEventDetailService paymentEventDetailService;
 
 	@Autowired
-	public void setBookmarkService(PaymentEventDetailService enrollDetailService) {
-		this.enrollDetailService = enrollDetailService;
+	public void setPaymentEventDetailService(PaymentEventDetailService paymentEventDetailService) {
+		this.paymentEventDetailService = paymentEventDetailService;
 	}
 
 	@GetMapping
 	public ResponseEntity<GetAllPaymentEventDetailDtoRes> getAll() throws Exception {
-		GetAllPaymentEventDetailDtoRes result = enrollDetailService.findAll();
+		GetAllPaymentEventDetailDtoRes result = paymentEventDetailService.findAll();
 		return new ResponseEntity<GetAllPaymentEventDetailDtoRes>(result, HttpStatus.OK);
 	}
 
 	@GetMapping("{id}")
 	public ResponseEntity<GetByPaymentEventDetailIdDtoRes> getById(@PathVariable("id") String id) throws Exception {
-		GetByPaymentEventDetailIdDtoRes data = enrollDetailService.findById(id);
+		GetByPaymentEventDetailIdDtoRes data = paymentEventDetailService.findById(id);
 		return new ResponseEntity<GetByPaymentEventDetailIdDtoRes>(data, HttpStatus.OK);
 	}
 	
 	@GetMapping("event/{id}")
 	public ResponseEntity<GetPaymentEventDetailByEventDtoRes> getByEvent(@PathVariable("id") String id) throws Exception {
-		GetPaymentEventDetailByEventDtoRes data = enrollDetailService.findByEvent(id);
+		GetPaymentEventDetailByEventDtoRes data = paymentEventDetailService.findByEvent(id);
 		return new ResponseEntity<GetPaymentEventDetailByEventDtoRes>(data, HttpStatus.OK);
 	}
 
 	@PostMapping
 	public ResponseEntity<InsertPaymentEventDetailDtoRes> insertData(@RequestBody @Valid InsertPaymentEventDetailDtoReq data) throws Exception {
-		InsertPaymentEventDetailDtoRes insert = enrollDetailService.insert(data);
+		InsertPaymentEventDetailDtoRes insert = paymentEventDetailService.insert(data);
 		return new ResponseEntity<InsertPaymentEventDetailDtoRes>(insert, HttpStatus.CREATED);
 	}
 }

@@ -9,7 +9,7 @@ import com.lawencon.community.dto.province.UpdateProvinceDtoReq;
 import com.lawencon.community.dto.province.UpdateProvinceDtoRes;
 
 public interface ProvinceService {
-	public GetAllProvinceDtoRes findAll(int startPage, int maxPage) throws Exception;
+	public GetAllProvinceDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
 	public GetByProvinceIdDtoRes findById(String id) throws Exception;
 	public InsertProvinceDtoRes insert(InsertProvinceDtoReq data) throws Exception;
 	public UpdateProvinceDtoRes update(UpdateProvinceDtoReq data) throws Exception;
