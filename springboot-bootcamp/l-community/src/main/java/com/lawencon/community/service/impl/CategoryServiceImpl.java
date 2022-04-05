@@ -35,7 +35,6 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 	@Override
 	public GetAllCategoryDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllCategoryDtoRes getAll = new GetAllCategoryDtoRes();
-		Long totalPage = categoryDao.countAll();
 
 		SearchQuery<Category> categories = categoryDao.findAll(query, startPage, maxPage);
 		List<GetAllCategoryDtoDataRes> listCategory = new ArrayList<>();
@@ -55,7 +54,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 
 		getAll.setData(listCategory);
 		getAll.setMsg(null);
-		getAll.setTotal(totalPage);
+		getAll.setTotal(categories.getCount());
 
 		return getAll;
 	}

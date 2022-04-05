@@ -61,7 +61,6 @@ public class UserServiceImpl extends BaseService implements UserService {
 	@Override
 	public GetAllUserDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllUserDtoRes getAll = new GetAllUserDtoRes();
-		Long totalPage = userDao.countAll();
 
 		SearchQuery<User> users = userDao.findAll(query, startPage, maxPage);
 		List<GetAllUserDtoDataRes> listUser = new ArrayList<>();
@@ -83,7 +82,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
 		getAll.setData(listUser);
 		getAll.setMsg(null);
-		getAll.setTotal(totalPage);
+		getAll.setTotal(users.getCount());
 		
 		return getAll;
 	}

@@ -40,7 +40,6 @@ public class RegencyServiceImpl extends BaseService implements RegencyService {
 	@Override
 	public GetAllRegencyDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllRegencyDtoRes getAll = new GetAllRegencyDtoRes();
-		Long totalPage = regencyDao.countAll();
 
 		SearchQuery<Regency> regencies = regencyDao.findAll(query, startPage, maxPage);
 		List<GetAllRegencyDtoDataRes> regencyList = new ArrayList<>();
@@ -62,7 +61,7 @@ public class RegencyServiceImpl extends BaseService implements RegencyService {
 		}
 		getAll.setData(regencyList);
 		getAll.setMsg(null);
-		getAll.setTotal(totalPage);
+		getAll.setTotal(regencies.getCount());
 
 		return getAll;
 	}
