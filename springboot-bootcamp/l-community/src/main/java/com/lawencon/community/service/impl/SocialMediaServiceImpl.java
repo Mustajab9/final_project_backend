@@ -35,8 +35,7 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 	@Override
 	public GetAllSocialMediaDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllSocialMediaDtoRes getAll = new GetAllSocialMediaDtoRes();
-		Long totalPage = socialMediaDao.countAll();
-
+		
 		SearchQuery<SocialMedia> socialMedias = socialMediaDao.findAll(query, startPage, maxPage);
 		List<GetAllSocialMediaDtoDataRes> listSocialMedia = new ArrayList<>();
 
@@ -55,7 +54,7 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 
 		getAll.setData(listSocialMedia);
 		getAll.setMsg(null);
-		getAll.setTotal(totalPage);
+		getAll.setTotal(socialMedias.getCount());
 
 		return getAll;
 	}

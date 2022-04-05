@@ -35,7 +35,6 @@ public class PriceListEventServiceImpl extends BaseService implements PriceListE
 	@Override
 	public GetAllPriceListEventDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllPriceListEventDtoRes getAll = new GetAllPriceListEventDtoRes();
-		Long totalPage = priceListEventDao.countAll();
 
 		SearchQuery<PriceListEvent> priceListEvents = priceListEventDao.findAll(query, startPage, maxPage);
 		List<GetAllPriceListEventDtoDataRes> priceListEventList = new ArrayList<>();
@@ -56,7 +55,7 @@ public class PriceListEventServiceImpl extends BaseService implements PriceListE
 
 		getAll.setData(priceListEventList);
 		getAll.setMsg(null);
-		getAll.setTotal(totalPage);
+		getAll.setTotal(priceListEvents.getCount());
 
 		return getAll;
 	}

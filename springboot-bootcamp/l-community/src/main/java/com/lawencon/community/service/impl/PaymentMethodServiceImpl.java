@@ -35,8 +35,7 @@ public class PaymentMethodServiceImpl extends BaseService implements PaymentMeth
 	@Override
 	public GetAllPaymentMethodDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllPaymentMethodDtoRes getAll = new GetAllPaymentMethodDtoRes();
-		Long totalPage = paymentMethodDao.countAll();
-
+		
 		SearchQuery<PaymentMethod> paymentMethods = paymentMethodDao.findAll(query, startPage, maxPage);
 		List<GetAllPaymentMethodDtoDataRes> listPaymentMethod = new ArrayList<>();
 
@@ -55,7 +54,7 @@ public class PaymentMethodServiceImpl extends BaseService implements PaymentMeth
 
 		getAll.setData(listPaymentMethod);
 		getAll.setMsg(null);
-		getAll.setTotal(totalPage);
+		getAll.setTotal(paymentMethods.getCount());
 
 		return getAll;
 	}

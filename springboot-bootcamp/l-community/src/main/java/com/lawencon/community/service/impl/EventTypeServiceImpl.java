@@ -35,7 +35,6 @@ public class EventTypeServiceImpl extends BaseService implements EventTypeServic
 	@Override
 	public GetAllEventTypeDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllEventTypeDtoRes getAll = new GetAllEventTypeDtoRes();
-		Long totalPage = typeDao.countAll();
 
 		SearchQuery<EventType> eventTypes = typeDao.findAll(query, startPage, maxPage);
 		List<GetAllEventTypeDtoDataRes> listEventType = new ArrayList<>();
@@ -55,7 +54,7 @@ public class EventTypeServiceImpl extends BaseService implements EventTypeServic
 
 		getAll.setData(listEventType);
 		getAll.setMsg(null);
-		getAll.setTotal(totalPage);
+		getAll.setTotal(eventTypes.getCount());
 
 		return getAll;
 	}

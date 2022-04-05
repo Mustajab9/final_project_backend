@@ -37,7 +37,6 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 	@Override
 	public GetAllRoleDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllRoleDtoRes getAll = new GetAllRoleDtoRes();
-		Long totalPage = roleDao.countAll();
 
 		SearchQuery<Role> roles = roleDao.findAll(query, startPage, maxPage);
 		List<GetAllRoleDtoDataRes> roleList = new ArrayList<>();
@@ -57,7 +56,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 
 		getAll.setData(roleList);
 		getAll.setMsg(null);
-		getAll.setTotal(totalPage);
+		getAll.setTotal(roles.getCount());
 
 		return getAll;
 	}

@@ -35,7 +35,6 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 	@Override
 	public GetAllPositionDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllPositionDtoRes getAll = new GetAllPositionDtoRes();
-		Long totalPage = positionDao.countAll();
 
 		SearchQuery<Position> positions = positionDao.findAll(query, startPage, maxPage);
 		List<GetAllPositionDtoDataRes> positionList = new ArrayList<>();
@@ -55,7 +54,7 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 
 		getAll.setData(positionList);
 		getAll.setMsg(null);
-		getAll.setTotal(totalPage);
+		getAll.setTotal(positions.getCount());
 
 		return getAll;
 	}

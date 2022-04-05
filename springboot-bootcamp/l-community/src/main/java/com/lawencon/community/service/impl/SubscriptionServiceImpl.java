@@ -50,7 +50,6 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 	@Override
 	public GetAllSubscriptionDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllSubscriptionDtoRes getAll = new GetAllSubscriptionDtoRes();
-		Long totalPage = subscriptionDao.countAll();
 
 		SearchQuery<Subscription> subscriptions = subscriptionDao.findAll(query, startPage, maxPage);
 		List<GetAllSubscriptionDtoDataRes> listSubscription = new ArrayList<>();
@@ -78,7 +77,7 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 
 		getAll.setData(listSubscription);
 		getAll.setMsg(null);
-		getAll.setTotal(totalPage);
+		getAll.setTotal(subscriptions.getCount());
 
 		return getAll;
 	}

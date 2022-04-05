@@ -35,7 +35,6 @@ public class ProvinceServiceImpl extends BaseService implements ProvinceService 
 	@Override
 	public GetAllProvinceDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllProvinceDtoRes getAll = new GetAllProvinceDtoRes();
-		Long totalPage = provinceDao.countAll();
 
 		SearchQuery<Province> provinces = provinceDao.findAll(query, startPage, maxPage);
 		List<GetAllProvinceDtoDataRes> provinceList = new ArrayList<>();
@@ -55,7 +54,7 @@ public class ProvinceServiceImpl extends BaseService implements ProvinceService 
 
 		getAll.setData(provinceList);
 		getAll.setMsg(null);
-		getAll.setTotal(totalPage);
+		getAll.setTotal(provinces.getCount());
 
 		return getAll;
 	}

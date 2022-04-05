@@ -5,7 +5,7 @@ import java.util.List;
 public class GetAllPositionDtoRes {
 	private String msg;
 	private List<GetAllPositionDtoDataRes> data;
-	private Long total;
+	private Integer total;
 
 	public String getMsg() {
 		return msg;
@@ -23,11 +23,11 @@ public class GetAllPositionDtoRes {
 		this.data = data;
 	}
 
-	public Long getTotal() {
+	public Integer getTotal() {
 		return total;
 	}
 
-	public void setTotal(Long total) {
+	public void setTotal(Integer total) {
 		this.total = total;
 	}
 }

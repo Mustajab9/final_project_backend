@@ -54,6 +54,7 @@ public class IndustryServiceImpl extends BaseService implements IndustryService 
 
 		getAll.setData(listIndustry);
 		getAll.setMsg(null);
+		getAll.setTotal(industries.getCount());
 
 		return getAll;
 	}

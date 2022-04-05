@@ -35,7 +35,6 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 	@Override
 	public GetAllThreadTypeDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllThreadTypeDtoRes getAll = new GetAllThreadTypeDtoRes();
-		Long totalPage = typeDao.countAll();
 
 		SearchQuery<ThreadType> types = typeDao.findAll(query, startPage, maxPage);
 		List<GetAllThreadTypeDtoDataRes> listUser = new ArrayList<>();
@@ -55,7 +54,7 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 
 		getAll.setData(listUser);
 		getAll.setMsg(null);
-		getAll.setTotal(totalPage);
+		getAll.setTotal(types.getCount());
 
 		return getAll;
 	}

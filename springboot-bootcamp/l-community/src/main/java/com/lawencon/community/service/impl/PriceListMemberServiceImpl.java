@@ -35,7 +35,6 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 	@Override
 	public GetAllPriceListMemberDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception {
 		GetAllPriceListMemberDtoRes getAll = new GetAllPriceListMemberDtoRes();
-		Long totalPage = priceListMemberDao.countAll();
 
 		SearchQuery<PriceListMember> priceListMembers = priceListMemberDao.findAll(query, startPage, maxPage);
 		List<GetAllPriceListMemberDtoDataRes> priceListMemberList = new ArrayList<>();
@@ -56,7 +55,7 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 
 		getAll.setData(priceListMemberList);
 		getAll.setMsg(null);
-		getAll.setTotal(totalPage);
+		getAll.setTotal(priceListMembers.getCount());
 
 		return getAll;
 	}
