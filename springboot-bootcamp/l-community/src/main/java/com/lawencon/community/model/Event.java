@@ -46,6 +46,9 @@ public class Event extends BaseEntity {
 	@Column(name = "is_approve")
 	private Boolean isApprove = false;
 	
+	@Column(name = "location")
+	private String location;
+	
 	@ManyToOne
 	@JoinColumn(name = "type_id")
 	private EventType typeId;
@@ -142,6 +145,14 @@ public class Event extends BaseEntity {
 		this.isApprove = isApprove;
 	}
 
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	
 	public EventType getTypeId() {
 		return typeId;
 	}

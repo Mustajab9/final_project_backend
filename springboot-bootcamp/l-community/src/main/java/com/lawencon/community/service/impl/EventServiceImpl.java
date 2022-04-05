@@ -19,6 +19,7 @@ import com.lawencon.community.dto.event.GetAllEventDtoDataRes;
 import com.lawencon.community.dto.event.GetAllEventDtoRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoDataRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoRes;
+import com.lawencon.community.dto.event.GetReportIncomeEventDto;
 import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
 import com.lawencon.community.dto.event.InsertEventDtoDataRes;
 import com.lawencon.community.dto.event.InsertEventDtoReq;
@@ -339,10 +340,17 @@ public class EventServiceImpl extends BaseService implements EventService {
 	}
 	
 	@Override
-	public GetReportProfileAttendanceEventDto getReportEnroll(String eventId) throws Exception {
-		
-		return null;
+	public List<GetReportProfileAttendanceEventDto> getReportEnroll(String eventId) throws Exception {
+		List<GetReportProfileAttendanceEventDto> reportEnrolls = new ArrayList<>();
+		reportEnrolls = eventDao.getReportEnrolls(eventId);
+		return reportEnrolls;
 	}
 	
+	@Override
+	public List<GetReportIncomeEventDto> getReportIncome(String eventId) throws Exception {
+		List<GetReportIncomeEventDto> reportIncome = new ArrayList<>();
+		reportIncome = eventDao.getReportIncome(eventId);
+		return reportIncome;
+	}
 	
 }

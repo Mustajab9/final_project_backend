@@ -2,6 +2,8 @@ package com.lawencon.community.dao;
 
 import java.util.List;
 
+import com.lawencon.community.dto.event.GetReportIncomeEventDto;
+import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
 import com.lawencon.community.model.Event;
 
 public interface EventDao {
@@ -11,5 +13,6 @@ public interface EventDao {
 	public boolean deleteById(String id) throws Exception;
 	public List<Event> findEnrollEvent(String id) throws Exception;
 	public List<Event> findNotEnrollEvent(String id) throws Exception;
-	public List<Event> getReportEnrolls(String eventId) throws Exception;
+	public List<GetReportProfileAttendanceEventDto> getReportEnrolls(String eventId) throws Exception;
+	public List<GetReportIncomeEventDto> getReportIncome(String eventId) throws Exception;
 }

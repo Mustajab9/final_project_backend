@@ -1,9 +1,15 @@
 package com.lawencon.community.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +25,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.lawencon.community.dto.event.DeleteByEventIdDtoRes;
 import com.lawencon.community.dto.event.GetAllEventDtoRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoRes;
+import com.lawencon.community.dto.event.GetReportIncomeEventDto;
+import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
 import com.lawencon.community.dto.event.InsertEventDtoRes;
 import com.lawencon.community.dto.event.UpdateEventDtoReq;
 import com.lawencon.community.dto.event.UpdateEventDtoRes;
 import com.lawencon.community.service.EventService;
+import com.lawencon.util.JasperUtil;
 
 @RestController
 @RequestMapping("events")
@@ -40,6 +49,40 @@ public class EventController {
 		return new ResponseEntity<GetAllEventDtoRes>(result, HttpStatus.OK);
 	}
 
+	@GetMapping("report/{eventId}")
+	public ResponseEntity<?> getReportProfileAttendance(@PathVariable("eventId") String eventId) throws Exception {
+		List<GetReportProfileAttendanceEventDto> data = eventService.getReportEnroll(eventId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", eventId);
+
+		byte[] out = JasperUtil.responseToByteArray(data, "member_list_event", map);
+		
+		String fileName = "member list " + data.get(0).getEventTitle() + ".pdf";
+		
+		return ResponseEntity.ok()
+				.contentType(MediaType.APPLICATION_PDF)
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName+ "\"")
+				.body(out);
+	}
+	
+	@GetMapping("income_report/{eventId}")
+	public ResponseEntity<?> getReportIncome(@PathVariable("eventId") String eventId) throws Exception {
+		List<GetReportIncomeEventDto> data = eventService.getReportIncome(eventId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("id", eventId);
+
+		byte[] out = JasperUtil.responseToByteArray(data, "income_list_event", map);
+		
+		String fileName = "income event " + data.get(0).getEventTitle() + ".pdf";
+		
+		return ResponseEntity.ok()
+				.contentType(MediaType.APPLICATION_PDF)
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName+ "\"")
+				.body(out);
+	}
+	
 	@GetMapping("{id}")
 	public ResponseEntity<GetByEventIdDtoRes> getById(@PathVariable("id") String id) throws Exception {
 		GetByEventIdDtoRes data = eventService.findById(id);

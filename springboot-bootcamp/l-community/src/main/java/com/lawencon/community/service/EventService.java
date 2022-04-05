@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.lawencon.community.dto.event.DeleteByEventIdDtoRes;
 import com.lawencon.community.dto.event.GetAllEventDtoRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoRes;
+import com.lawencon.community.dto.event.GetReportIncomeEventDto;
 import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
 import com.lawencon.community.dto.event.InsertEventDtoRes;
 import com.lawencon.community.dto.event.UpdateEventDtoReq;
@@ -21,4 +22,5 @@ public interface EventService {
 	public GetAllEventDtoRes findEnrollEvent(String id) throws Exception;
 	public GetAllEventDtoRes findNotEnrollEvent(String id) throws Exception;
 	public List<GetReportProfileAttendanceEventDto> getReportEnroll(String eventId) throws Exception;
+	public List<GetReportIncomeEventDto> getReportIncome(String eventId) throws Exception;
 }

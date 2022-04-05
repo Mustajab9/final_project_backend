@@ -12,6 +12,8 @@ public class GetReportProfileAttendanceEventDto {
 	private String email;
 	private String profilePhone;
 	private String profileCompany;
+	private String regencyName;
+	private String provinceName;
 	
 	public String getEventTitle() {
 		return eventTitle;
@@ -79,7 +81,17 @@ public class GetReportProfileAttendanceEventDto {
 	public void setProfileCompany(String profileCompany) {
 		this.profileCompany = profileCompany;
 	}
-	
-	
+	public String getRegencyName() {
+		return regencyName;
+	}
+	public void setRegencyName(String regencyName) {
+		this.regencyName = regencyName;
+	}
+	public String getProvinceName() {
+		return provinceName;
+	}
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
+	}
 	
 }

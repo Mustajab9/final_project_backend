@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.19.0.final using JasperReports Library version 6.19.0-646c68931cebf1a58bc65c4359d1f0ca223c5e94  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="member_list_in_event_or_course" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="200f3997-386c-4c5b-acf5-8da64823268e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Final Project DB"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="233"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="756"/>
+	<parameter name="id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT e.event_title AS eventTitle,
+e.event_provider AS eventProvider,
+e.event_price AS eventPrice,
+e.event_date_start AS eventDateStart,
+e.event_date_end AS eventDateEnd,
+e.event_time_start AS eventTimeStart,
+e.event_time_end AS eventTimeEnd,
+	p.profile_name AS profileName,
+	p.profile_company AS profileCompany,
+	p.profile_phone AS profilePhone,
+	u.email AS email,
+	r.regency_name AS regencyName,
+	pr.province_name AS provinceName
+FROM profiles p
+	INNER JOIN users u ON 
+	 u.id = p.user_id 
+	INNER JOIN regencies r ON 
+	 r.id = p.regency_id 
+	INNER JOIN provinces pr ON 
+	 pr.id = r.province_id 
+	INNER JOIN events e ON 
+	 e.id = $P{id} 
+WHERE 
+	 p.id IN (SELECT profile_id
+FROM enroll_events
+WHERE 
+	 enroll_events.event_id =  $P{id}  )]]>
+	</queryString>
+	<field name="eventTitle" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="eventtitle"/>
+		<property name="com.jaspersoft.studio.field.label" value="eventtitle"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="events"/>
+	</field>
+	<field name="eventProvider" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="eventprovider"/>
+		<property name="com.jaspersoft.studio.field.label" value="eventprovider"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="events"/>
+	</field>
+	<field name="eventPrice" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="eventprice"/>
+		<property name="com.jaspersoft.studio.field.label" value="eventprice"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="events"/>
+	</field>
+	<field name="eventDateStart" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="eventdatestart"/>
+		<property name="com.jaspersoft.studio.field.label" value="eventdatestart"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="events"/>
+	</field>
+	<field name="eventDateEnd" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="eventdateend"/>
+		<property name="com.jaspersoft.studio.field.label" value="eventdateend"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="events"/>
+	</field>
+	<field name="eventTimeStart" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="eventtimestart"/>
+		<property name="com.jaspersoft.studio.field.label" value="eventtimestart"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="events"/>
+	</field>
+	<field name="eventTimeEnd" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="eventtimeend"/>
+		<property name="com.jaspersoft.studio.field.label" value="eventtimeend"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="events"/>
+	</field>
+	<field name="profileName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="profilename"/>
+		<property name="com.jaspersoft.studio.field.label" value="profilename"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="profiles"/>
+	</field>
+	<field name="profileCompany" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="profilecompany"/>
+		<property name="com.jaspersoft.studio.field.label" value="profilecompany"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="profiles"/>
+	</field>
+	<field name="profilePhone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="profilephone"/>
+		<property name="com.jaspersoft.studio.field.label" value="profilephone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="profiles"/>
+	</field>
+	<field name="email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="email"/>
+		<property name="com.jaspersoft.studio.field.label" value="email"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="users"/>
+	</field>
+	<field name="regencyName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="regencyname"/>
+		<property name="com.jaspersoft.studio.field.label" value="regencyname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="regencies"/>
+	</field>
+	<field name="provinceName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="provincename"/>
+		<property name="com.jaspersoft.studio.field.label" value="provincename"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="provinces"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="92" splitType="Stretch">
+			<image>
+				<reportElement x="181" y="0" width="199" height="42" uuid="8784b09a-2a88-46b5-94fe-5326e169892f"/>
+				<imageExpression><![CDATA["C:/Users/Lawencon/Downloads/lwcn-logo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="80" y="42" width="400" height="38" uuid="431a6f49-68d2-4656-be91-b3bc49aa929e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Pakuwon Tower, Jl. Casablanca No.Kav 88, RT.6/RW.14, Kb. Baru, Kec. Tebet, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12870]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="172" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="90" height="19" uuid="408f98b5-699b-49dd-a859-980ff1d66946"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[   Event Title	:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="140" width="174" height="32" uuid="ed0daf6e-5715-4126-a5bb-893c8e177155"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Email]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="140" width="130" height="32" uuid="0885c13f-5ce3-436d-a2dd-3c3146e27f25"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Profile Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="19" width="90" height="20" uuid="ce452404-1759-44de-a1e8-9493a01757be"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[   Event Provider	:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="19" width="90" height="20" uuid="c9f3dfda-49b3-4217-b3d3-72a882556927"/>
+				<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{eventProvider}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="39" width="90" height="21" uuid="ad8a0191-dde6-4b8d-a313-f25371e85427"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[   Event Price	:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="39" width="90" height="21" uuid="973b72d8-723a-4216-a66c-af7b991f7caf"/>
+				<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{eventPrice}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="334" y="140" width="100" height="32" uuid="39626776-2015-403b-a28a-149007d7eeb2"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Profile Phone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="434" y="140" width="120" height="32" uuid="8a345cc0-207c-4284-a0e7-c91ec83f6251"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Company Name]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="77" width="100" height="20" uuid="84cdfe93-7902-4114-8914-880bff08039d"/>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{eventDateStart}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="77" width="80" height="20" uuid="1637ddc3-bde8-4bce-9f25-0b54dcc669c8"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[   Event Date:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="180" y="77" width="100" height="20" uuid="d67aca97-6243-4c36-b40f-e6fcaad87916"/>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{eventDateEnd}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="97" width="100" height="20" uuid="a7d5d5f0-9850-4192-8ca7-404323895598"/>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{eventTimeStart}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="97" width="80" height="20" uuid="db972244-5990-4dc8-89b7-1bf30e36f675"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[   Event Time:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="180" y="97" width="100" height="20" uuid="fee4abe1-9410-4e44-93ce-d83f30f157be"/>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{eventTimeEnd}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="90" y="0" width="90" height="19" uuid="73d00b19-7ab2-4a3c-9acd-8598cb56a00b"/>
+				<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{eventTitle}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="140" width="30" height="32" uuid="d9288a69-714e-405c-9b54-d73b54fc0f63"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[No]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="30" y="0" width="130" height="30" uuid="5c4327f3-b75b-4b84-b2b3-452ffee9a49a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{profileName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="0" width="120" height="30" uuid="068d106e-1109-4651-b8f0-52605811800a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{profileCompany}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="0" width="174" height="30" uuid="1965626b-af7f-4ed6-b9e8-79fd7ac96535"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="334" y="0" width="100" height="30" uuid="22bc230f-c1fc-430e-8149-8bdca9bc000a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{profilePhone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="30" height="30" uuid="9c71f1a0-1cf7-4fed-9f7c-dccb0b752a71"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="25" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="61" splitType="Stretch">
+			<textField>
+				<reportElement x="500" y="42" width="54" height="19" uuid="91453330-b6f8-4c46-9b38-38c1748558c5"/>
+				<textFieldExpression><![CDATA["PAGE : "  + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

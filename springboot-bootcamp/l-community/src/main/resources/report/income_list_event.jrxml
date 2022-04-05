@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.19.0.final using JasperReports Library version 6.19.0-646c68931cebf1a58bc65c4359d1f0ca223c5e94  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="event_income_in_event_and_course" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8c7aaf60-4064-455e-ac21-3ae540010a01">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Final Project DB"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT e.event_price AS eventPrice,
+	COUNT( ped.created_by) AS totalPeople,
+	e.event_title AS eventTitle,
+	e.event_provider AS eventProvider,
+	e.event_date_start AS eventDateStart,
+	e.event_date_end AS eventDateEnd,
+	e.location AS location
+FROM events e
+	JOIN payment_event_detail ped ON 
+	 ped.event_id = e.id 
+WHERE 
+	 ped.payment_event_id IN (SELECT pe.id
+FROM payment_events pe
+WHERE 
+	 pe.is_approve = TRUE )
+	 AND e.id = $P{id} 
+GROUP BY e.event_price,
+	e.event_title,
+	e.event_provider,
+	e.event_date_start,
+	e.event_date_end,
+	e.location]]>
+	</queryString>
+	<field name="eventPrice" class="java.lang.String"/>
+	<field name="totalPeople" class="java.lang.Long"/>
+	<field name="eventTitle" class="java.lang.String"/>
+	<field name="eventProvider" class="java.lang.String"/>
+	<field name="eventDateStart" class="java.lang.String"/>
+	<field name="eventDateEnd" class="java.lang.String"/>
+	<field name="location" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="101" splitType="Stretch">
+			<image>
+				<reportElement x="180" y="0" width="199" height="42" uuid="713adee4-ec7d-4aca-8ef7-fc7c2e2d8651"/>
+				<imageExpression><![CDATA["C:/Users/Lawencon/Downloads/lwcn-logo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="79" y="42" width="400" height="47" uuid="9e0215d4-e09e-449e-8cb3-f0527b65e2f5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Pakuwon Tower, Jl. Casablanca No.Kav 88, RT.6/RW.14, Kb. Baru, Kec. Tebet, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12870]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="200" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="61" width="90" height="19" uuid="ed474875-1cae-4891-a3b7-0c2c7b3f6390"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[   Event Title	:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="80" width="90" height="20" uuid="53cf58cd-2218-46f4-a423-e22f57765ec7"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[   Event Provider	:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="80" width="170" height="20" uuid="5f5ec3f9-562e-400e-9254-ab515f762c74"/>
+				<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{eventProvider}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="90" y="61" width="170" height="19" uuid="f4664c0a-af8b-4966-9429-bc00e790a30b"/>
+				<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{eventTitle}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="100" width="90" height="20" uuid="2f9e9572-e054-4b99-bf71-35a21fd5dc67"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[   Event Location	:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="100" width="170" height="20" uuid="8a8f6d43-f630-45cf-a669-e2b08fc533cc"/>
+				<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="120" width="90" height="20" uuid="56751f5e-9e81-437a-a2e5-49ab270dc10f"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[   Date Start	:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="120" width="170" height="20" uuid="94e5bc25-b5f6-4393-acde-4b91217bef9c"/>
+				<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{eventDateStart}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="140" width="90" height="21" uuid="e09b8066-3bc3-416b-ba8a-a5d4e50c0e6c"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[   Date End	:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="140" width="170" height="21" uuid="2cef0b83-f0cd-447e-8e18-1e43a682799c"/>
+				<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{eventDateEnd}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="79" y="0" width="400" height="30" uuid="8ca66780-4774-4b90-98ff-1eedfe9f0d93"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Income List Event]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="1" width="90" height="19" uuid="fd993727-a463-4f3b-a743-0707152a2b83"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Count of People	:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="90" height="19" uuid="3d06043a-7dd4-4b1c-b2a8-68ea68d06531"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Price		:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="20" width="170" height="19" uuid="4a30ea1b-d75d-4ea0-8aee-d0625ba4479b"/>
+				<textFieldExpression><![CDATA[$F{eventPrice} + " IDR"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="90" y="1" width="170" height="19" uuid="80428d4b-440c-4ad6-9281-90da2ef36418"/>
+				<textFieldExpression><![CDATA[$F{totalPeople} + " PEOPLE"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="61" splitType="Stretch">
+			<textField>
+				<reportElement x="500" y="42" width="54" height="19" uuid="79d684d8-1b39-4ffa-99ee-1f7e900e6e9c"/>
+				<textFieldExpression><![CDATA["PAGE : "  + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

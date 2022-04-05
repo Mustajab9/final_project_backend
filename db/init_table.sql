@@ -400,7 +400,8 @@ CREATE TABLE events(
 	updated_by varchar(36),
 	updated_at timestamp without time zone,
 	"version" int NOT NULL,
-	is_active boolean
+	is_active boolean,
+	"location" varchar(100) NOT NULL
 );
 
 ALTER TABLE events ADD CONSTRAINT event_pk PRIMARY KEY(id);
