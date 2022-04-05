@@ -44,8 +44,8 @@ public class EventTypeServiceImpl extends BaseService implements EventTypeServic
 			GetAllEventTypeDtoDataRes data = new GetAllEventTypeDtoDataRes();
 
 			data.setId(eventType.getId());
-			data.setTypeName(data.getTypeName());
-			data.setTypeCode(data.getTypeCode());
+			data.setTypeName(eventType.getTypeName());
+			data.setTypeCode(eventType.getTypeCode());
 			data.setVersion(eventType.getVersion());
 			data.setIsActive(eventType.getIsActive());
 
