@@ -84,7 +84,7 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 
 		try {
 			Category category = new Category();
-			category.setCategoryCode(getAlphaNumericString(5));
+			category.setCategoryCode(data.getCategoryCode());
 			category.setCategoryName(data.getCategoryName());
 			category.setCreatedBy(getId());
 
