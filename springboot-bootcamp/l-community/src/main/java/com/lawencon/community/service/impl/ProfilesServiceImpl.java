@@ -79,9 +79,12 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			data.setIndustyName(profile.getIndustryId().getIndustryName());
 			data.setPositionId(profile.getPositionId().getId());
 			data.setPositionName(profile.getPositionId().getPositionName());
-			data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
-			data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
-			data.setProvinceCode(profile.getRegencyId().getProvinceId().getProvinceCode());
+			
+			if(profile.getRegencyId() != null) {
+				data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
+				data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
+				data.setProvinceCode(profile.getRegencyId().getProvinceId().getProvinceCode());			
+			}
 			
 			data.setVersion(profile.getVersion());
 			data.setIsActive(profile.getIsActive());
@@ -121,9 +124,12 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 		data.setIndustyName(profile.getIndustryId().getIndustryName());
 		data.setPositionId(profile.getPositionId().getId());
 		data.setPositionName(profile.getPositionId().getPositionName());
-		data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
-		data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
-		data.setProvinceCode(profile.getRegencyId().getProvinceId().getProvinceCode());
+		
+		if(profile.getRegencyId() != null) {
+			data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
+			data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
+			data.setProvinceCode(profile.getRegencyId().getProvinceId().getProvinceCode());			
+		}
 		
 		data.setVersion(profile.getVersion());
 		data.setIsActive(profile.getIsActive());
@@ -262,8 +268,11 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 		data.setIndustyName(profile.getIndustryId().getIndustryName());
 		data.setPositionId(profile.getPositionId().getId());
 		data.setPositionName(profile.getPositionId().getPositionName());
-		data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
-		data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
+		
+		if(profile.getRegencyId() != null) {
+			data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
+			data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
+		}
 		data.setVersion(profile.getVersion());
 		data.setIsActive(profile.getIsActive());
 
