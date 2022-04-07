@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.dto.profiles.DeleteByProfilesIdDtoRes;
 import com.lawencon.community.dto.profiles.GetAllProfilesDtoRes;
 import com.lawencon.community.dto.profiles.GetByProfilesIdDtoRes;
+import com.lawencon.community.dto.profiles.GetProfileByUserDtoRes;
 import com.lawencon.community.dto.profiles.InsertProfilesDtoReq;
 import com.lawencon.community.dto.profiles.InsertProfilesDtoRes;
 import com.lawencon.community.dto.profiles.UpdateProfilesDtoReq;
@@ -44,6 +45,12 @@ private ProfilesService profileService;
 	public ResponseEntity<GetByProfilesIdDtoRes> getById(@PathVariable("id") String id) throws Exception {
 		GetByProfilesIdDtoRes profile = profileService.findById(id);
 		return new ResponseEntity<GetByProfilesIdDtoRes>(profile, HttpStatus.OK);
+	}
+	
+	@GetMapping("user/{id}")
+	public ResponseEntity<GetProfileByUserDtoRes> getByUserId(@PathVariable("id") String id) throws Exception {
+		GetProfileByUserDtoRes profile = profileService.findByUser(id);
+		return new ResponseEntity<GetProfileByUserDtoRes>(profile, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("{id}")
