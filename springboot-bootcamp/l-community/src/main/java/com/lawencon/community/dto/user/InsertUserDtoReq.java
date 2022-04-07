@@ -6,7 +6,6 @@ import javax.validation.constraints.Size;
 
 public class InsertUserDtoReq {
 	@NotEmpty(message = "Username is Empty")
-	@Size(max = 30, min = 5, message = "Username min 5 Character and max 30 Character")
 	private String username;
 
 	@NotEmpty(message = "Password is Empty")
