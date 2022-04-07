@@ -85,12 +85,11 @@ public class ChoiceVoteDaoImpl extends BaseDao<ChoiceVote> implements ChoiceVote
 	public List<GetCountVoteByThreadDtoDataRes> findCountByThread(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT p.polling_name, pc.choice_name, COUNT(cv.choice_id) AS count_vote");
-		builder.append(" FROM choice_votes AS cv");
-		builder.append(" LEFT JOIN polling_choices pc ON pc.id = cv.choice_id");
+		builder.append(" FROM polling_choices AS pc");
+		builder.append(" LEFT JOIN choice_votes AS cv ON pc.id = cv.choice_id");
 		builder.append(" LEFT JOIN pollings AS p ON p.id = pc.polling_id");
-		builder.append(" WHERE cv.choice_id IN");
-		builder.append(" (SELECT pc.id FROM polling_choices pc WHERE pc.polling_id IN");
-		builder.append(" (SELECT p.id FROM pollings p WHERE p.thread_id = :id))");
+		builder.append(" WHERE pc.polling_id IN");
+		builder.append(" (SELECT p.id FROM pollings p WHERE p.thread_id = :id)");
 		builder.append(" GROUP BY pc.choice_name, p.polling_name");
 		
 		List<?> results = createNativeQuery(builder.toString()).setParameter("id", id).getResultList();

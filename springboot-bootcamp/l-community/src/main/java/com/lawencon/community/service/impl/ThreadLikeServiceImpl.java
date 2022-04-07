@@ -13,7 +13,6 @@ import com.lawencon.community.dto.threadlike.GetAllThreadLikeDtoDataRes;
 import com.lawencon.community.dto.threadlike.GetAllThreadLikeDtoRes;
 import com.lawencon.community.dto.threadlike.GetByThreadLikeIdDtoDataRes;
 import com.lawencon.community.dto.threadlike.GetByThreadLikeIdDtoRes;
-import com.lawencon.community.dto.threadlike.GetThreadLikeByThreadDtoDataRes;
 import com.lawencon.community.dto.threadlike.GetThreadLikeByThreadDtoRes;
 import com.lawencon.community.dto.threadlike.InsertThreadLikeDtoDataRes;
 import com.lawencon.community.dto.threadlike.InsertThreadLikeDtoReq;
@@ -137,32 +136,7 @@ public class ThreadLikeServiceImpl extends BaseService implements ThreadLikeServ
 	
 	@Override
 	public GetThreadLikeByThreadDtoRes findByThread(String id) throws Exception {
-		GetThreadLikeByThreadDtoRes getByThread = new GetThreadLikeByThreadDtoRes();
-
-		List<ThreadLike> threadLikes = threadLikeDao.findByUser(id);
-		List<GetThreadLikeByThreadDtoDataRes> listThreadLike = new ArrayList<>();
-
-		for (int i = 0; i < threadLikes.size(); i++) {
-			ThreadLike threadLike = threadLikes.get(i);
-			GetThreadLikeByThreadDtoDataRes data = new GetThreadLikeByThreadDtoDataRes();
-
-			data.setId(threadLike.getId());
-			data.setLikeCode(threadLike.getLikeCode());
-			data.setThreadId(threadLike.getThreadId().getId());
-			data.setThreadCode(threadLike.getThreadId().getThreadCode());
-			data.setThreadTitle(threadLike.getThreadId().getThreadTitle());
-			data.setThreadContent(threadLike.getThreadId().getThreadContent());
-			data.setIsPremium(threadLike.getThreadId().getIsPremium());
-			data.setTypeId(threadLike.getThreadId().getTypeId().getId());
-			data.setTypeCode(threadLike.getThreadId().getTypeId().getTypeCode());
-			data.setTypeName(threadLike.getThreadId().getTypeId().getTypeName());
-			data.setVersion(threadLike.getVersion());
-			data.setIsActive(threadLike.getIsActive());
-
-			listThreadLike.add(data);
-		}
-
-		getByThread.setData(listThreadLike);
+		GetThreadLikeByThreadDtoRes getByThread = threadLikeDao.countByThread(id);
 		getByThread.setMsg(null);
 
 		return getByThread;

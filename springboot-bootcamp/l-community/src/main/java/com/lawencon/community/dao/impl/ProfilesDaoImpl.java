@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.lawencon.base.BaseDaoImpl;
 import com.lawencon.community.dao.ProfilesDao;
 import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.Industry;
@@ -13,7 +12,7 @@ import com.lawencon.community.model.Profiles;
 import com.lawencon.community.model.Province;
 
 @Repository
-public class ProfilesDaoImpl extends BaseDaoImpl<Profiles> implements ProfilesDao {
+public class ProfilesDaoImpl extends BaseDao<Profiles> implements ProfilesDao {
 	
 	@Override
 	public List<Profiles> findAll() throws Exception {

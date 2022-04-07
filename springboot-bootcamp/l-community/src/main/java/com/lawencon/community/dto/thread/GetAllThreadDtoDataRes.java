@@ -7,6 +7,7 @@ public class GetAllThreadDtoDataRes {
 	private String threadCode;
 	private String threadTitle;
 	private String threadContent;
+	private String typeCode;
 	private List<String> categoryId;
 	private List<String> categoryName;
 	private List<String> attachmentId;
@@ -15,6 +16,9 @@ public class GetAllThreadDtoDataRes {
 	private List<String> choiceName;
 	private List<Integer> countVote;
 	private Integer totalVote;
+	private Integer totalLike;
+	private Integer totalComment;
+	private Boolean isLiked = false;
 	private Integer version;
 	private Boolean isActive;
 
@@ -48,6 +52,14 @@ public class GetAllThreadDtoDataRes {
 
 	public void setThreadContent(String threadContent) {
 		this.threadContent = threadContent;
+	}
+
+	public String getTypeCode() {
+		return typeCode;
+	}
+
+	public void setTypeCode(String typeCode) {
+		this.typeCode = typeCode;
 	}
 
 	public List<String> getCategoryId() {
@@ -112,6 +124,30 @@ public class GetAllThreadDtoDataRes {
 
 	public void setTotalVote(Integer totalVote) {
 		this.totalVote = totalVote;
+	}
+
+	public Integer getTotalLike() {
+		return totalLike;
+	}
+
+	public void setTotalLike(Integer totalLike) {
+		this.totalLike = totalLike;
+	}
+
+	public Integer getTotalComment() {
+		return totalComment;
+	}
+
+	public void setTotalComment(Integer totalComment) {
+		this.totalComment = totalComment;
+	}
+
+	public Boolean getIsLiked() {
+		return isLiked;
+	}
+
+	public void setIsLiked(Boolean isLiked) {
+		this.isLiked = isLiked;
 	}
 
 	public Integer getVersion() {

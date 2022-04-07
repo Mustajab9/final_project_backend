@@ -19,13 +19,13 @@ import com.lawencon.model.SearchQuery;
  * 
  */
 @Repository
-public class BaseDaoImpl<T extends BaseEntity> {
+public class AbstractJpaDao<T extends BaseEntity> {
 
 	public Class<T> clazz;
 
 	@SuppressWarnings("unchecked")
-	public BaseDaoImpl() {
-		this.clazz = (Class<T>) GenericTypeResolver.resolveTypeArgument(getClass(), BaseDaoImpl.class);
+	public AbstractJpaDao() {
+		this.clazz = (Class<T>) GenericTypeResolver.resolveTypeArgument(getClass(), AbstractJpaDao.class);
 	}
 
 	protected T getById(final String id) {

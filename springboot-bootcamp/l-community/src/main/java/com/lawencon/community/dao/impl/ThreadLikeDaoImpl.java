@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.community.dao.ThreadLikeDao;
+import com.lawencon.community.dto.threadlike.GetThreadLikeByThreadDtoDataRes;
+import com.lawencon.community.dto.threadlike.GetThreadLikeByThreadDtoRes;
 import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadLike;
 import com.lawencon.community.model.ThreadType;
@@ -73,5 +75,48 @@ public class ThreadLikeDaoImpl extends BaseDao<ThreadLike> implements ThreadLike
 		
 		
 		return listResult;
+	}
+
+	@Override
+	public GetThreadLikeByThreadDtoRes countByThread(String id) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT COUNT(thread_id) FROM thread_like WHERE thread_id = :id");
+		
+		Object result = createNativeQuery(builder.toString())
+				.setParameter("id", id)
+				.getSingleResult();
+		
+		Object obj = (Object) result;
+		
+		GetThreadLikeByThreadDtoDataRes threadLikeData = new GetThreadLikeByThreadDtoDataRes();
+		threadLikeData.setCountLike(Integer.valueOf(obj.toString()));
+		
+		GetThreadLikeByThreadDtoRes threadLike = new GetThreadLikeByThreadDtoRes();
+		threadLike.setData(threadLikeData);
+		
+		return threadLike;
+	}
+
+	@Override
+	public GetThreadLikeByThreadDtoRes countByThreadAndUser(String userId, String threadId) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT COUNT(created_by) FROM thread_like tl");
+		builder.append(" WHERE :userId IN (tl.created_by) AND tl.thread_id = :thread");
+		
+		Object result = createNativeQuery(builder.toString())
+				.setParameter("userId", userId)
+				.setParameter("thread", threadId)
+				.getSingleResult();
+		
+		Object obj = (Object) result;
+		
+		GetThreadLikeByThreadDtoDataRes threadLikeData = new GetThreadLikeByThreadDtoDataRes();
+		threadLikeData.setCountLike(Integer.valueOf(obj.toString()));
+		
+		GetThreadLikeByThreadDtoRes threadLike = new GetThreadLikeByThreadDtoRes();
+		threadLike.setData(threadLikeData);
+		threadLike.setMsg(null);
+		
+		return threadLike;
 	}
 }
