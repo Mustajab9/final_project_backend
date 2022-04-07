@@ -5,6 +5,7 @@ public class GetByProfilesIdDtoDataRes {
 	private String profileCode;
 	private String profileName;
 	private String profileCompany;
+	private String profilePhone;
 	private Integer profilePortalCode;
 	private String profileImageId;
 	private String profileImageExtension;
@@ -54,6 +55,14 @@ public class GetByProfilesIdDtoDataRes {
 
 	public void setProfileCompany(String profileCompany) {
 		this.profileCompany = profileCompany;
+	}
+
+	public String getProfilePhone() {
+		return profilePhone;
+	}
+
+	public void setProfilePhone(String profilePhone) {
+		this.profilePhone = profilePhone;
 	}
 
 	public Integer getProfilePortalCode() {

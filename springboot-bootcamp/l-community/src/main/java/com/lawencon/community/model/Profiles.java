@@ -39,7 +39,7 @@ public class Profiles extends BaseEntity {
 	private Integer profilePostalCode;
 	
 	@FullTextField
-	@Column(name = "profile_phone", length=13)
+	@Column(name = "profile_phone", length=20)
 	private String profilePhone;
 	
 	@ManyToOne
@@ -59,8 +59,8 @@ public class Profiles extends BaseEntity {
 	private Position positionId;
 	
 	@ManyToOne
-	@JoinColumn(name = "province_id")
-	private Province provinceId;
+	@JoinColumn(name = "regency_id")
+	private Regency regencyId;
 	
 	@OneToMany(mappedBy = "profileId")
 	private Set<Subscription> subscriptions = new HashSet<>();
@@ -137,12 +137,12 @@ public class Profiles extends BaseEntity {
 		this.positionId = positionId;
 	}
 
-	public Province getProvinceId() {
-		return provinceId;
+	public Regency getRegencyId() {
+		return regencyId;
 	}
 
-	public void setProvinceId(Province provinceId) {
-		this.provinceId = provinceId;
+	public void setRegencyId(Regency regencyId) {
+		this.regencyId = regencyId;
 	}
 
 	public Set<Subscription> getSubscriptions() {

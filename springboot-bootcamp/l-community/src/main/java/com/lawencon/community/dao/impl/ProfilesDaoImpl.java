@@ -10,6 +10,7 @@ import com.lawencon.community.model.Industry;
 import com.lawencon.community.model.Position;
 import com.lawencon.community.model.Profiles;
 import com.lawencon.community.model.Province;
+import com.lawencon.community.model.Regency;
 
 @Repository
 public class ProfilesDaoImpl extends BaseDao<Profiles> implements ProfilesDao {
@@ -38,12 +39,13 @@ public class ProfilesDaoImpl extends BaseDao<Profiles> implements ProfilesDao {
 	public Profiles findByUser(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT p.id, p.profile_name, p.profile_company, a.id AS attachment_id, a.attachment_extension, i.id AS industry_id, i.industry_name,");
-		builder.append(" po.id AS position_id, po.position_name, pr.id AS province_id, pr.province_name p.version, p.is_active");
+		builder.append(" po.id AS position_id, po.position_name, r.id AS regency_id, pr.id AS province_id, pr.province_name, p.version, p.is_active");
 		builder.append(" FROM profiles AS p");
 		builder.append(" LEFT JOIN attachment AS a ON a.id = p.profile_image");
 		builder.append(" INNER JOIN industries AS i ON i.id = p.industry_id");
 		builder.append(" INNER JOIN positions AS po ON po.id = p.position_id");
-		builder.append(" INNER JOIN provinces AS pr ON pr.id = p.province_id");
+		builder.append(" INNER JOIN rgencies AS pr ON r.id = p.regency_id");
+		builder.append(" INNER JOIN provinces AS pr ON pr.id = r.province_id");
 		builder.append(" INNER JOIN users AS u ON u.id = p.user_id ");
 		builder.append(" WHERE u.id = :id");
 		
@@ -76,13 +78,18 @@ public class ProfilesDaoImpl extends BaseDao<Profiles> implements ProfilesDao {
 		position.setPositionName(obj[8].toString());
 		profile.setPositionId(position);
 		
-		Province province = new Province();
-		province.setId(obj[9].toString());
-		province.setProvinceName(obj[10].toString());
-		profile.setProvinceId(province);
+		Regency regency = new Regency();
+		regency.setId(obj[9].toString());
 		
-		profile.setVersion(Integer.valueOf(obj[11].toString()));
-		profile.setIsActive(Boolean.valueOf(obj[12].toString()));
+		Province province = new Province();
+		province.setId(obj[10].toString());
+		province.setProvinceName(obj[11].toString());
+		regency.setProvinceId(province);
+		
+		profile.setRegencyId(regency);
+		
+		profile.setVersion(Integer.valueOf(obj[12].toString()));
+		profile.setIsActive(Boolean.valueOf(obj[13].toString()));
 
 		return profile;
 	}

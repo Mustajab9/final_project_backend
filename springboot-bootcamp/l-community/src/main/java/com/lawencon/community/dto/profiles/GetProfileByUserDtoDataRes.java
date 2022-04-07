@@ -4,6 +4,7 @@ public class GetProfileByUserDtoDataRes {
 	private String id;
 	private String profileName;
 	private String profileCompany;
+	private String profilePhone;
 	private String profileImageId;
 	private String profileImageExtension;
 	private String industryId;
@@ -37,6 +38,14 @@ public class GetProfileByUserDtoDataRes {
 
 	public void setProfileCompany(String profileCompany) {
 		this.profileCompany = profileCompany;
+	}
+
+	public String getProfilePhone() {
+		return profilePhone;
+	}
+
+	public void setProfilePhone(String profilePhone) {
+		this.profilePhone = profilePhone;
 	}
 
 	public String getProfileImageId() {

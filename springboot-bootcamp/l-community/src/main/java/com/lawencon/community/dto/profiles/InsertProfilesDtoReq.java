@@ -6,7 +6,7 @@ public class InsertProfilesDtoReq {
 	private String userId;
 	private String industryId;
 	private String positionId;
-	private String provinceId;
+	private String phoneNumber;
 
 	public String getProfileName() {
 		return profileName;
@@ -48,11 +48,11 @@ public class InsertProfilesDtoReq {
 		this.positionId = positionId;
 	}
 
-	public String getProvinceId() {
-		return provinceId;
+	public String getPhoneNumber() {
+		return phoneNumber;
 	}
 
-	public void setProvinceId(String provinceId) {
-		this.provinceId = provinceId;
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 }

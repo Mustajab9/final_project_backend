@@ -10,7 +10,7 @@ import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.IndustryDao;
 import com.lawencon.community.dao.PositionDao;
 import com.lawencon.community.dao.ProfilesDao;
-import com.lawencon.community.dao.ProvinceDao;
+import com.lawencon.community.dao.RegencyDao;
 import com.lawencon.community.dao.UserDao;
 import com.lawencon.community.dto.profiles.DeleteByProfilesIdDtoRes;
 import com.lawencon.community.dto.profiles.GetAllProfilesDtoDataRes;
@@ -28,7 +28,7 @@ import com.lawencon.community.dto.profiles.UpdateProfilesDtoRes;
 import com.lawencon.community.model.Industry;
 import com.lawencon.community.model.Position;
 import com.lawencon.community.model.Profiles;
-import com.lawencon.community.model.Province;
+import com.lawencon.community.model.Regency;
 import com.lawencon.community.model.User;
 import com.lawencon.community.service.ProfilesService;
 
@@ -38,15 +38,15 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 	private UserDao userDao;
 	private IndustryDao industryDao;
 	private PositionDao positionDao;
-	private ProvinceDao provinceDao;
+	private RegencyDao regencyDao;
 
 	@Autowired
-	public ProfilesServiceImpl(ProfilesDao profilesDao, UserDao userDao, IndustryDao industryDao, PositionDao positionDao, ProvinceDao provinceDao) {
+	public ProfilesServiceImpl(ProfilesDao profilesDao, UserDao userDao, IndustryDao industryDao, PositionDao positionDao, RegencyDao regencyDao) {
 		this.profilesDao = profilesDao;
 		this.userDao = userDao;
 		this.industryDao = industryDao;
 		this.positionDao = positionDao;
-		this.provinceDao = provinceDao;
+		this.regencyDao = regencyDao;
 	}
 	
 	@Override
@@ -64,6 +64,7 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			data.setProfileCode(profile.getProfileCode());
 			data.setProfileName(profile.getProfileName());
 			data.setProfileCompany(profile.getProfileCompany());
+			data.setProfilePhone(profile.getProfilePhone());
 			data.setProfilePortalCode(profile.getProfilePostalCode());
 			
 			if(profile.getProfileImage() != null) {				
@@ -78,9 +79,9 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			data.setIndustyName(profile.getIndustryId().getIndustryName());
 			data.setPositionId(profile.getPositionId().getId());
 			data.setPositionName(profile.getPositionId().getPositionName());
-			data.setProvinceId(profile.getProvinceId().getId());
-			data.setProvinceName(profile.getProvinceId().getProvinceName());
-			data.setProvinceCode(profile.getProvinceId().getProvinceCode());
+			data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
+			data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
+			data.setProvinceCode(profile.getRegencyId().getProvinceId().getProvinceCode());
 			
 			data.setVersion(profile.getVersion());
 			data.setIsActive(profile.getIsActive());
@@ -105,6 +106,7 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 		data.setProfileCode(profile.getProfileCode());
 		data.setProfileName(profile.getProfileName());
 		data.setProfileCompany(profile.getProfileCompany());
+		data.setProfilePhone(profile.getProfilePhone());
 		data.setProfilePortalCode(profile.getProfilePostalCode());
 		
 		if(profile.getProfileImage() != null) {				
@@ -119,9 +121,9 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 		data.setIndustyName(profile.getIndustryId().getIndustryName());
 		data.setPositionId(profile.getPositionId().getId());
 		data.setPositionName(profile.getPositionId().getPositionName());
-		data.setProvinceId(profile.getProvinceId().getId());
-		data.setProvinceName(profile.getProvinceId().getProvinceName());
-		data.setProvinceCode(profile.getProvinceId().getProvinceCode());
+		data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
+		data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
+		data.setProvinceCode(profile.getRegencyId().getProvinceId().getProvinceCode());
 		
 		data.setVersion(profile.getVersion());
 		data.setIsActive(profile.getIsActive());
@@ -142,6 +144,7 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			profile.setProfileCode(code);
 			profile.setProfileName(data.getProfileName());
 			profile.setProfileCompany(data.getProfileCompany());
+			profile.setProfilePhone(data.getPhoneNumber());
 			
 			User user = userDao.findById(data.getUserId());
 			profile.setUserId(user);
@@ -152,9 +155,7 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			Position position = positionDao.findById(data.getPositionId());
 			profile.setPositionId(position);
 			
-			Province province = provinceDao.findById(data.getProvinceId());
-			profile.setProvinceId(province);
-			profile.setCreatedBy(getId());
+			profile.setCreatedBy(data.getUserId());
 			
 			begin();
 			Profiles profileInsert = profilesDao.save(profile);
@@ -191,8 +192,8 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 				Position position = positionDao.findById(data.getPositionId());
 				profile.setPositionId(position);
 				
-				Province province = provinceDao.findById(data.getProvinceId());
-				profile.setProvinceId(province);
+				Regency regency = regencyDao.findById(data.getRegencyId());
+				profile.setRegencyId(regency);
 				profile.setVersion(data.getVersion());
 				profile.setUpdatedBy(getId());
 
@@ -250,6 +251,7 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 		data.setId(profile.getId());
 		data.setProfileName(profile.getProfileName());
 		data.setProfileCompany(profile.getProfileCompany());
+		data.setProfilePhone(profile.getProfilePhone());
 		
 		if(profile.getProfileImage() != null) {				
 			data.setProfileImageId(profile.getProfileImage().getId());
@@ -260,8 +262,8 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 		data.setIndustyName(profile.getIndustryId().getIndustryName());
 		data.setPositionId(profile.getPositionId().getId());
 		data.setPositionName(profile.getPositionId().getPositionName());
-		data.setProvinceId(profile.getProvinceId().getId());
-		data.setProvinceName(profile.getProvinceId().getProvinceName());
+		data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
+		data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
 		data.setVersion(profile.getVersion());
 		data.setIsActive(profile.getIsActive());
 

@@ -12,8 +12,8 @@ public class InsertUserDtoReq {
 	@Size(max = 225, min = 5, message = "Password min 5 Character and max 225 Character")
 	private String password;
 
-	@NotNull(message = "Role Id Is Empty")
-	private String roleId;
+	@NotNull(message = "Role Code Is Empty")
+	private String roleCode;
 
 	public String getUsername() {
 		return username;
@@ -31,11 +31,11 @@ public class InsertUserDtoReq {
 		this.password = password;
 	}
 
-	public String getRoleId() {
-		return roleId;
+	public String getRoleCode() {
+		return roleCode;
 	}
 
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
 	}
 }

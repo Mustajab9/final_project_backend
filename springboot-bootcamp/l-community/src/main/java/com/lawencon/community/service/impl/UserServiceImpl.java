@@ -124,7 +124,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 			String verificationCode = getAlphaNumericString(5);
 			user.setVerificationCode(verificationCode);
 
-			Role role = roleDao.findById(data.getRoleId());
+			Role role = roleDao.findByCode(data.getRoleCode());
 			user.setRoleId(role);
 			user.setIsActive(isActive);
 			
