@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.community.dao.ChoiceVoteDao;
@@ -107,5 +109,26 @@ public class ChoiceVoteDaoImpl extends BaseDao<ChoiceVote> implements ChoiceVote
 		});
 		
 		return listResult;
+	}
+	
+	@Override
+	public GetCountVoteByThreadDtoDataRes findPollingNameByThread(String id) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT p.polling_name");
+		builder.append(" FROM pollings AS p");
+		builder.append(" WHERE p.thread_id = :id");
+		
+		GetCountVoteByThreadDtoDataRes choiceVote = new GetCountVoteByThreadDtoDataRes();
+		try {
+			Object result = createNativeQuery(builder.toString())
+					.setParameter("id", id)
+					.getSingleResult();
+
+			choiceVote.setPollingName(result.toString());
+		} catch (NoResultException e) {
+			e.printStackTrace();
+		}
+		
+		return choiceVote;
 	}
 }

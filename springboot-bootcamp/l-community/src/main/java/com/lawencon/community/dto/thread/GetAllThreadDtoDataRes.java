@@ -19,6 +19,8 @@ public class GetAllThreadDtoDataRes {
 	private Integer totalLike;
 	private Integer totalComment;
 	private Boolean isLiked = false;
+	private Boolean isBookmarked = false;
+	private Boolean isVoted = false;
 	private Integer version;
 	private Boolean isActive;
 
@@ -148,6 +150,22 @@ public class GetAllThreadDtoDataRes {
 
 	public void setIsLiked(Boolean isLiked) {
 		this.isLiked = isLiked;
+	}
+
+	public Boolean getIsBookmarked() {
+		return isBookmarked;
+	}
+
+	public void setIsBookmarked(Boolean isBookmarked) {
+		this.isBookmarked = isBookmarked;
+	}
+
+	public Boolean getIsVoted() {
+		return isVoted;
+	}
+
+	public void setIsVoted(Boolean isVoted) {
+		this.isVoted = isVoted;
 	}
 
 	public Integer getVersion() {

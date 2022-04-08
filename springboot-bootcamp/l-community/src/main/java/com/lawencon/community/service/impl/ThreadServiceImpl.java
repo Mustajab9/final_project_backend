@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.constant.ThreadTypeConstant;
+import com.lawencon.community.dao.BookmarkDao;
 import com.lawencon.community.dao.ChoiceVoteDao;
 import com.lawencon.community.dao.ThreadAttachmentDao;
 import com.lawencon.community.dao.ThreadCategoryDao;
@@ -17,6 +18,7 @@ import com.lawencon.community.dao.ThreadDao;
 import com.lawencon.community.dao.ThreadLikeDao;
 import com.lawencon.community.dao.ThreadTypeDao;
 import com.lawencon.community.dto.attachment.InsertAttachmentDtoRes;
+import com.lawencon.community.dto.bookmark.GetBookmarkByUserAndThreadDtoRes;
 import com.lawencon.community.dto.choicevote.GetCountVoteByThreadDtoDataRes;
 import com.lawencon.community.dto.polling.InsertPollingDtoReq;
 import com.lawencon.community.dto.thread.DeleteByThreadIdDtoRes;
@@ -54,6 +56,7 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 	private ThreadAttachmentDao threadAttachmentDao;
 	private ThreadCategoryDao threadCategoryDao;
 	private ThreadLikeDao threadLikeDao;
+	private BookmarkDao bookmarkDao;
 	private ChoiceVoteDao choiceVoteDao;
 	private AttachmentService attachmentService;
 	private ThreadAttachmentService threadAttachmentService;
@@ -63,12 +66,13 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 	@Autowired
 	public ThreadServiceImpl(ThreadDao threadDao, ThreadTypeDao threadTypeDao, 
 			ThreadAttachmentDao threadAttachmentDao, ThreadCategoryDao threadCategoryDao, 
-			ThreadLikeDao threadLikeDao, ChoiceVoteDao choiceVoteDao) {
+			ThreadLikeDao threadLikeDao, BookmarkDao bookmarkDao, ChoiceVoteDao choiceVoteDao) {
 		this.threadDao = threadDao;
 		this.threadTypeDao = threadTypeDao;
 		this.threadAttachmentDao = threadAttachmentDao;
 		this.threadCategoryDao = threadCategoryDao;
 		this.threadLikeDao = threadLikeDao;
+		this.bookmarkDao = bookmarkDao;
 		this.choiceVoteDao = choiceVoteDao;
 	}
 	
@@ -148,7 +152,8 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 			
 			if(thread.getTypeId().getTypeCode().equals(ThreadTypeConstant.POLLING.getCode())) {
 				List<GetCountVoteByThreadDtoDataRes> listChoice = choiceVoteDao.findCountByThread(thread.getId());
-				data.setPollingName(listChoice.get(0).getPollingName());
+				GetCountVoteByThreadDtoDataRes getPollingName = choiceVoteDao.findPollingNameByThread(thread.getId());
+				data.setPollingName(getPollingName.getPollingName());
 				
 				List<String> listChoiceName = new ArrayList<>();
 				List<Integer> listCountVote = new ArrayList<>();
@@ -175,8 +180,13 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 			// TODO setTotalComment here
 			
 			GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
-			if(threadLikeByUser.getData().getCountLike() != 0) {
+			if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
 				data.setIsLiked(true);
+			}
+			
+			GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
+			if(bookmarkByUserAndThread.getData() != null) {
+				data.setIsBookmarked(true);
 			}
 			
 			data.setVersion(thread.getVersion());

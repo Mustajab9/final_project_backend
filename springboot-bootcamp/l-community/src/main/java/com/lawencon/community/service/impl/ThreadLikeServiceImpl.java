@@ -141,4 +141,9 @@ public class ThreadLikeServiceImpl extends BaseService implements ThreadLikeServ
 
 		return getByThread;
 	}
+	
+	@Override
+	public GetThreadLikeByThreadDtoRes findByThreadAndUser(String userId, String threadId) throws Exception {
+		return threadLikeDao.countByThreadAndUser(userId, threadId);
+	}
 }

@@ -5,9 +5,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.community.dao.BookmarkDao;
+import com.lawencon.community.dto.bookmark.GetBookmarkByUserAndThreadDtoDataRes;
+import com.lawencon.community.dto.bookmark.GetBookmarkByUserAndThreadDtoRes;
 import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.Bookmark;
 import com.lawencon.community.model.Thread;
@@ -94,5 +98,34 @@ public class BookmarkDaoImpl extends BaseDao<Bookmark> implements BookmarkDao {
 		});
 		
 		return listResult;
+	}
+
+	@Override
+	public GetBookmarkByUserAndThreadDtoRes findByUserAndThread(String userId, String threadId) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT b.id, b.created_by FROM bookmarks AS b");
+		builder.append(" WHERE :userId IN (b.created_by) AND b.thread_id = :threadId");
+		
+		GetBookmarkByUserAndThreadDtoRes bookmark = new GetBookmarkByUserAndThreadDtoRes();
+		try {
+			Object result = createNativeQuery(builder.toString())
+					.setParameter("userId", userId)
+					.setParameter("threadId", threadId)
+					.getSingleResult();
+			
+			Object[] obj = (Object[]) result;
+			
+			GetBookmarkByUserAndThreadDtoDataRes bookmarkData = new GetBookmarkByUserAndThreadDtoDataRes();
+			bookmarkData.setId(obj[0].toString());
+			bookmarkData.setCreatedBy(obj[1].toString());
+			
+			bookmark.setData(bookmarkData);
+			bookmark.setMsg(null);
+			
+		}catch(NoResultException e) {
+			e.printStackTrace();
+		}
+		
+		return bookmark;
 	}	 
 }

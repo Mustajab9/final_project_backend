@@ -12,6 +12,7 @@ import com.lawencon.community.dao.ThreadDao;
 import com.lawencon.community.dto.bookmark.DeleteByBookmarkIdDtoRes;
 import com.lawencon.community.dto.bookmark.GetAllBookmarkDtoDataRes;
 import com.lawencon.community.dto.bookmark.GetAllBookmarkDtoRes;
+import com.lawencon.community.dto.bookmark.GetBookmarkByUserAndThreadDtoRes;
 import com.lawencon.community.dto.bookmark.GetBookmarkByUserDtoDataRes;
 import com.lawencon.community.dto.bookmark.GetBookmarkByUserDtoRes;
 import com.lawencon.community.dto.bookmark.GetByBookmarkIdDtoDataRes;
@@ -159,5 +160,10 @@ public class BookmarkServiceImpl extends BaseService implements BookmarkService 
 		getByUser.setMsg(null);
 
 		return getByUser;
+	}
+
+	@Override
+	public GetBookmarkByUserAndThreadDtoRes findByUserAndThread(String userId, String threadId) throws Exception {
+		return bookmarkDao.findByUserAndThread(userId, threadId);
 	}
 }

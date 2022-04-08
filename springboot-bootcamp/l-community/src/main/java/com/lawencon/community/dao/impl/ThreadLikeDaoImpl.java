@@ -3,6 +3,8 @@ package com.lawencon.community.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.community.dao.ThreadLikeDao;
@@ -86,10 +88,8 @@ public class ThreadLikeDaoImpl extends BaseDao<ThreadLike> implements ThreadLike
 				.setParameter("id", id)
 				.getSingleResult();
 		
-		Object obj = (Object) result;
-		
 		GetThreadLikeByThreadDtoDataRes threadLikeData = new GetThreadLikeByThreadDtoDataRes();
-		threadLikeData.setCountLike(Integer.valueOf(obj.toString()));
+		threadLikeData.setCountLike(Integer.valueOf(result.toString()));
 		
 		GetThreadLikeByThreadDtoRes threadLike = new GetThreadLikeByThreadDtoRes();
 		threadLike.setData(threadLikeData);
@@ -100,23 +100,29 @@ public class ThreadLikeDaoImpl extends BaseDao<ThreadLike> implements ThreadLike
 	@Override
 	public GetThreadLikeByThreadDtoRes countByThreadAndUser(String userId, String threadId) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT COUNT(created_by) FROM thread_like tl");
+		builder.append("SELECT tl.id, COUNT(created_by) FROM thread_like tl");
 		builder.append(" WHERE :userId IN (tl.created_by) AND tl.thread_id = :thread");
-		
-		Object result = createNativeQuery(builder.toString())
-				.setParameter("userId", userId)
-				.setParameter("thread", threadId)
-				.getSingleResult();
-		
-		Object obj = (Object) result;
-		
-		GetThreadLikeByThreadDtoDataRes threadLikeData = new GetThreadLikeByThreadDtoDataRes();
-		threadLikeData.setCountLike(Integer.valueOf(obj.toString()));
-		
+		builder.append(" GROUP BY tl.id");
+
 		GetThreadLikeByThreadDtoRes threadLike = new GetThreadLikeByThreadDtoRes();
-		threadLike.setData(threadLikeData);
-		threadLike.setMsg(null);
-		
+		try {
+			Object result = createNativeQuery(builder.toString())
+					.setParameter("userId", userId)
+					.setParameter("thread", threadId)
+					.getSingleResult();
+
+			Object[] obj = (Object[]) result;
+
+			GetThreadLikeByThreadDtoDataRes threadLikeData = new GetThreadLikeByThreadDtoDataRes();
+			threadLikeData.setId(obj[0].toString());
+			threadLikeData.setCountLike(Integer.valueOf(obj[1].toString()));
+
+			threadLike.setData(threadLikeData);
+			threadLike.setMsg(null);
+		} catch (NoResultException e) {
+			e.printStackTrace();
+		}
+
 		return threadLike;
 	}
 }

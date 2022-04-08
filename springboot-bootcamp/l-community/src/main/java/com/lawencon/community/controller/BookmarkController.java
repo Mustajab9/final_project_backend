@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.community.dto.bookmark.DeleteByBookmarkIdDtoRes;
 import com.lawencon.community.dto.bookmark.GetAllBookmarkDtoRes;
+import com.lawencon.community.dto.bookmark.GetBookmarkByUserAndThreadDtoRes;
 import com.lawencon.community.dto.bookmark.GetBookmarkByUserDtoRes;
 import com.lawencon.community.dto.bookmark.GetByBookmarkIdDtoRes;
 import com.lawencon.community.dto.bookmark.InsertBookmarkDtoReq;
@@ -47,6 +48,12 @@ public class BookmarkController {
 	public ResponseEntity<GetBookmarkByUserDtoRes> getByUser(@PathVariable("id") String id) throws Exception {
 		GetBookmarkByUserDtoRes data = bookmarkService.findByUser(id);
 		return new ResponseEntity<GetBookmarkByUserDtoRes>(data, HttpStatus.OK);
+	}
+	
+	@GetMapping("user/{userId}/{threadId}")
+	public ResponseEntity<GetBookmarkByUserAndThreadDtoRes> getByUserAndThread(@PathVariable("userId") String userId, @PathVariable("threadId") String threadId) throws Exception {
+		GetBookmarkByUserAndThreadDtoRes data = bookmarkService.findByUserAndThread(userId, threadId);
+		return new ResponseEntity<GetBookmarkByUserAndThreadDtoRes>(data, HttpStatus.OK);
 	}
 
 	@DeleteMapping("{id}")

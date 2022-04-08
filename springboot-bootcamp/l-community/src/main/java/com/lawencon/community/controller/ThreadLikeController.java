@@ -60,4 +60,10 @@ public class ThreadLikeController {
 		GetThreadLikeByThreadDtoRes getByThread = threadLikeService.findByThread(id);
 		return new ResponseEntity<GetThreadLikeByThreadDtoRes>(getByThread, HttpStatus.OK);
 	}
+	
+	@GetMapping("thread/{userId}/{threadId}")
+	public ResponseEntity<GetThreadLikeByThreadDtoRes> getByThreadAndUser(@PathVariable("userId") String userId, @PathVariable("threadId") String threadId) throws Exception{
+		GetThreadLikeByThreadDtoRes getByThread = threadLikeService.findByThreadAndUser(userId, threadId);
+		return new ResponseEntity<GetThreadLikeByThreadDtoRes>(getByThread, HttpStatus.OK);
+	}
 }

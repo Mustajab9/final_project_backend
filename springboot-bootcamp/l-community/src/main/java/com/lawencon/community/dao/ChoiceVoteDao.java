@@ -12,4 +12,5 @@ public interface ChoiceVoteDao {
 	public boolean deleteById(String id) throws Exception;
 	public List<ChoiceVote> findByChoice(String id) throws Exception;
 	public List<GetCountVoteByThreadDtoDataRes> findCountByThread(String id) throws Exception;
+	public GetCountVoteByThreadDtoDataRes findPollingNameByThread(String id) throws Exception;
 }
