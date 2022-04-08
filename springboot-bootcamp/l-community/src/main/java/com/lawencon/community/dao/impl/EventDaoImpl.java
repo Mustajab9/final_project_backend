@@ -15,16 +15,10 @@ import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.Category;
 import com.lawencon.community.model.Event;
 import com.lawencon.community.model.EventType;
-import com.lawencon.community.model.User;
 import com.lawencon.model.SearchQuery;
 
 @Repository
 public class EventDaoImpl extends BaseDao<Event> implements EventDao {
-
-//	@Override
-//	public List<Event> findAll() throws Exception {
-//		return super.getAll();
-//	}
 
 	@Override
 	public SearchQuery<Event> findAll(String query, Integer startPage, Integer maxPage) throws Exception {
@@ -42,7 +36,7 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 				sq.setData(data);
 				sq.setCount(count);
 			}else {
-				return super.getAll(query, startPage, maxPage, "eventTitle");
+				return super.getAll(query, startPage, maxPage, "eventTitle", "eventProvider", "location", "typeId.typeName", "categoryId.categoryName");
 			}
 		}
 		

@@ -1,7 +1,11 @@
 package com.lawencon.community.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -28,6 +32,9 @@ public class Category extends BaseEntity {
 	@Column(name = "category_code", length=5)
 	private String categoryCode;
 	
+	@OneToMany(mappedBy = "categoryId")
+	private Set<Event> event = new HashSet<>();
+	
 	public String getCategoryName() {
 		return categoryName;
 	}
@@ -43,4 +50,13 @@ public class Category extends BaseEntity {
 	public void setCategoryCode(String categoryCode) {
 		this.categoryCode = categoryCode;
 	}
+
+	public Set<Event> getEvent() {
+		return event;
+	}
+
+	public void setEvent(Set<Event> event) {
+		this.event = event;
+	}
+	
 }

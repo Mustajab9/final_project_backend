@@ -2,7 +2,7 @@ package com.lawencon.community.dto.event;
 
 public class UpdateEventDtoReq {
 	private String id;
-	private Boolean isApprove;
+	private Boolean isApprove = true;
 	private Integer version;
 	private Boolean isActive;
 

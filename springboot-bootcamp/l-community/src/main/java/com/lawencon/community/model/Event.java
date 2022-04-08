@@ -11,20 +11,27 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+
 import com.lawencon.base.BaseEntity;
 
 @Entity
+@Indexed
 @Table(name = "events", uniqueConstraints = @UniqueConstraint(name="event_bk", columnNames = "event_code"))
 public class Event extends BaseEntity {
 	
 	private static final long serialVersionUID = 1023072540840191613L;
 	
+	@FullTextField
 	@Column(name = "event_title", length=100)
 	private String eventTitle;
 	
 	@Column(name = "event_code", length=5)
 	private String eventCode;
 	
+	@FullTextField
 	@Column(name = "event_provider", length=100)
 	private String eventProvider;
 	
@@ -46,13 +53,16 @@ public class Event extends BaseEntity {
 	@Column(name = "is_approve")
 	private Boolean isApprove = false;
 	
+	@FullTextField
 	@Column(name = "location")
 	private String location;
 	
+	@IndexedEmbedded
 	@ManyToOne
 	@JoinColumn(name = "type_id")
 	private EventType typeId;
 	
+	@IndexedEmbedded
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private Category categoryId;
