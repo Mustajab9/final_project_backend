@@ -9,6 +9,8 @@ import javax.persistence.NoResultException;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.community.dao.ChoiceVoteDao;
+import com.lawencon.community.dto.choicevote.GetChoiceVoteByUserDtoDataRes;
+import com.lawencon.community.dto.choicevote.GetChoiceVoteByUserDtoRes;
 import com.lawencon.community.dto.choicevote.GetCountVoteByThreadDtoDataRes;
 import com.lawencon.community.model.ChoiceVote;
 import com.lawencon.community.model.Polling;
@@ -86,15 +88,18 @@ public class ChoiceVoteDaoImpl extends BaseDao<ChoiceVote> implements ChoiceVote
 	@Override
 	public List<GetCountVoteByThreadDtoDataRes> findCountByThread(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT p.polling_name, pc.choice_name, COUNT(cv.choice_id) AS count_vote");
+		builder.append("SELECT p.polling_name, pc.id, pc.choice_name, COUNT(cv.choice_id) AS count_vote");
 		builder.append(" FROM polling_choices AS pc");
 		builder.append(" LEFT JOIN choice_votes AS cv ON pc.id = cv.choice_id");
 		builder.append(" LEFT JOIN pollings AS p ON p.id = pc.polling_id");
 		builder.append(" WHERE pc.polling_id IN");
 		builder.append(" (SELECT p.id FROM pollings p WHERE p.thread_id = :id)");
-		builder.append(" GROUP BY pc.choice_name, p.polling_name");
+		builder.append(" GROUP BY pc.id, pc.choice_name, p.polling_name");
 		
-		List<?> results = createNativeQuery(builder.toString()).setParameter("id", id).getResultList();
+		List<?> results = createNativeQuery(builder.toString())
+				.setParameter("id", id)
+				.getResultList();
+		
 		List<GetCountVoteByThreadDtoDataRes> listResult = new ArrayList<>();
 		
 		results.forEach(result -> {
@@ -102,8 +107,9 @@ public class ChoiceVoteDaoImpl extends BaseDao<ChoiceVote> implements ChoiceVote
 			
 			GetCountVoteByThreadDtoDataRes choiceVote = new GetCountVoteByThreadDtoDataRes();
 			choiceVote.setPollingName(obj[0].toString());
-			choiceVote.setChoiceName(obj[1].toString());
-			choiceVote.setCountVote(Integer.valueOf(obj[2].toString()));
+			choiceVote.setChoiceId(obj[1].toString());
+			choiceVote.setChoiceName(obj[2].toString());
+			choiceVote.setCountVote(Integer.valueOf(obj[3].toString()));
 			
 			listResult.add(choiceVote);
 		});
@@ -118,17 +124,44 @@ public class ChoiceVoteDaoImpl extends BaseDao<ChoiceVote> implements ChoiceVote
 		builder.append(" FROM pollings AS p");
 		builder.append(" WHERE p.thread_id = :id");
 		
-		GetCountVoteByThreadDtoDataRes choiceVote = new GetCountVoteByThreadDtoDataRes();
+		GetCountVoteByThreadDtoDataRes getCountVoteByThread = new GetCountVoteByThreadDtoDataRes();
 		try {
 			Object result = createNativeQuery(builder.toString())
 					.setParameter("id", id)
 					.getSingleResult();
 
-			choiceVote.setPollingName(result.toString());
+			getCountVoteByThread.setPollingName(result.toString());
 		} catch (NoResultException e) {
 			e.printStackTrace();
 		}
 		
-		return choiceVote;
+		return getCountVoteByThread;
+	}
+	
+	@Override
+	public GetChoiceVoteByUserDtoRes findByUser(String id) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT cv.id, cv.created_by FROM choice_votes cv");
+		builder.append(" WHERE :id IN (cv.created_by)");
+		
+		GetChoiceVoteByUserDtoRes getChoiceVoteByUser = new GetChoiceVoteByUserDtoRes();
+		try {
+			Object result = createNativeQuery(builder.toString())
+					.setParameter("id", id)
+					.getSingleResult();
+			
+			Object[] obj = (Object[]) result;
+			
+			GetChoiceVoteByUserDtoDataRes getChoiceVoteByUserData = new GetChoiceVoteByUserDtoDataRes();
+			getChoiceVoteByUserData.setId(obj[0].toString());
+			getChoiceVoteByUserData.setCreatedBy(obj[1].toString());
+			
+			getChoiceVoteByUser.setMsg(null);
+			getChoiceVoteByUser.setData(getChoiceVoteByUserData);
+		}catch (NoResultException e) {
+			e.printStackTrace();
+		}
+		
+		return getChoiceVoteByUser;
 	}
 }

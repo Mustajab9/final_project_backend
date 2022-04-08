@@ -14,6 +14,7 @@ import com.lawencon.community.dto.threadcomment.GetAllThreadCommentDtoDataRes;
 import com.lawencon.community.dto.threadcomment.GetAllThreadCommentDtoRes;
 import com.lawencon.community.dto.threadcomment.GetByThreadCommentIdDtoDataRes;
 import com.lawencon.community.dto.threadcomment.GetByThreadCommentIdDtoRes;
+import com.lawencon.community.dto.threadcomment.GetCountCommentByThreadDtoRes;
 import com.lawencon.community.dto.threadcomment.GetThreadCommentByThreadDtoDataRes;
 import com.lawencon.community.dto.threadcomment.GetThreadCommentByThreadDtoRes;
 import com.lawencon.community.dto.threadcomment.InsertThreadCommentDtoDataRes;
@@ -171,5 +172,10 @@ public class ThreadCommentServiceImpl extends BaseService implements ThreadComme
 		getByThread.setMsg(null);
 
 		return getByThread;
+	}
+	
+	@Override
+	public GetCountCommentByThreadDtoRes countByThread(String id) throws Exception {
+		return threadCommentDao.countByThread(id);
 	}
 }

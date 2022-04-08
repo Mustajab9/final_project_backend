@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.dto.choicevote.GetAllChoiceVoteDtoRes;
 import com.lawencon.community.dto.choicevote.GetByChoiceVoteIdDtoRes;
 import com.lawencon.community.dto.choicevote.GetByPollingChoiceIdDtoRes;
+import com.lawencon.community.dto.choicevote.GetChoiceVoteByUserDtoRes;
 import com.lawencon.community.dto.choicevote.InsertChoiceVoteDtoReq;
 import com.lawencon.community.dto.choicevote.InsertChoiceVoteDtoRes;
 import com.lawencon.community.service.ChoiceVoteService;
@@ -45,6 +46,12 @@ public class ChoiceVoteController {
 	public ResponseEntity<GetByPollingChoiceIdDtoRes> getByChoice(@PathVariable("id") String id) throws Exception {
 		GetByPollingChoiceIdDtoRes data = choiceVoteService.findByChoice(id);
 		return new ResponseEntity<GetByPollingChoiceIdDtoRes>(data, HttpStatus.OK);
+	}
+	
+	@GetMapping("user/{id}")
+	public ResponseEntity<GetChoiceVoteByUserDtoRes> getChoiceVoteByUser(@PathVariable("id") String id) throws Exception {
+		GetChoiceVoteByUserDtoRes data = choiceVoteService.findByUser(id);
+		return new ResponseEntity<GetChoiceVoteByUserDtoRes>(data, HttpStatus.OK);
 	}
 
 	@PostMapping

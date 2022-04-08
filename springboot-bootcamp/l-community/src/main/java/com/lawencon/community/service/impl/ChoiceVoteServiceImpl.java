@@ -14,6 +14,7 @@ import com.lawencon.community.dto.choicevote.GetByChoiceVoteIdDtoDataRes;
 import com.lawencon.community.dto.choicevote.GetByChoiceVoteIdDtoRes;
 import com.lawencon.community.dto.choicevote.GetByPollingChoiceIdDtoDataRes;
 import com.lawencon.community.dto.choicevote.GetByPollingChoiceIdDtoRes;
+import com.lawencon.community.dto.choicevote.GetChoiceVoteByUserDtoRes;
 import com.lawencon.community.dto.choicevote.GetCountVoteByThreadDtoDataRes;
 import com.lawencon.community.dto.choicevote.GetCountVoteByThreadDtoRes;
 import com.lawencon.community.dto.choicevote.InsertChoiceVoteDtoDataRes;
@@ -170,5 +171,10 @@ public class ChoiceVoteServiceImpl extends BaseService implements ChoiceVoteServ
 		getCountByThread.setMsg(null);
 
 		return getCountByThread;
+	}
+	
+	@Override
+	public GetChoiceVoteByUserDtoRes findByUser(String id) throws Exception {
+		return choiceVoteDao.findByUser(id);
 	}
 }

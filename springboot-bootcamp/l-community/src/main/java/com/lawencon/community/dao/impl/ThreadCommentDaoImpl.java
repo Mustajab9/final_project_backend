@@ -3,9 +3,12 @@ package com.lawencon.community.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.community.dao.ThreadCommentDao;
+import com.lawencon.community.dto.threadcomment.GetCountCommentByThreadDtoRes;
 import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadComment;
 import com.lawencon.community.model.ThreadType;
@@ -75,5 +78,25 @@ public class ThreadCommentDaoImpl extends BaseDao<ThreadComment> implements Thre
 
 		return listResult;
 	}
-
+	
+	@Override
+	public GetCountCommentByThreadDtoRes countByThread(String id) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT COUNT(thread_id) FROM thread_comments");
+		builder.append(" WHERE tc.thread_id = :id");
+		
+		GetCountCommentByThreadDtoRes countComment = new GetCountCommentByThreadDtoRes();
+		try {
+			Object result = createNativeQuery(builder.toString())
+					.setParameter("id", id)
+					.getSingleResult();
+			
+			countComment.setCountComment(Integer.valueOf(result.toString()));
+			
+		}catch (NoResultException e) {
+			e.printStackTrace();
+		}
+		
+		return countComment;
+	}
 }

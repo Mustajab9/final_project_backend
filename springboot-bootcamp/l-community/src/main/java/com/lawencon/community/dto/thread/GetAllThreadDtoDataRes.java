@@ -13,7 +13,7 @@ public class GetAllThreadDtoDataRes {
 	private List<String> attachmentId;
 	private List<String> attachemntExtension;
 	private String pollingName;
-	private List<String> choiceName;
+	private List<GetThreadPollingChoiceDtoRes> choices;
 	private List<Integer> countVote;
 	private Integer totalVote;
 	private Integer totalLike;
@@ -104,12 +104,12 @@ public class GetAllThreadDtoDataRes {
 		this.pollingName = pollingName;
 	}
 
-	public List<String> getChoiceName() {
-		return choiceName;
+	public List<GetThreadPollingChoiceDtoRes> getChoices() {
+		return choices;
 	}
 
-	public void setChoiceName(List<String> choiceName) {
-		this.choiceName = choiceName;
+	public void setChoices(List<GetThreadPollingChoiceDtoRes> choice) {
+		this.choices = choice;
 	}
 
 	public List<Integer> getCountVote() {

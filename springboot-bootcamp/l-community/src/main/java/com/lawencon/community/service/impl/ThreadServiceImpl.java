@@ -14,11 +14,13 @@ import com.lawencon.community.dao.BookmarkDao;
 import com.lawencon.community.dao.ChoiceVoteDao;
 import com.lawencon.community.dao.ThreadAttachmentDao;
 import com.lawencon.community.dao.ThreadCategoryDao;
+import com.lawencon.community.dao.ThreadCommentDao;
 import com.lawencon.community.dao.ThreadDao;
 import com.lawencon.community.dao.ThreadLikeDao;
 import com.lawencon.community.dao.ThreadTypeDao;
 import com.lawencon.community.dto.attachment.InsertAttachmentDtoRes;
 import com.lawencon.community.dto.bookmark.GetBookmarkByUserAndThreadDtoRes;
+import com.lawencon.community.dto.choicevote.GetChoiceVoteByUserDtoRes;
 import com.lawencon.community.dto.choicevote.GetCountVoteByThreadDtoDataRes;
 import com.lawencon.community.dto.polling.InsertPollingDtoReq;
 import com.lawencon.community.dto.thread.DeleteByThreadIdDtoRes;
@@ -30,6 +32,7 @@ import com.lawencon.community.dto.thread.GetThreadByCategoryDtoDataRes;
 import com.lawencon.community.dto.thread.GetThreadByCategoryDtoRes;
 import com.lawencon.community.dto.thread.GetThreadByUserDtoDataRes;
 import com.lawencon.community.dto.thread.GetThreadByUserDtoRes;
+import com.lawencon.community.dto.thread.GetThreadPollingChoiceDtoRes;
 import com.lawencon.community.dto.thread.InsertThreadDtoDataRes;
 import com.lawencon.community.dto.thread.InsertThreadDtoReq;
 import com.lawencon.community.dto.thread.InsertThreadDtoRes;
@@ -38,6 +41,7 @@ import com.lawencon.community.dto.thread.UpdateThreadDtoReq;
 import com.lawencon.community.dto.thread.UpdateThreadDtoRes;
 import com.lawencon.community.dto.threadattachment.InsertThreadAttachmentDtoReq;
 import com.lawencon.community.dto.threadcategory.InsertThreadCategoryDtoReq;
+import com.lawencon.community.dto.threadcomment.GetCountCommentByThreadDtoRes;
 import com.lawencon.community.dto.threadlike.GetThreadLikeByThreadDtoRes;
 import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadAttachment;
@@ -56,6 +60,7 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 	private ThreadAttachmentDao threadAttachmentDao;
 	private ThreadCategoryDao threadCategoryDao;
 	private ThreadLikeDao threadLikeDao;
+	private ThreadCommentDao threadCommentDao;
 	private BookmarkDao bookmarkDao;
 	private ChoiceVoteDao choiceVoteDao;
 	private AttachmentService attachmentService;
@@ -66,12 +71,14 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 	@Autowired
 	public ThreadServiceImpl(ThreadDao threadDao, ThreadTypeDao threadTypeDao, 
 			ThreadAttachmentDao threadAttachmentDao, ThreadCategoryDao threadCategoryDao, 
-			ThreadLikeDao threadLikeDao, BookmarkDao bookmarkDao, ChoiceVoteDao choiceVoteDao) {
+			ThreadLikeDao threadLikeDao, ThreadCommentDao threadCommentDao, 
+			BookmarkDao bookmarkDao, ChoiceVoteDao choiceVoteDao) {
 		this.threadDao = threadDao;
 		this.threadTypeDao = threadTypeDao;
 		this.threadAttachmentDao = threadAttachmentDao;
 		this.threadCategoryDao = threadCategoryDao;
 		this.threadLikeDao = threadLikeDao;
+		this.threadCommentDao = threadCommentDao;
 		this.bookmarkDao = bookmarkDao;
 		this.choiceVoteDao = choiceVoteDao;
 	}
@@ -113,7 +120,6 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 			data.setThreadTitle(thread.getThreadTitle());
 			data.setThreadContent(thread.getThreadContent());
 			data.setTypeCode(thread.getTypeId().getTypeCode());
-			System.out.println(thread.getTypeId().getTypeCode());
 			
 			List<ThreadCategory> categories = threadCategoryDao.findByThread(thread.getId());		
 			List<String> listCategoryId = new ArrayList<>();
@@ -155,29 +161,42 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				GetCountVoteByThreadDtoDataRes getPollingName = choiceVoteDao.findPollingNameByThread(thread.getId());
 				data.setPollingName(getPollingName.getPollingName());
 				
-				List<String> listChoiceName = new ArrayList<>();
+				List<GetThreadPollingChoiceDtoRes> listChoiceName = new ArrayList<>();
 				List<Integer> listCountVote = new ArrayList<>();
+				
 				Integer totalVote = 0;
 				for(int z = 0; z < listChoice.size(); z++) {
 					GetCountVoteByThreadDtoDataRes choiceVote = listChoice.get(z);
 					
-					String choiceName = choiceVote.getChoiceName();
+					GetThreadPollingChoiceDtoRes threadPollingChoice = new GetThreadPollingChoiceDtoRes();
+					threadPollingChoice.setChoiceId(choiceVote.getChoiceId());
+					threadPollingChoice.setChoiceName(choiceVote.getChoiceName());
+					
 					Integer countVote = choiceVote.getCountVote();
 					
-					listChoiceName.add(choiceName);
+					listChoiceName.add(threadPollingChoice);
 					listCountVote.add(countVote);
 					totalVote = totalVote + choiceVote.getCountVote();
 					
 				}
 				
-				data.setChoiceName(listChoiceName);
+				data.setChoices(listChoiceName);
 				data.setCountVote(listCountVote);
 				data.setTotalVote(totalVote);
+				
+				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+				if(choiceVoteByUser.getData() != null) {
+					data.setIsVoted(true);
+				}
 			}
 			
 			GetThreadLikeByThreadDtoRes threadLike = threadLikeDao.countByThread(thread.getId());
 			data.setTotalLike(threadLike.getData().getCountLike());
-			// TODO setTotalComment here
+			
+			GetCountCommentByThreadDtoRes threadComment = threadCommentDao.countByThread(thread.getId());
+			if(threadComment.getCountComment() == null) {
+				data.setTotalComment(threadComment.getCountComment());				
+			}
 			
 			GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
 			if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
@@ -252,26 +271,46 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 			List<GetCountVoteByThreadDtoDataRes> listChoice = choiceVoteDao.findCountByThread(thread.getId());
 			data.setPollingName(listChoice.get(0).getPollingName());
 			
-			List<String> listChoiceName = new ArrayList<>();
+			List<GetThreadPollingChoiceDtoRes> listChoiceName = new ArrayList<>();
 			List<Integer> listCountVote = new ArrayList<>();
+			
 			Integer totalVote = 0;
 			for(int z = 0; z < listChoice.size(); z++) {
 				GetCountVoteByThreadDtoDataRes choiceVote = listChoice.get(z);
 				
-				String choiceName = choiceVote.getChoiceName();
+				GetThreadPollingChoiceDtoRes threadPollingChoice = new GetThreadPollingChoiceDtoRes();
+				threadPollingChoice.setChoiceId(choiceVote.getChoiceId());
+				threadPollingChoice.setChoiceName(choiceVote.getChoiceName());
+				
 				Integer countVote = choiceVote.getCountVote();
 				
-				listChoiceName.add(choiceName);
+				listChoiceName.add(threadPollingChoice);
 				listCountVote.add(countVote);
 				totalVote = totalVote + choiceVote.getCountVote();
 				
 			}
 			
-			data.setChoiceName(listChoiceName);
+			data.setChoices(listChoiceName);
 			data.setCountVote(listCountVote);
 			data.setTotalVote(totalVote);
 		}
-					 
+		
+		GetThreadLikeByThreadDtoRes threadLike = threadLikeDao.countByThread(thread.getId());
+		data.setTotalLike(threadLike.getData().getCountLike());
+		
+		GetCountCommentByThreadDtoRes threadComment = threadCommentDao.countByThread(thread.getId());
+		data.setTotalComment(threadComment.getCountComment());
+		
+		GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
+		if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
+			data.setIsLiked(true);
+		}
+		
+		GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
+		if(bookmarkByUserAndThread.getData() != null) {
+			data.setIsBookmarked(true);
+		}
+		
 		data.setVersion(thread.getVersion());
 		data.setIsActive(thread.getIsActive());
 
