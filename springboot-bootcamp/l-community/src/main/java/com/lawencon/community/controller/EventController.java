@@ -44,8 +44,8 @@ public class EventController {
 	}
 
 	@GetMapping
-	public ResponseEntity<GetAllEventDtoRes> getAll() throws Exception {
-		GetAllEventDtoRes result = eventService.findAll();
+	public ResponseEntity<GetAllEventDtoRes> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		GetAllEventDtoRes result = eventService.findAll(query, startPage, maxPage);
 		return new ResponseEntity<GetAllEventDtoRes>(result, HttpStatus.OK);
 	}
 

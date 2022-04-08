@@ -15,13 +15,38 @@ import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.Category;
 import com.lawencon.community.model.Event;
 import com.lawencon.community.model.EventType;
+import com.lawencon.community.model.User;
+import com.lawencon.model.SearchQuery;
 
 @Repository
 public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 
+//	@Override
+//	public List<Event> findAll() throws Exception {
+//		return super.getAll();
+//	}
+
 	@Override
-	public List<Event> findAll() throws Exception {
-		return super.getAll();
+	public SearchQuery<Event> findAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		SearchQuery<Event> sq = new SearchQuery<>();
+		List<Event> data = null;
+		
+		if(startPage == null || maxPage == null) {
+			data = getAll();
+			sq.setData(data);
+		}else {
+			if(query == null) {
+				data = getAll(startPage, maxPage);
+				int count = countAll().intValue();
+				
+				sq.setData(data);
+				sq.setCount(count);
+			}else {
+				return super.getAll(query, startPage, maxPage, "eventTitle");
+			}
+		}
+		
+		return sq;
 	}
 
 	@Override
@@ -37,6 +62,11 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 	@Override
 	public boolean deleteById(String id) throws Exception {
 		return super.deleteById(id);
+	}
+	
+	@Override
+	public Long countAll() {
+		return super.countAll();
 	}
 
 	@Override
@@ -210,19 +240,22 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 	@Override
 	public List<GetReportIncomeEventDto> getReportIncome(String eventId) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT e.event_price, COUNT(ped.created_by), e.event_title, e.event_provider, e.event_date_start, e.event_date_end, e.\"location\"");
+		builder.append(
+				"SELECT e.event_price, COUNT(ped.created_by), e.event_title, e.event_provider, e.event_date_start, e.event_date_end, e.\"location\"");
 		builder.append(" FROM events e");
 		builder.append(" JOIN payment_event_detail ped ON ped.event_id = e.id");
-		builder.append(" WHERE ped.payment_event_id IN (SELECT pe.id FROM payment_events pe WHERE pe.is_approve = true)");
+		builder.append(
+				" WHERE ped.payment_event_id IN (SELECT pe.id FROM payment_events pe WHERE pe.is_approve = true)");
 		builder.append(" AND e.id = :id");
-		builder.append(" GROUP BY e.event_price, e.event_title, e.event_provider, e.event_date_start, e.event_date_end, e.\"location\"");
+		builder.append(
+				" GROUP BY e.event_price, e.event_title, e.event_provider, e.event_date_start, e.event_date_end, e.\"location\"");
 		List<?> results = createNativeQuery(builder.toString()).setParameter("id", eventId).getResultList();
 		List<GetReportIncomeEventDto> listResult = new ArrayList<>();
-		
-		results.forEach(result->{
+
+		results.forEach(result -> {
 			Object[] obj = (Object[]) result;
 			GetReportIncomeEventDto data = new GetReportIncomeEventDto();
-			
+
 			data.setEventPrice(obj[0].toString());
 			data.setTotalPeople(Long.valueOf(obj[1].toString()));
 			data.setEventTitle(obj[2].toString());
@@ -230,11 +263,13 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 			data.setEventDateStart(obj[4].toString());
 			data.setEventDateEnd(obj[5].toString());
 			data.setLocation(obj[6].toString());
-			
+
 			listResult.add(data);
 		});
-		
+
 		return listResult;
 	}
+
+	
 
 }

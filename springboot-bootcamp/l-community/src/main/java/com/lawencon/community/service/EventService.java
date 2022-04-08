@@ -14,7 +14,7 @@ import com.lawencon.community.dto.event.UpdateEventDtoReq;
 import com.lawencon.community.dto.event.UpdateEventDtoRes;
 
 public interface EventService {
-	public GetAllEventDtoRes findAll() throws Exception;
+	public GetAllEventDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
 	public GetByEventIdDtoRes findById(String id) throws Exception;
 	public InsertEventDtoRes insert(String data, MultipartFile file) throws Exception;
 	public UpdateEventDtoRes update(UpdateEventDtoReq data) throws Exception;

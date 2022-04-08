@@ -5,6 +5,7 @@ import java.util.List;
 public class GetAllEventDtoRes {
 	private String msg;
 	private List<GetAllEventDtoDataRes> data;
+	private Integer total;
 
 	public String getMsg() {
 		return msg;
@@ -21,4 +22,13 @@ public class GetAllEventDtoRes {
 	public void setData(List<GetAllEventDtoDataRes> data) {
 		this.data = data;
 	}
+	
+	public Integer getTotal() {
+		return total;
+	}
+	
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
+	
 }
