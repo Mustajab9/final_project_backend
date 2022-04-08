@@ -68,6 +68,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 			data.setEventCode(event.getEventCode());
 			data.setEventTitle(event.getEventTitle());
 			data.setEventProvider(event.getEventProvider());
+			data.setEventLocation(event.getLocation());
 			data.setEventPrice(event.getEventPrice());
 			data.setEventTimeStart(event.getEventTimeStart());
 			data.setEventTimeEnd(event.getEventTimeEnd());
@@ -99,51 +100,6 @@ public class EventServiceImpl extends BaseService implements EventService {
 		return getAll;
 	}
 
-//	@Override
-//	public GetAllEventDtoRes findAll() throws Exception {
-//		GetAllEventDtoRes getAll = new GetAllEventDtoRes();
-//
-//		List<Event> events = eventDao.findAll();
-//		List<GetAllEventDtoDataRes> listEvent = new ArrayList<>();
-//
-//		for (int i = 0; i < events.size(); i++) {
-//			Event event = events.get(i);
-//			GetAllEventDtoDataRes data = new GetAllEventDtoDataRes();
-//
-//			data.setId(event.getId());
-//			data.setEventCode(event.getEventCode());
-//			data.setEventTitle(event.getEventTitle());
-//			data.setEventProvider(event.getEventProvider());
-//			data.setEventPrice(event.getEventPrice());
-//			data.setEventTimeStart(event.getEventTimeStart());
-//			data.setEventTimeEnd(event.getEventTimeEnd());
-//			data.setEventDateStart(event.getEventDateStart());
-//			data.setEventDateEnd(event.getEventDateEnd());
-//			data.setIsApprove(event.getIsApprove());
-//			data.setCategoryId(event.getCategoryId().getId());
-//			data.setCategoryName(event.getCategoryId().getCategoryName());
-//			data.setTypeId(event.getTypeId().getId());
-//			data.setTypeName(event.getTypeId().getTypeName());
-//			data.setPriceId(event.getPriceId().getId());
-//			data.setPriceName(event.getPriceId().getPriceName());
-//			
-//			if(event.getAttachmentId() != null) {
-//				data.setAttachmentId(event.getAttachmentId().getId());
-//				data.setAttachmentExtension(event.getAttachmentId().getAttachmentExtension());
-//			}
-//			
-//			data.setVersion(event.getVersion());
-//			data.setIsActive(event.getIsActive());
-//
-//			listEvent.add(data);
-//		}
-//
-//		getAll.setData(listEvent);
-//		getAll.setMsg(null);
-//
-//		return getAll;
-//	}
-
 	@Override
 	public GetByEventIdDtoRes findById(String id) throws Exception {
 		GetByEventIdDtoRes getById = new GetByEventIdDtoRes();
@@ -154,6 +110,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 		data.setEventCode(event.getEventCode());
 		data.setEventTitle(event.getEventTitle());
 		data.setEventProvider(event.getEventProvider());
+		data.setEventLocation(event.getLocation());
 		data.setEventPrice(event.getEventPrice());
 		data.setEventTimeStart(event.getEventTimeStart());
 		data.setEventTimeEnd(event.getEventTimeEnd());
@@ -191,6 +148,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 			event.setEventCode(getAlphaNumericString(5));
 			event.setEventTitle(dataInsert.getEventTitle());
 			event.setEventProvider(dataInsert.getEventProvider());
+			event.setLocation(dataInsert.getEventLocation());
 			event.setEventPrice(dataInsert.getEventPrice());
 			event.setEventTimeStart(dataInsert.getEventTimeStart());
 			event.setEventTimeEnd(dataInsert.getEventTimeEnd());
@@ -314,6 +272,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 			data.setEventCode(event.getEventCode());
 			data.setEventTitle(event.getEventTitle());
 			data.setEventProvider(event.getEventProvider());
+			data.setEventLocation(event.getLocation());
 			data.setEventPrice(event.getEventPrice());
 			data.setEventTimeStart(event.getEventTimeStart());
 			data.setEventTimeEnd(event.getEventTimeEnd());
@@ -359,6 +318,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 			data.setEventCode(event.getEventCode());
 			data.setEventTitle(event.getEventTitle());
 			data.setEventProvider(event.getEventProvider());
+			data.setEventLocation(event.getLocation());
 			data.setEventPrice(event.getEventPrice());
 			data.setEventTimeStart(event.getEventTimeStart());
 			data.setEventTimeEnd(event.getEventTimeEnd());

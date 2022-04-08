@@ -33,7 +33,7 @@ public class SubscriptionDaoImpl extends BaseDao<Subscription> implements Subscr
 				sq.setData(data);
 				sq.setCount(count);
 			}else {
-				return super.getAll(query, startPage, maxPage, "subscriptionCode", "profileId.profileName", "profileId.userId.email", "profileId.profileCompany", "profileId.profilePhone");
+				return super.getAll(query, startPage, maxPage, "subscriptionCode", "profileId.profileName", "profileId.userId.email", "profileId.profileCompany");
 			}
 		}
 		

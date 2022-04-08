@@ -24,6 +24,7 @@ import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
 import com.lawencon.community.dto.user.GetAllUserDtoRes;
 import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
 import com.lawencon.community.dto.user.GetByUserIdDtoRes;
+import com.lawencon.community.dto.user.GetUserByEmailDtoDataRes;
 import com.lawencon.community.dto.user.InsertUserDtoDataRes;
 import com.lawencon.community.dto.user.InsertUserDtoReq;
 import com.lawencon.community.dto.user.InsertUserDtoRes;
@@ -174,6 +175,9 @@ public class UserServiceImpl extends BaseService implements UserService {
 								
 				String passwordEncode = passwordEncoder.encode(data.getPassword());
 				user.setPassword(passwordEncode);
+
+				Role role = roleDao.findById(data.getRoleId());
+				user.setRoleId(role);
 				
 				user.setVersion(data.getVersion());
 				user.setUpdatedBy(getId());
@@ -221,16 +225,68 @@ public class UserServiceImpl extends BaseService implements UserService {
 
 		return deleteById;
 	}
+	
+	@Override
+	public UpdateUserDtoRes forgotPassword(UpdateUserDtoReq data) throws Exception {
+		UpdateUserDtoRes update = new UpdateUserDtoRes();
+
+		try {
+			if (data.getVersion() != null) {
+				User user = userDao.findById(data.getId());
+
+				user.setEmail(data.getEmail());
+								
+				String passwordEncode = passwordEncoder.encode(data.getPassword());
+				user.setPassword(passwordEncode);
+
+				Role role = roleDao.findById(data.getRoleId());
+				user.setRoleId(role);
+				
+				user.setVersion(data.getVersion());
+				user.setUpdatedBy(data.getId());
+
+				if (data.getIsActive() != null) {
+					user.setIsActive(data.getIsActive());
+				}
+
+				begin();
+				User userUpdate = userDao.save(user);
+				commit();
+
+				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
+				dataDto.setVersion(userUpdate.getVersion());
+
+				update.setData(dataDto);
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Passowrd " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rollback();
+			throw new Exception(e);
+		}
+
+		return update;
+	}
 
 	@Override
-	public User findByUser(String email) throws Exception {
-		User getByUser = userDao.findByUser(email);
-		return getByUser;
+	public GetUserByEmailDtoDataRes findByUser(String email) throws Exception {
+		GetUserByEmailDtoDataRes data = new GetUserByEmailDtoDataRes();
+		User user = userDao.findByUser(email);
+		
+		data.setId(user.getId());
+		data.setUsername(user.getEmail());
+		data.setPassword(user.getPassword());
+		data.setRoleId(user.getRoleId().getId());
+		data.setRoleName(user.getRoleId().getRoleName());
+		data.setVersion(user.getVersion());
+		data.setIsActive(user.getIsActive());
+		
+		return data;
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = null;
+		GetUserByEmailDtoDataRes user = null;
 		System.out.print(username);
 		try {
 			user = findByUser(username);
@@ -239,7 +295,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 			throw new UsernameNotFoundException(CommonConstant.INVALID_LOGIN.getDetail());
 		}
 
-		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
 				new ArrayList<>());
 	}
 }

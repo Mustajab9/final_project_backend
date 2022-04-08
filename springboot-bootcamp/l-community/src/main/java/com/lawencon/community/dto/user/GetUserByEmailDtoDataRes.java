@@ -1,25 +1,11 @@
 package com.lawencon.community.dto.user;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-public class UpdateUserDtoReq {
-	@NotNull(message = "Id is Empty")
+public class GetUserByEmailDtoDataRes {
 	private String id;
-
-	@NotEmpty(message = "Email is Empty")
-	@Size(max = 50, min = 5, message = "Email min 5 Character and max 30 Character")
-	private String email;
-
-	@NotEmpty(message = "Password is Empty")
-	@Size(min = 5, message = "Password min 5 Character")
+	private String username;
 	private String password;
-	
-	@NotNull(message = "Role Id is Empty")
 	private String roleId;
-
-	@NotNull(message = "Version is Empty")
+	private String roleName;
 	private Integer version;
 	private Boolean isActive;
 
@@ -31,12 +17,12 @@ public class UpdateUserDtoReq {
 		this.id = id;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
@@ -53,6 +39,14 @@ public class UpdateUserDtoReq {
 
 	public void setRoleId(String roleId) {
 		this.roleId = roleId;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
 	}
 
 	public Integer getVersion() {

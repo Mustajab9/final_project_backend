@@ -2,6 +2,9 @@ package com.lawencon.community.dao.impl;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.community.dao.UserDao;
@@ -65,23 +68,32 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
 		builder.append(" INNER JOIN roles r ON r.id = u.role_id");
 		builder.append(" WHERE u.email = :email");
 
-		Object result = createNativeQuery(builder.toString()).setParameter("email", email).getSingleResult();
+		User user = null;
+		try {
+			Object result = createNativeQuery(builder.toString())
+								.setParameter("email", email)
+								.getSingleResult();
 
-		Object[] obj = (Object[]) result;
-		User user = new User();
-		user.setId(obj[0].toString());
-		user.setEmail(obj[1].toString());
-		user.setPassword(obj[2].toString());
-		user.setVerificationCode(obj[3].toString());
+			Object[] obj = (Object[]) result;
+			user = new User();
+			user.setId(obj[0].toString());
+			user.setEmail(obj[1].toString());
+			user.setPassword(obj[2].toString());
+			user.setVerificationCode(obj[3].toString());
 
-		Role role = new Role();
-		role.setId(obj[4].toString());
-		role.setRoleCode(obj[5].toString());
-		role.setRoleName(obj[6].toString());
-		user.setRoleId(role);
+			Role role = new Role();
+			role.setId(obj[4].toString());
+			role.setRoleCode(obj[5].toString());
+			role.setRoleName(obj[6].toString());
+			user.setRoleId(role);
 
-		user.setVersion(Integer.valueOf(obj[7].toString()));
-		user.setIsActive(Boolean.valueOf(obj[8].toString()));
+			user.setVersion(Integer.valueOf(obj[7].toString()));
+			user.setIsActive(Boolean.valueOf(obj[8].toString()));
+			
+		}catch(NoResultException | NonUniqueResultException e) {
+			e.printStackTrace();
+		}
+		
 
 		return user;
 	}

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
 import com.lawencon.community.dto.user.GetAllUserDtoRes;
 import com.lawencon.community.dto.user.GetByUserIdDtoRes;
+import com.lawencon.community.dto.user.GetUserByEmailDtoDataRes;
 import com.lawencon.community.dto.user.InsertUserDtoReq;
 import com.lawencon.community.dto.user.InsertUserDtoRes;
 import com.lawencon.community.dto.user.UpdateUserDtoReq;
@@ -61,5 +62,17 @@ public class UserController {
 	public ResponseEntity<DeleteByUserIdDtoRes> deleteById(@PathVariable("id") String id) throws Exception{
 		DeleteByUserIdDtoRes deleteById = userService.deleteById(id);
 		return new ResponseEntity<DeleteByUserIdDtoRes>(deleteById, HttpStatus.OK);
+	}
+	
+	@GetMapping("user-{email}")
+	public ResponseEntity<GetUserByEmailDtoDataRes> getByEmail(@PathVariable("email") String email) throws Exception{
+		GetUserByEmailDtoDataRes getByEmail = userService.findByUser(email);
+		return new ResponseEntity<GetUserByEmailDtoDataRes>(getByEmail, HttpStatus.OK);
+	}
+	
+	@PutMapping("forgot-password")
+	public ResponseEntity<UpdateUserDtoRes> forgotPassword(@RequestBody @Valid UpdateUserDtoReq data) throws Exception{
+		UpdateUserDtoRes forgotPassword = userService.forgotPassword(data);
+		return new ResponseEntity<UpdateUserDtoRes>(forgotPassword, HttpStatus.OK);
 	}
 }

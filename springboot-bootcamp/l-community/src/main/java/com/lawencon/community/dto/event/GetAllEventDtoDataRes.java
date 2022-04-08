@@ -9,6 +9,7 @@ public class GetAllEventDtoDataRes {
 	private String eventCode;
 	private String eventTitle;
 	private String eventProvider;
+	private String eventLocation;
 	private BigInteger eventPrice;
 	private Time eventTimeStart;
 	private Time eventTimeEnd;
@@ -56,6 +57,14 @@ public class GetAllEventDtoDataRes {
 
 	public void setEventProvider(String eventProvider) {
 		this.eventProvider = eventProvider;
+	}
+
+	public String getEventLocation() {
+		return eventLocation;
+	}
+
+	public void setEventLocation(String eventLocation) {
+		this.eventLocation = eventLocation;
 	}
 
 	public BigInteger getEventPrice() {
