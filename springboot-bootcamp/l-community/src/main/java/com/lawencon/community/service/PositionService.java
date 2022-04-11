@@ -9,9 +9,9 @@ import com.lawencon.community.dto.position.UpdatePositionDtoReq;
 import com.lawencon.community.dto.position.UpdatePositionDtoRes;
 
 public interface PositionService {
-	public GetAllPositionDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
-	public GetByPositionIdDtoRes findById(String id) throws Exception;
-	public InsertPositionDtoRes insert(InsertPositionDtoReq data) throws Exception;
-	public UpdatePositionDtoRes update(UpdatePositionDtoReq data) throws Exception;
-	public DeleteByPositionIdDtoRes deleteById(String id) throws Exception;
+	GetAllPositionDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
+	GetByPositionIdDtoRes findById(String id) throws Exception;
+	InsertPositionDtoRes insert(InsertPositionDtoReq data) throws Exception;
+	UpdatePositionDtoRes update(UpdatePositionDtoReq data) throws Exception;
+	DeleteByPositionIdDtoRes deleteById(String id) throws Exception;
 }

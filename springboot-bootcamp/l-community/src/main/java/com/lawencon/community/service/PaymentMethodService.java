@@ -9,9 +9,9 @@ import com.lawencon.community.dto.paymentmethod.UpdatePaymentMethodDtoReq;
 import com.lawencon.community.dto.paymentmethod.UpdatePaymentMethodDtoRes;
 
 public interface PaymentMethodService {
-	public GetAllPaymentMethodDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
-	public GetByPaymentMethodIdDtoRes findById(String id) throws Exception;
-	public InsertPaymentMethodDtoRes insert(InsertPaymentMethodDtoReq data) throws Exception;
-	public UpdatePaymentMethodDtoRes update(UpdatePaymentMethodDtoReq data) throws Exception;
-	public DeleteByPaymentMethodIdDtoRes deleteById(String id) throws Exception;
+	GetAllPaymentMethodDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
+	GetByPaymentMethodIdDtoRes findById(String id) throws Exception;
+	InsertPaymentMethodDtoRes insert(InsertPaymentMethodDtoReq data) throws Exception;
+	UpdatePaymentMethodDtoRes update(UpdatePaymentMethodDtoReq data) throws Exception;
+	DeleteByPaymentMethodIdDtoRes deleteById(String id) throws Exception;
 }

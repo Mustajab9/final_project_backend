@@ -10,10 +10,10 @@ import com.lawencon.community.dto.pollingchoice.UpdatePollingChoiceDtoReq;
 import com.lawencon.community.dto.pollingchoice.UpdatePollingChoiceDtoRes;
 
 public interface PollingChoiceService {
-	public GetAllPollingChoiceDtoRes findAll() throws Exception;
-	public GetByPollingChoiceIdDtoRes findById(String id) throws Exception;
-	public InsertPollingChoiceDtoRes insert(InsertPollingChoiceDtoReq data) throws Exception;
-	public UpdatePollingChoiceDtoRes update(UpdatePollingChoiceDtoReq data) throws Exception;
-	public DeleteByPollingChoiceIdDtoRes deleteById(String id) throws Exception;
-	public GetByPollingIdDtoRes findByPolling(String id) throws Exception;
+	GetAllPollingChoiceDtoRes findAll() throws Exception;
+	GetByPollingChoiceIdDtoRes findById(String id) throws Exception;
+	InsertPollingChoiceDtoRes insert(InsertPollingChoiceDtoReq data) throws Exception;
+	UpdatePollingChoiceDtoRes update(UpdatePollingChoiceDtoReq data) throws Exception;
+	DeleteByPollingChoiceIdDtoRes deleteById(String id) throws Exception;
+	GetByPollingIdDtoRes findByPolling(String id) throws Exception;
 }

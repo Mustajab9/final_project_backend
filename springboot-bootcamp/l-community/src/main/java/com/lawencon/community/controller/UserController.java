@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lawencon.community.dto.user.ChangePasswordDtoReq;
 import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
 import com.lawencon.community.dto.user.GetAllUserDtoRes;
 import com.lawencon.community.dto.user.GetByUserIdDtoRes;
@@ -74,5 +75,11 @@ public class UserController {
 	public ResponseEntity<UpdateUserDtoRes> forgotPassword(@RequestBody @Valid UpdateUserDtoReq data) throws Exception{
 		UpdateUserDtoRes forgotPassword = userService.forgotPassword(data);
 		return new ResponseEntity<UpdateUserDtoRes>(forgotPassword, HttpStatus.OK);
+	}
+	
+	@PutMapping("change-password")
+	public ResponseEntity<UpdateUserDtoRes> changePassword(@RequestBody @Valid ChangePasswordDtoReq data) throws Exception{
+		UpdateUserDtoRes changePassword = userService.changePassword(data);
+		return new ResponseEntity<UpdateUserDtoRes>(changePassword, HttpStatus.OK);
 	}
 }

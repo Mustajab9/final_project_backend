@@ -9,9 +9,9 @@ import com.lawencon.community.dto.pricelistmember.UpdatePriceListMemberDtoReq;
 import com.lawencon.community.dto.pricelistmember.UpdatePriceListMemberDtoRes;
 
 public interface PriceListMemberService {
-	public GetAllPriceListMemberDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
-	public GetByPriceListMemberIdDtoRes findById(String id) throws Exception;
-	public InsertPriceListMemberDtoRes insert(InsertPriceListMemberDtoReq data) throws Exception;
-	public UpdatePriceListMemberDtoRes update(UpdatePriceListMemberDtoReq data) throws Exception;
-	public DeleteByPriceListMemberIdDtoRes deleteById(String id) throws Exception;
+	GetAllPriceListMemberDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
+	GetByPriceListMemberIdDtoRes findById(String id) throws Exception;
+	InsertPriceListMemberDtoRes insert(InsertPriceListMemberDtoReq data) throws Exception;
+	UpdatePriceListMemberDtoRes update(UpdatePriceListMemberDtoReq data) throws Exception;
+	DeleteByPriceListMemberIdDtoRes deleteById(String id) throws Exception;
 }

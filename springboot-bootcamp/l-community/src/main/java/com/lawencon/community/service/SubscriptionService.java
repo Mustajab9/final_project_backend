@@ -10,10 +10,10 @@ import com.lawencon.community.dto.subscription.UpdateSubscriptionDtoReq;
 import com.lawencon.community.dto.subscription.UpdateSubscriptionDtoRes;
 
 public interface SubscriptionService {
-	public GetAllSubscriptionDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
-	public GetBySubscriptionIdDtoRes findById(String id) throws Exception;
-	public InsertSubscriptionDtoRes insert(InsertSubscriptionDtoReq data) throws Exception;
-	public UpdateSubscriptionDtoRes update(UpdateSubscriptionDtoReq data) throws Exception;
-	public DeleteBySubscriptionIdDtoRes deleteById(String id) throws Exception;
-	public GetSubscriptionByUserDtoRes findByUser(String id) throws Exception;
+	GetAllSubscriptionDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
+	GetBySubscriptionIdDtoRes findById(String id) throws Exception;
+	InsertSubscriptionDtoRes insert(InsertSubscriptionDtoReq data) throws Exception;
+	UpdateSubscriptionDtoRes update(UpdateSubscriptionDtoReq data) throws Exception;
+	DeleteBySubscriptionIdDtoRes deleteById(String id) throws Exception;
+	GetSubscriptionByUserDtoRes findByUser(String id) throws Exception;
 }

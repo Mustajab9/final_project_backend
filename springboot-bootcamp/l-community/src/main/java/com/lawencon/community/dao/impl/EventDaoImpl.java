@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.community.dao.EventDao;
+import com.lawencon.community.dto.event.GetAllEventDtoDataRes;
 import com.lawencon.community.dto.event.GetReportIncomeEventDto;
 import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
 import com.lawencon.community.model.Attachment;
@@ -68,11 +69,11 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT e.id, e.event_code, e.event_title, e.event_provider, e.event_price, e.event_time_start, e.event_time_end,");
 		builder.append(" e.event_date_start, e.event_date_end, e.is_approve, c.id AS category_id, c.category_code, c.category_name, t.id AS type_id, t.type_code, t.type_name,");
-		builder.append(" a.id AS attachment_id, a.attachment_extension, e.created_by, e.version, e.is_active");
-		builder.append(" FROM events e");
-		builder.append(" JOIN categories c ON category_id = e.category_id");
-		builder.append(" JOIN event_types t ON type_id = e.type_id");
-		builder.append(" LEFT JOIN attachments a ON attachment_id = e.attachment_id");
+		builder.append(" a.id AS attachment_id, a.attachment_extension, e.created_by, e.version, e.is_active, e.location");
+		builder.append(" FROM events SA e");
+		builder.append(" INNER JOIN categories AS c ON category_id = e.category_id");
+		builder.append(" INNER JOIN event_types AS t ON type_id = e.type_id");
+		builder.append(" LEFT JOIN attachments AS a ON attachment_id = e.attachment_id");
 		builder.append(" WHERE e.id IN (SELECT ee.id FROM enroll_events ee JOIN profiles p ON p.id = ee.profile_id WHERE p.user_id = :id)");
 		builder.append(" AND e.is_approve = true");
 
@@ -116,7 +117,8 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 			data.setCreatedBy(obj[18].toString());
 			data.setVersion(Integer.valueOf(obj[19].toString()));
 			data.setIsActive(Boolean.valueOf(obj[20].toString()));
-
+			data.setLocation(obj[21].toString());
+			
 			listResult.add(data);
 		});
 
@@ -126,17 +128,14 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 	@Override
 	public List<Event> findNotEnrollEvent(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append(
-				"SELECT e.id, e.event_code, e.event_title, e.event_provider, e.event_price, e.event_time_start, e.event_time_end,");
-		builder.append(
-				" e.event_date_start, e.event_date_end, e.is_approve, c.id, c.category_code, c.category_name, t.id, t.type_code, t.type_name,");
-		builder.append(" a.id, a.attachment_extension, e.created_by, e.version, e.is_active");
-		builder.append(" FORM event e");
-		builder.append(" JOIN categories c ON c.id = e.category_id");
-		builder.append(" JOIN event_types t ON t.id = e.type_id");
-		builder.append(" LEFT JOIN attachments a ON a.id = e.attachment_id");
-		builder.append(
-				" WHERE e.id NOT IN (SELECT ee.id FROM enroll_events ee JOIN profiles p ON p.id = ee.profile_id WHERE p.user_id = :id)");
+		builder.append("SELECT e.id, e.event_code, e.event_title, e.event_provider, e.event_price, e.event_time_start, e.event_time_end,");
+		builder.append(" e.event_date_start, e.event_date_end, e.is_approve, c.id AS category_id, c.category_code, c.category_name, t.id AS type_id, t.type_code, t.type_name,");
+		builder.append(" a.id AS attachment_id, a.attachment_extension, e.created_by, e.version, e.is_active, e.location");
+		builder.append(" FROM events SA e");
+		builder.append(" INNER JOIN categories AS c ON category_id = e.category_id");
+		builder.append(" INNER JOIN event_types AS t ON type_id = e.type_id");
+		builder.append(" LEFT JOIN attachments AS a ON attachment_id = e.attachment_id");
+		builder.append(" WHERE e.id NOT IN (SELECT ee.id FROM enroll_events ee JOIN profiles p ON p.id = ee.profile_id WHERE p.user_id = :id)");
 		builder.append(" AND e.is_approve = true");
 
 		List<?> results = createNativeQuery(builder.toString()).setParameter("id", id).getResultList();
@@ -179,6 +178,7 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 			data.setCreatedBy(obj[18].toString());
 			data.setVersion(Integer.valueOf(obj[19].toString()));
 			data.setIsActive(Boolean.valueOf(obj[20].toString()));
+			data.setLocation(obj[21].toString());
 
 			listResult.add(data);
 		});
@@ -231,15 +231,13 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 	@Override
 	public List<GetReportIncomeEventDto> getReportIncome(String eventId) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append(
-				"SELECT e.event_price, COUNT(ped.created_by), e.event_title, e.event_provider, e.event_date_start, e.event_date_end, e.\"location\"");
+		builder.append("SELECT e.event_price, COUNT(ped.created_by), e.event_title, e.event_provider, e.event_date_start, e.event_date_end, e.\"location\"");
 		builder.append(" FROM events e");
-		builder.append(" JOIN payment_event_detail ped ON ped.event_id = e.id");
-		builder.append(
-				" WHERE ped.payment_event_id IN (SELECT pe.id FROM payment_events pe WHERE pe.is_approve = true)");
+		builder.append(" INNER JOIN payment_event_detail ped ON ped.event_id = e.id");
+		builder.append(" WHERE ped.payment_event_id IN (SELECT pe.id FROM payment_events pe WHERE pe.is_approve = true)");
 		builder.append(" AND e.id = :id");
-		builder.append(
-				" GROUP BY e.event_price, e.event_title, e.event_provider, e.event_date_start, e.event_date_end, e.\"location\"");
+		builder.append(" GROUP BY e.event_price, e.event_title, e.event_provider, e.event_date_start, e.event_date_end, e.\"location\"");
+		
 		List<?> results = createNativeQuery(builder.toString()).setParameter("id", eventId).getResultList();
 		List<GetReportIncomeEventDto> listResult = new ArrayList<>();
 
@@ -260,7 +258,131 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 
 		return listResult;
 	}
-
 	
+	@Override
+	public List<GetAllEventDtoDataRes> findEnrollStatus(String id, boolean isApprove) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT e.id, e.event_code, e.event_title, e.event_provider, e.event_price, e.location,");
+		builder.append(" e.event_time_start, e.event_time_end, e.event_date_start, e.event_date_end, e.is_approve,");
+		builder.append(" c.id AS category_id, c.category_name, t.id AS type_id, t.type_name, a.id AS attachment_id, a.attachment_extension,");
+		builder.append(" ee.attachment_id AS payment_attachment, pm.id AS payment_id, pm.payment_name, e.version, e.is_active");
+		builder.append(" FROM event AS e");
+		builder.append(" INNER JOIN categories AS c ON c.id = e.category_id");
+		builder.append(" INNER JOIN event_types AS t ON t.id = e.type_id");
+		builder.append(" INNER JOIN attachments AS a ON a.id = e.attachment_id");
+		builder.append(" INNER JOIN enroll_events AS ee ON e.id = ee.event_id");
+		builder.append(" INNER JOIN attachments AS attac ON attac.id = ee.attachment_id");
+		builder.append(" INNER JOIN payment_method AS pm ON pm.id = ee.payment_id");
+		builder.append(" WHERE ee.is_approve = :isApprove");
+		builder.append(" AND e.created_by = :id");
 
+		List<?> results = createNativeQuery(builder.toString())
+							.setParameter("isApprove", isApprove)
+							.setParameter("id", id)
+							.getResultList();
+		List<GetAllEventDtoDataRes> listResult = new ArrayList<>();
+
+		results.forEach(result -> {
+			Object[] obj = (Object[]) result;
+			GetAllEventDtoDataRes data = new GetAllEventDtoDataRes();
+
+			data.setId(obj[0].toString());
+			data.setEventCode(obj[1].toString());
+			data.setEventTitle(obj[2].toString());
+			data.setEventProvider(obj[3].toString());
+			data.setEventPrice(BigInteger.valueOf(((Number) obj[4]).longValue()));
+			data.setEventLocation(obj[5].toString());
+			data.setEventTimeStart((Time) obj[6]);
+			data.setEventTimeEnd((Time) obj[7]);
+			data.setEventDateStart((Date) obj[8]);
+			data.setEventDateEnd((Date) obj[9]);
+			data.setIsApprove(Boolean.valueOf(obj[10].toString()));
+			data.setCategoryId(obj[11].toString());
+			data.setCategoryName(obj[12].toString());
+			data.setTypeId(obj[13].toString());
+			data.setTypeName(obj[14].toString());
+
+			if (obj[15] != null) {
+				data.setAttachmentId(obj[15].toString());
+				data.setAttachmentExtension(obj[16].toString());
+			}
+			
+			if(obj[17] != null) {
+				data.setPaymentAttachment(obj[17].toString());
+				data.setPaymentId(obj[18].toString());
+				data.setPaymentName(obj[19].toString());
+			}
+
+			data.setVersion(Integer.valueOf(obj[20].toString()));
+			data.setIsActive(Boolean.valueOf(obj[21].toString()));
+
+			listResult.add(data);
+		});
+
+		return listResult;
+	}
+	
+	@Override
+	public List<GetAllEventDtoDataRes> findEventNotApprove(String id, boolean isApprove) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT e.id, e.event_code, e.event_title, e.event_provider, e.event_price, e.location,");
+		builder.append(" e.event_time_start, e.event_time_end, e.event_date_start, e.event_date_end, e.is_approve,");
+		builder.append(" c.id AS category_id, c.category_name, t.id AS type_id, t.type_name, a.id AS attachment_id, a.attachment_extension,");
+		builder.append(" pe.attachment_id AS payment_attachment, pm.id AS payment_id, pm.payment_name, e.version, e.is_active");
+		builder.append(" FROM event AS e");
+		builder.append(" INNER JOIN categories AS c ON c.id = e.category_id");
+		builder.append(" INNER JOIN event_types AS t ON t.id = e.type_id");
+		builder.append(" INNER JOIN attachments AS a ON a.id = e.attachment_id");
+		builder.append(" INNER JOIN payment_event_detail AS ped ON e.id = ped.event_id");
+		builder.append(" INNER JOIN payment_events AS pe ON pe.id = ped.payment_event_id");
+		builder.append(" INNER JOIN attachments AS attac ON attac.id = pe.attachment_id");
+		builder.append(" INNER JOIN payment_method AS pm ON pm.id = pe.payment_id");
+		builder.append(" WHERE pe.is_approve = :isApprove");
+		builder.append(" AND e.created_by = :id");
+
+		List<?> results = createNativeQuery(builder.toString())
+							.setParameter("isApprove", isApprove)
+							.setParameter("id", id)
+							.getResultList();
+		List<GetAllEventDtoDataRes> listResult = new ArrayList<>();
+
+		results.forEach(result -> {
+			Object[] obj = (Object[]) result;
+			GetAllEventDtoDataRes data = new GetAllEventDtoDataRes();
+
+			data.setId(obj[0].toString());
+			data.setEventCode(obj[1].toString());
+			data.setEventTitle(obj[2].toString());
+			data.setEventProvider(obj[3].toString());
+			data.setEventPrice(BigInteger.valueOf(((Number) obj[4]).longValue()));
+			data.setEventLocation(obj[5].toString());
+			data.setEventTimeStart((Time) obj[6]);
+			data.setEventTimeEnd((Time) obj[7]);
+			data.setEventDateStart((Date) obj[8]);
+			data.setEventDateEnd((Date) obj[9]);
+			data.setIsApprove(Boolean.valueOf(obj[10].toString()));
+			data.setCategoryId(obj[11].toString());
+			data.setCategoryName(obj[12].toString());
+			data.setTypeId(obj[13].toString());
+			data.setTypeName(obj[14].toString());
+
+			if (obj[15] != null) {
+				data.setAttachmentId(obj[15].toString());
+				data.setAttachmentExtension(obj[16].toString());
+			}
+			
+			if(obj[17] != null) {
+				data.setPaymentAttachment(obj[17].toString());
+				data.setPaymentId(obj[18].toString());
+				data.setPaymentName(obj[19].toString());
+			}
+
+			data.setVersion(Integer.valueOf(obj[20].toString()));
+			data.setIsActive(Boolean.valueOf(obj[21].toString()));
+
+			listResult.add(data);
+		});
+
+		return listResult;
+	}
 }

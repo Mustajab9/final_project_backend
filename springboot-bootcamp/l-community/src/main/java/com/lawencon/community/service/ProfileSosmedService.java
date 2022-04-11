@@ -10,10 +10,10 @@ import com.lawencon.community.dto.profilesosmed.UpdateProfileSosmedDtoReq;
 import com.lawencon.community.dto.profilesosmed.UpdateProfileSosmedDtoRes;
 
 public interface ProfileSosmedService {
-	public GetAllProfileSosmedDtoRes findAll() throws Exception;
-	public GetByProfileSosmedIdDtoRes findById(String id) throws Exception;
-	public InsertProfileSosmedDtoRes insert(InsertProfileSosmedDtoReq data) throws Exception;
-	public UpdateProfileSosmedDtoRes update(UpdateProfileSosmedDtoReq data) throws Exception;
-	public DeleteByProfileSosmedIdDtoRes deleteById(String id) throws Exception;
-	public GetProfileSosmedByUserDtoRes findByUser(String id) throws Exception;
+	GetAllProfileSosmedDtoRes findAll() throws Exception;
+	GetByProfileSosmedIdDtoRes findById(String id) throws Exception;
+	InsertProfileSosmedDtoRes insert(InsertProfileSosmedDtoReq data) throws Exception;
+	UpdateProfileSosmedDtoRes update(UpdateProfileSosmedDtoReq data) throws Exception;
+	DeleteByProfileSosmedIdDtoRes deleteById(String id) throws Exception;
+	GetProfileSosmedByUserDtoRes findByUser(String id) throws Exception;
 }

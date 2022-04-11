@@ -4,9 +4,9 @@ import com.lawencon.community.model.SocialMedia;
 import com.lawencon.model.SearchQuery;
 
 public interface SocialMediaDao {
-	public SearchQuery<SocialMedia> findAll(String query, Integer startPage, Integer maxPage) throws Exception;
-	public SocialMedia findById(String id) throws Exception;
-	public SocialMedia save(SocialMedia data) throws Exception;
-	public boolean deleteById(String id) throws Exception;
-	public Long countAll() throws Exception;
+	SearchQuery<SocialMedia> findAll(String query, Integer startPage, Integer maxPage) throws Exception;
+	SocialMedia findById(String id) throws Exception;
+	SocialMedia save(SocialMedia data) throws Exception;
+	boolean deleteById(String id) throws Exception;
+	Long countAll() throws Exception;
 }

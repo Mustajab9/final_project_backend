@@ -14,13 +14,15 @@ import com.lawencon.community.dto.event.UpdateEventDtoReq;
 import com.lawencon.community.dto.event.UpdateEventDtoRes;
 
 public interface EventService {
-	public GetAllEventDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
-	public GetByEventIdDtoRes findById(String id) throws Exception;
-	public InsertEventDtoRes insert(String data, MultipartFile file) throws Exception;
-	public UpdateEventDtoRes update(UpdateEventDtoReq data) throws Exception;
-	public DeleteByEventIdDtoRes deleteById(String id) throws Exception;
-	public GetAllEventDtoRes findEnrollEvent(String id) throws Exception;
-	public GetAllEventDtoRes findNotEnrollEvent(String id) throws Exception;
-	public List<GetReportProfileAttendanceEventDto> getReportEnroll(String eventId) throws Exception;
-	public List<GetReportIncomeEventDto> getReportIncome(String eventId) throws Exception;
+	GetAllEventDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
+	GetByEventIdDtoRes findById(String id) throws Exception;
+	InsertEventDtoRes insert(String data, MultipartFile file) throws Exception;
+	UpdateEventDtoRes update(UpdateEventDtoReq data) throws Exception;
+	DeleteByEventIdDtoRes deleteById(String id) throws Exception;
+	GetAllEventDtoRes findEnrollEvent(String id) throws Exception;
+	GetAllEventDtoRes findNotEnrollEvent(String id) throws Exception;
+	List<GetReportProfileAttendanceEventDto> getReportEnroll(String eventId) throws Exception;
+	List<GetReportIncomeEventDto> getReportIncome(String eventId) throws Exception;
+	GetAllEventDtoRes findEnrollStatus(String id, boolean isApprove) throws Exception;
+	GetAllEventDtoRes findEventNotApprove(String id, boolean isApprove) throws Exception;
 }

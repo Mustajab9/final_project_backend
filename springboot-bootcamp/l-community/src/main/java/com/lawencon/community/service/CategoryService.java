@@ -9,9 +9,9 @@ import com.lawencon.community.dto.category.UpdateCategoryDtoReq;
 import com.lawencon.community.dto.category.UpdateCategoryDtoRes;
 
 public interface CategoryService {
-	public GetAllCategoryDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
-	public GetByCategoryIdDtoRes findById(String id) throws Exception;
-	public InsertCategoryDtoRes insert(InsertCategoryDtoReq data) throws Exception;
-	public UpdateCategoryDtoRes update(UpdateCategoryDtoReq data) throws Exception;
-	public DeleteByCategoryIdDtoRes deleteById(String id) throws Exception;
+	GetAllCategoryDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
+	GetByCategoryIdDtoRes findById(String id) throws Exception;
+	InsertCategoryDtoRes insert(InsertCategoryDtoReq data) throws Exception;
+	UpdateCategoryDtoRes update(UpdateCategoryDtoReq data) throws Exception;
+	DeleteByCategoryIdDtoRes deleteById(String id) throws Exception;
 }

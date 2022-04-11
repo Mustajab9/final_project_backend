@@ -6,10 +6,10 @@ import com.lawencon.community.model.Regency;
 import com.lawencon.model.SearchQuery;
 
 public interface RegencyDao {
-	public SearchQuery<Regency> findAll(String query, Integer startPage, Integer maxPage) throws Exception;
-	public Regency findById(String id) throws Exception;
-	public Regency save(Regency data) throws Exception;
-	public boolean deleteById(String id) throws Exception;
-	public List<Regency> findByProvince(String code) throws Exception;
-	public Long countAll() throws Exception;
+	SearchQuery<Regency> findAll(String query, Integer startPage, Integer maxPage) throws Exception;
+	Regency findById(String id) throws Exception;
+	Regency save(Regency data) throws Exception;
+	boolean deleteById(String id) throws Exception;
+	List<Regency> findByProvince(String code) throws Exception;
+	Long countAll() throws Exception;
 }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.RoleDao;
 import com.lawencon.community.dao.UserDao;
+import com.lawencon.community.dto.user.ChangePasswordDtoReq;
 import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
 import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
 import com.lawencon.community.dto.user.GetAllUserDtoRes;
@@ -238,6 +239,50 @@ public class UserServiceImpl extends BaseService implements UserService {
 								
 				String passwordEncode = passwordEncoder.encode(data.getPassword());
 				user.setPassword(passwordEncode);
+
+				Role role = roleDao.findById(data.getRoleId());
+				user.setRoleId(role);
+				
+				user.setVersion(data.getVersion());
+				user.setUpdatedBy(data.getId());
+
+				if (data.getIsActive() != null) {
+					user.setIsActive(data.getIsActive());
+				}
+
+				begin();
+				User userUpdate = userDao.save(user);
+				commit();
+
+				UpdateUserDtoDataRes dataDto = new UpdateUserDtoDataRes();
+				dataDto.setVersion(userUpdate.getVersion());
+
+				update.setData(dataDto);
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Passowrd " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rollback();
+			throw new Exception(e);
+		}
+
+		return update;
+	}
+	
+	@Override
+	public UpdateUserDtoRes changePassword(ChangePasswordDtoReq data) throws Exception {
+		UpdateUserDtoRes update = new UpdateUserDtoRes();
+
+		try {
+			if (data.getVersion() != null) {
+				User user = userDao.findById(data.getId());
+
+				user.setEmail(data.getEmail());
+				
+				if(passwordEncoder.matches(data.getPassword(), user.getPassword()) == true) {					
+					String passwordEncode = passwordEncoder.encode(data.getNewPassword());
+					user.setPassword(passwordEncode);
+				};
 
 				Role role = roleDao.findById(data.getRoleId());
 				user.setRoleId(role);

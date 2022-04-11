@@ -8,9 +8,9 @@ import com.lawencon.community.dto.polling.InsertPollingDtoReq;
 import com.lawencon.community.dto.polling.InsertPollingDtoRes;
 
 public interface PollingService {
-	public GetAllPollingDtoRes findAll() throws Exception;
-	public GetByPollingIdDtoRes findById(String id) throws Exception;
-	public InsertPollingDtoRes insert(InsertPollingDtoReq dasta) throws Exception;
-	public DeleteByPollingIdDtoRes deleteById(String id) throws Exception;
-	public GetPollingByThreadIdDtoRes findByThread(String id) throws Exception;
+	GetAllPollingDtoRes findAll() throws Exception;
+	GetByPollingIdDtoRes findById(String id) throws Exception;
+	InsertPollingDtoRes insert(InsertPollingDtoReq dasta) throws Exception;
+	DeleteByPollingIdDtoRes deleteById(String id) throws Exception;
+	GetPollingByThreadIdDtoRes findByThread(String id) throws Exception;
 }

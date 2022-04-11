@@ -10,10 +10,10 @@ import com.lawencon.community.dto.regency.UpdateRegencyDtoReq;
 import com.lawencon.community.dto.regency.UpdateRegencyDtoRes;
 
 public interface RegencyService {
-	public GetAllRegencyDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
-	public GetByRegencyIdDtoRes findById(String id) throws Exception;
-	public InsertRegencyDtoRes insert(InsertRegencyDtoReq data) throws Exception;
-	public UpdateRegencyDtoRes update(UpdateRegencyDtoReq data) throws Exception;
-	public DeleteByRegencyIdDtoRes deleteById(String id) throws Exception;
-	public GetByProvinceCodeDtoRes findByProvince(String code) throws Exception;
+	GetAllRegencyDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
+	GetByRegencyIdDtoRes findById(String id) throws Exception;
+	InsertRegencyDtoRes insert(InsertRegencyDtoReq data) throws Exception;
+	UpdateRegencyDtoRes update(UpdateRegencyDtoReq data) throws Exception;
+	DeleteByRegencyIdDtoRes deleteById(String id) throws Exception;
+	GetByProvinceCodeDtoRes findByProvince(String code) throws Exception;
 }

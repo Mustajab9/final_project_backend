@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawencon.community.constant.CommonConstant;
+import com.lawencon.community.constant.EventTypeConstant;
 import com.lawencon.community.dao.AttachmentDao;
 import com.lawencon.community.dao.CategoryDao;
 import com.lawencon.community.dao.EventDao;
@@ -148,7 +149,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 			event.setEventCode(getAlphaNumericString(5));
 			event.setEventTitle(dataInsert.getEventTitle());
 			event.setEventProvider(dataInsert.getEventProvider());
-			event.setLocation(dataInsert.getEventLocation());
+			event.setLocation(dataInsert.getEventLocation());	
 			event.setEventPrice(dataInsert.getEventPrice());
 			event.setEventTimeStart(dataInsert.getEventTimeStart());
 			event.setEventTimeEnd(dataInsert.getEventTimeEnd());
@@ -157,12 +158,17 @@ public class EventServiceImpl extends BaseService implements EventService {
 
 			EventType eventType = eventTypeDao.findById(dataInsert.getEventTypeId());
 			event.setTypeId(eventType);
+			
+			if(EventTypeConstant.COURSE.getCode().equals(eventType.getTypeCode())) {
+				PriceListEvent priceListEvent = priceListEventDao.findByCode(EventTypeConstant.COURSE.getCodePrice());
+				event.setPriceId(priceListEvent);
+			}else if(EventTypeConstant.EVENT.getCode().equals(eventType.getTypeCode())) {
+				PriceListEvent priceListEvent = priceListEventDao.findByCode(EventTypeConstant.EVENT.getCodePrice());
+				event.setPriceId(priceListEvent);
+			}
 
 			Category category = categoryDao.findById(dataInsert.getCategoryId());
 			event.setCategoryId(category);
-
-			PriceListEvent priceListEvent = priceListEventDao.findById(dataInsert.getPriceId());
-			event.setPriceId(priceListEvent);
 
 			event.setCreatedBy(getId());
 
@@ -189,8 +195,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 			dataDto.setId(eventInsert.getId());
 
 			insert.setData(dataDto);
-			insert.setMsg(CommonConstant.ACTION_ADD.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Event "
-					+ CommonConstant.HAS_BEEN_ADDED.getDetail());
+			insert.setMsg(CommonConstant.ACTION_ADD.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Event " + CommonConstant.HAS_BEEN_ADDED.getDetail());
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
@@ -223,8 +228,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 				dataDto.setVersion(eventUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail()
-						+ ", Event " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Event " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -245,8 +249,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail()
-						+ ", Evenet " + CommonConstant.HAS_BEEN_DELETED.getDetail());
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Evenet " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -362,5 +365,24 @@ public class EventServiceImpl extends BaseService implements EventService {
 		reportIncome = eventDao.getReportIncome(eventId);
 		return reportIncome;
 	}
-
+	
+	@Override
+	public GetAllEventDtoRes findEnrollStatus(String id, boolean isApprove) throws Exception {
+		GetAllEventDtoRes dtoRes = new GetAllEventDtoRes();
+		List<GetAllEventDtoDataRes> findEnrollStatus = eventDao.findEnrollStatus(id, isApprove);
+		
+		dtoRes.setData(findEnrollStatus);
+		dtoRes.setMsg(null);
+		return dtoRes;
+	}
+	
+	@Override
+	public GetAllEventDtoRes findEventNotApprove(String id, boolean isApprove) throws Exception {
+		GetAllEventDtoRes dtoRes = new GetAllEventDtoRes();
+		List<GetAllEventDtoDataRes> findEventNotApprove = eventDao.findEventNotApprove(id, isApprove);
+		
+		dtoRes.setData(findEventNotApprove);
+		dtoRes.setMsg(null);
+		return dtoRes;
+	}
 }

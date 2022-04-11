@@ -7,8 +7,8 @@ import com.lawencon.community.dto.subscriptiondetail.InsertSubscriptionDetailDto
 import com.lawencon.community.dto.subscriptiondetail.InsertSubscriptionDetailDtoRes;
 
 public interface SubscriptionDetailService {
-	public GetAllSubscriptionDetailDtoRes findAll() throws Exception;
-	public GetBySubscriptionDetailIdDtoRes findById(String id) throws Exception;
-	public InsertSubscriptionDetailDtoRes insert(InsertSubscriptionDetailDtoReq data) throws Exception;
-	public GetSubscriptionDetailBySubscriptionDtoRes findBySubscription(String id) throws Exception;
+	GetAllSubscriptionDetailDtoRes findAll() throws Exception;
+	GetBySubscriptionDetailIdDtoRes findById(String id) throws Exception;
+	InsertSubscriptionDetailDtoRes insert(InsertSubscriptionDetailDtoReq data) throws Exception;
+	GetSubscriptionDetailBySubscriptionDtoRes findBySubscription(String id) throws Exception;
 }

@@ -9,9 +9,9 @@ import com.lawencon.community.dto.socialmedia.UpdateSocialMediaDtoReq;
 import com.lawencon.community.dto.socialmedia.UpdateSocialMediaDtoRes;
 
 public interface SocialMediaService {
-	public GetAllSocialMediaDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
-	public GetBySocialMediaIdDtoRes findById(String id) throws Exception;
-	public InsertSocialMediaDtoRes insert(InsertSocialMediaDtoReq data) throws Exception;
-	public UpdateSocialMediaDtoRes update(UpdateSocialMediaDtoReq data) throws Exception;
-	public DeleteBySocialMediaIdDtoRes deleteById(String id) throws Exception;
+	GetAllSocialMediaDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
+	GetBySocialMediaIdDtoRes findById(String id) throws Exception;
+	InsertSocialMediaDtoRes insert(InsertSocialMediaDtoReq data) throws Exception;
+	UpdateSocialMediaDtoRes update(UpdateSocialMediaDtoReq data) throws Exception;
+	DeleteBySocialMediaIdDtoRes deleteById(String id) throws Exception;
 }

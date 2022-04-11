@@ -4,9 +4,9 @@ import com.lawencon.community.model.EventType;
 import com.lawencon.model.SearchQuery;
 
 public interface EventTypeDao {
-	public SearchQuery<EventType> findAll(String query, Integer startPage, Integer maxPage) throws Exception;
-	public EventType findById(String id) throws Exception;
-	public EventType save(EventType data) throws Exception;
-	public boolean deleteById(String id) throws Exception;
-	public Long countAll() throws Exception;
+	SearchQuery<EventType> findAll(String query, Integer startPage, Integer maxPage) throws Exception;
+	EventType findById(String id) throws Exception;
+	EventType save(EventType data) throws Exception;
+	boolean deleteById(String id) throws Exception;
+	Long countAll() throws Exception;
 }

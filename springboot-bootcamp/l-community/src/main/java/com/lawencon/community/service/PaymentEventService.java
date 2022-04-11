@@ -11,10 +11,10 @@ import com.lawencon.community.dto.paymentevent.UpdatePaymentEventDtoReq;
 import com.lawencon.community.dto.paymentevent.UpdatePaymentEventDtoRes;
 
 public interface PaymentEventService {
-	public GetAllPaymentEventDtoRes findAll() throws Exception;
-	public GetByPaymentEventIdDtoRes findById(String id) throws Exception;
-	public InsertPaymentEventDtoRes insert(String data, MultipartFile file) throws Exception;
-	public UpdatePaymentEventDtoRes update(UpdatePaymentEventDtoReq data) throws Exception;
-	public DeleteByPaymentEventIdDtoRes deleteById(String id) throws Exception;
-	public GetPaymentEventByUserDtoRes findByUser(String id) throws Exception;
+	GetAllPaymentEventDtoRes findAll() throws Exception;
+	GetByPaymentEventIdDtoRes findById(String id) throws Exception;
+	InsertPaymentEventDtoRes insert(String data, MultipartFile file) throws Exception;
+	UpdatePaymentEventDtoRes update(UpdatePaymentEventDtoReq data) throws Exception;
+	DeleteByPaymentEventIdDtoRes deleteById(String id) throws Exception;
+	GetPaymentEventByUserDtoRes findByUser(String id) throws Exception;
 }

@@ -24,6 +24,9 @@ public class GetByEventIdDtoDataRes {
 	private String priceName;
 	private String attachmentId;
 	private String attachmentExtension;
+	private String paymentAttachment;
+	private String paymentId;
+	private String paymentName;
 	private Integer version;
 	private Boolean isActive;
 
@@ -177,6 +180,30 @@ public class GetByEventIdDtoDataRes {
 
 	public void setAttachmentExtension(String attachmentExtension) {
 		this.attachmentExtension = attachmentExtension;
+	}
+
+	public String getPaymentAttachment() {
+		return paymentAttachment;
+	}
+
+	public void setPaymentAttachment(String paymentAttachment) {
+		this.paymentAttachment = paymentAttachment;
+	}
+
+	public String getPaymentId() {
+		return paymentId;
+	}
+
+	public void setPaymentId(String paymentId) {
+		this.paymentId = paymentId;
+	}
+
+	public String getPaymentName() {
+		return paymentName;
+	}
+
+	public void setPaymentName(String paymentName) {
+		this.paymentName = paymentName;
 	}
 
 	public Integer getVersion() {

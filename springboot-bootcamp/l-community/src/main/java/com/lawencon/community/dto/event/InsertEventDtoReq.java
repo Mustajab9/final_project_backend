@@ -15,7 +15,6 @@ public class InsertEventDtoReq {
 	private Date eventDateEnd;
 	private String eventTypeId;
 	private String categoryId;
-	private String priceId;
 
 	public String getEventTitle() {
 		return eventTitle;
@@ -95,13 +94,5 @@ public class InsertEventDtoReq {
 
 	public void setCategoryId(String categoryId) {
 		this.categoryId = categoryId;
-	}
-
-	public String getPriceId() {
-		return priceId;
-	}
-
-	public void setPriceId(String priceId) {
-		this.priceId = priceId;
 	}
 }

@@ -11,10 +11,10 @@ import com.lawencon.community.dto.enrollevent.UpdateEnrollEventDtoReq;
 import com.lawencon.community.dto.enrollevent.UpdateEnrollEventDtoRes;
 
 public interface EnrollEventService {
-	public GetAllEnrollEventDtoRes findAll() throws Exception;
-	public GetByEnrollEventIdDtoRes findById(String id) throws Exception;
-	public InsertEnrollEventDtoRes insert(String data, MultipartFile file) throws Exception;
-	public UpdateEnrollEventDtoRes update(UpdateEnrollEventDtoReq data) throws Exception;
-	public DeleteByEnrollEventIdDtoRes deleteById(String id) throws Exception;
-	public GetEnrollEventByUserDtoRes findByUser(String id) throws Exception;
+	GetAllEnrollEventDtoRes findAll() throws Exception;
+	GetByEnrollEventIdDtoRes findById(String id) throws Exception;
+	InsertEnrollEventDtoRes insert(String data, MultipartFile file) throws Exception;
+	UpdateEnrollEventDtoRes update(UpdateEnrollEventDtoReq data) throws Exception;
+	DeleteByEnrollEventIdDtoRes deleteById(String id) throws Exception;
+	GetEnrollEventByUserDtoRes findByUser(String id) throws Exception;
 }

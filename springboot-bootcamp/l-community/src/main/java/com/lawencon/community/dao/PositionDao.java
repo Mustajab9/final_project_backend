@@ -4,9 +4,9 @@ import com.lawencon.community.model.Position;
 import com.lawencon.model.SearchQuery;
 
 public interface PositionDao {
-	public SearchQuery<Position> findAll(String query, Integer startPage, Integer maxPage) throws Exception;
-	public Position findById(String id) throws Exception;
-	public Position save(Position data) throws Exception;
-	public boolean deleteById(String id) throws Exception;
-	public Long countAll() throws Exception;
+	SearchQuery<Position> findAll(String query, Integer startPage, Integer maxPage) throws Exception;
+	Position findById(String id) throws Exception;
+	Position save(Position data) throws Exception;
+	boolean deleteById(String id) throws Exception;
+	Long countAll() throws Exception;
 }

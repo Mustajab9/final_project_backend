@@ -9,9 +9,9 @@ import com.lawencon.community.dto.eventtype.UpdateEventTypeDtoReq;
 import com.lawencon.community.dto.eventtype.UpdateEventTypeDtoRes;
 
 public interface EventTypeService {
-	public GetAllEventTypeDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
-	public GetByEventTypeIdDtoRes findById(String id) throws Exception;
-	public InsertEventTypeDtoRes insert(InsertEventTypeDtoReq data) throws Exception;
-	public UpdateEventTypeDtoRes update(UpdateEventTypeDtoReq data) throws Exception;
-	public DeleteByEventTypeIdDtoRes deleteById(String id) throws Exception;
+	GetAllEventTypeDtoRes findAll(String query, Integer startPage, Integer maxPage) throws Exception;
+	GetByEventTypeIdDtoRes findById(String id) throws Exception;
+	InsertEventTypeDtoRes insert(InsertEventTypeDtoReq data) throws Exception;
+	UpdateEventTypeDtoRes update(UpdateEventTypeDtoReq data) throws Exception;
+	DeleteByEventTypeIdDtoRes deleteById(String id) throws Exception;
 }

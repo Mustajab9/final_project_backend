@@ -7,8 +7,8 @@ import com.lawencon.community.dto.paymenteventdetail.InsertPaymentEventDetailDto
 import com.lawencon.community.dto.paymenteventdetail.InsertPaymentEventDetailDtoRes;
 
 public interface PaymentEventDetailService {
-	public GetAllPaymentEventDetailDtoRes findAll() throws Exception;
-	public GetByPaymentEventDetailIdDtoRes findById(String id) throws Exception;
-	public InsertPaymentEventDetailDtoRes insert(InsertPaymentEventDetailDtoReq data) throws Exception;
-	public GetPaymentEventDetailByEventDtoRes findByEvent(String id) throws Exception;
+	GetAllPaymentEventDetailDtoRes findAll() throws Exception;
+	GetByPaymentEventDetailIdDtoRes findById(String id) throws Exception;
+	InsertPaymentEventDetailDtoRes insert(InsertPaymentEventDetailDtoReq data) throws Exception;
+	GetPaymentEventDetailByEventDtoRes findByEvent(String id) throws Exception;
 }

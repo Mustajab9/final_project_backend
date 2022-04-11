@@ -8,8 +8,8 @@ import com.lawencon.community.dto.attachment.GetByAttachmentIdDtoRes;
 import com.lawencon.community.dto.attachment.InsertAttachmentDtoRes;
 
 public interface AttachmentService {
-	public GetAllAttachmentDtoRes findAll() throws Exception;
-	public GetByAttachmentIdDtoRes findById(String id) throws Exception;
-	public InsertAttachmentDtoRes insert(MultipartFile file) throws Exception;
-	public DeleteByAttachmentIdDtoRes deleteById(String id) throws Exception;
+	GetAllAttachmentDtoRes findAll() throws Exception;
+	GetByAttachmentIdDtoRes findById(String id) throws Exception;
+	InsertAttachmentDtoRes insert(MultipartFile file) throws Exception;
+	DeleteByAttachmentIdDtoRes deleteById(String id) throws Exception;
 }
