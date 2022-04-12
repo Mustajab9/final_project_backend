@@ -2,19 +2,24 @@ package com.lawencon.community.service.impl;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import com.lawencon.community.constant.CommonConstant;
 import com.lawencon.community.dao.RoleDao;
@@ -32,15 +37,19 @@ import com.lawencon.community.dto.user.InsertUserDtoRes;
 import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
 import com.lawencon.community.dto.user.UpdateUserDtoReq;
 import com.lawencon.community.dto.user.UpdateUserDtoRes;
+import com.lawencon.community.dto.user.VerificationCodeTemplate;
 import com.lawencon.community.model.Role;
 import com.lawencon.community.model.User;
 import com.lawencon.community.service.UserService;
 import com.lawencon.model.SearchQuery;
 
+import freemarker.template.Configuration;
+
 @Service
 public class UserServiceImpl extends BaseService implements UserService {
-	private static final String text = "Password Akun Anda : ";
-	private static final String subject = "Password App E-Learning";
+	private static final String text = "Kode Verifikasi Akun Anda : ";
+//	private static final String subject = "Password App E-Learning";
+	private static final String subject = "Registration Verification Code";
 	private static final String email = "mustajabsa@gmail.com";
 	private static final Boolean isActive = false;
 	private UserDao userDao;
@@ -54,6 +63,9 @@ public class UserServiceImpl extends BaseService implements UserService {
 		this.roleDao = roleDoa;
 		this.mailSender = mailSender;
 	}
+	
+	@Autowired
+    private Configuration freeMarkerConfiguration;
 
 	@Autowired
 	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
@@ -74,6 +86,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 			data.setId(user.getId());
 			data.setUsername(user.getEmail());
 			data.setPassword(user.getPassword());
+			data.setVerificationCode(user.getVerificationCode());
 			data.setRoleId(user.getRoleId().getId());
 			data.setRoleName(user.getRoleId().getRoleName());
 			data.setVersion(user.getVersion());
@@ -85,7 +98,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 		getAll.setData(listUser);
 		getAll.setMsg(null);
 		getAll.setTotal(users.getCount());
-		
+
 		return getAll;
 	}
 
@@ -99,6 +112,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 		data.setId(user.getId());
 		data.setUsername(user.getEmail());
 		data.setPassword(user.getPassword());
+		data.setVerificationCode(user.getVerificationCode());
 		data.setRoleId(user.getRoleId().getId());
 		data.setRoleName(user.getRoleId().getRoleName());
 		data.setVersion(user.getVersion());
@@ -110,58 +124,115 @@ public class UserServiceImpl extends BaseService implements UserService {
 		return getById;
 	}
 
+//	@Override
+//	public InsertUserDtoRes insert(InsertUserDtoReq data) throws Exception {
+//		InsertUserDtoRes insert = new InsertUserDtoRes();
+//
+//		try {
+//			User user = new User();
+//			user.setEmail(data.getUsername());
+//
+//			String password = data.getPassword();
+//
+//			String passwordEncode = passwordEncoder.encode(password);
+//			user.setPassword(passwordEncode);
+//			
+//			String verificationCode = getAlphaNumericString(5);
+//			user.setVerificationCode(verificationCode);
+//
+//			Role role = roleDao.findByCode(data.getRoleCode());
+//			user.setRoleId(role);
+//			user.setIsActive(isActive);
+//			
+//			begin();
+//			User insertUser = userDao.save(user);
+//			commit();
+//
+//			MimeMessage message = mailSender.createMimeMessage();
+//			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
+//					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+//
+//			messageHelper.setTo(data.getUsername());
+//			messageHelper.setText(text + verificationCode, true);
+//			messageHelper.setSubject(subject);
+//			messageHelper.setFrom(email);
+//
+//			ExecutorService executor = Executors.newSingleThreadExecutor();
+//
+//			executor.submit(() -> {
+//				mailSender.send(message);
+//			});
+//			executor.shutdown();
+//
+//			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
+//			dataDto.setId(insertUser.getId());
+//
+//			insert.setData(dataDto);
+//			insert.setMsg("Registrasi " + CommonConstant.SUCCESS.getDetail());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			rollback();
+//			throw new Exception(e);
+//		}
+//
+//		return insert;
+//	}
+
 	@Override
 	public InsertUserDtoRes insert(InsertUserDtoReq data) throws Exception {
-		InsertUserDtoRes insert = new InsertUserDtoRes();
+		InsertUserDtoRes dataRes = new InsertUserDtoRes();
 
 		try {
 			User user = new User();
 			user.setEmail(data.getUsername());
 
 			String password = data.getPassword();
+			String encodedPassword = passwordEncoder.encode(password);
+			user.setPassword(encodedPassword);
 
-			String passwordEncode = passwordEncoder.encode(password);
-			user.setPassword(passwordEncode);
-			
-			String verificationCode = getAlphaNumericString(5);
-			user.setVerificationCode(verificationCode);
+			String generatedVerificationCode = getRandomNumericString(5);
+			user.setVerificationCode(generatedVerificationCode);
 
 			Role role = roleDao.findByCode(data.getRoleCode());
 			user.setRoleId(role);
 			user.setIsActive(isActive);
-			
+
+			user.setVersion(0);
+			user.setIsActive(false);
+
 			begin();
 			User insertUser = userDao.save(user);
 			commit();
-
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-			messageHelper.setTo(data.getUsername());
-			messageHelper.setText(text + verificationCode, true);
-			messageHelper.setSubject(subject);
-			messageHelper.setFrom(email);
-
+			
+			VerificationCodeTemplate verifCodeTemplate = new VerificationCodeTemplate();
+			verifCodeTemplate.setTo(insertUser.getEmail());
+			verifCodeTemplate.setFrom(email);
+			verifCodeTemplate.setSubject(subject);
+			Map<String, Object> model = new HashMap<>();
+//	        model.put("userEmail", insertUser.getEmail());
+	        model.put("verificationCode", insertUser.getVerificationCode());
+			verifCodeTemplate.setModel(model);
+	        
 			ExecutorService executor = Executors.newSingleThreadExecutor();
 
 			executor.submit(() -> {
-				mailSender.send(message);
+//				mailSender.send(messageHelper.getMimeMessage());
+				sendEmail(verifCodeTemplate);
 			});
 			executor.shutdown();
 
 			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
 			dataDto.setId(insertUser.getId());
 
-			insert.setData(dataDto);
-			insert.setMsg("Registrasi " + CommonConstant.SUCCESS.getDetail());
+			dataRes.setData(dataDto);
+			dataRes.setMsg("Registrasi " + CommonConstant.SUCCESS.getDetail());
 		} catch (Exception e) {
 			e.printStackTrace();
 			rollback();
 			throw new Exception(e);
 		}
 
-		return insert;
+		return dataRes;
 	}
 
 	@Override
@@ -173,15 +244,15 @@ public class UserServiceImpl extends BaseService implements UserService {
 				User user = userDao.findById(data.getId());
 
 				user.setEmail(data.getEmail());
-								
+
 				String passwordEncode = passwordEncoder.encode(data.getPassword());
 				user.setPassword(passwordEncode);
 
 				Role role = roleDao.findById(data.getRoleId());
 				user.setRoleId(role);
-				
+
 				user.setVersion(data.getVersion());
-				user.setUpdatedBy(getId());
+				user.setUpdatedBy(data.getId());
 
 				if (data.getIsActive() != null) {
 					user.setIsActive(data.getIsActive());
@@ -195,7 +266,8 @@ public class UserServiceImpl extends BaseService implements UserService {
 				dataDto.setVersion(userUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Passowrd " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail()
+						+ ", Password " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -216,7 +288,8 @@ public class UserServiceImpl extends BaseService implements UserService {
 			commit();
 
 			if (isDeleted) {
-				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", User " + CommonConstant.HAS_BEEN_DELETED.getDetail());
+				deleteById.setMsg(CommonConstant.ACTION_DELETE.getDetail() + " " + CommonConstant.SUCCESS.getDetail()
+						+ ", User " + CommonConstant.HAS_BEEN_DELETED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -226,7 +299,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
 		return deleteById;
 	}
-	
+
 	@Override
 	public UpdateUserDtoRes forgotPassword(UpdateUserDtoReq data) throws Exception {
 		UpdateUserDtoRes update = new UpdateUserDtoRes();
@@ -236,13 +309,13 @@ public class UserServiceImpl extends BaseService implements UserService {
 				User user = userDao.findById(data.getId());
 
 				user.setEmail(data.getEmail());
-								
+
 				String passwordEncode = passwordEncoder.encode(data.getPassword());
 				user.setPassword(passwordEncode);
 
 				Role role = roleDao.findById(data.getRoleId());
 				user.setRoleId(role);
-				
+
 				user.setVersion(data.getVersion());
 				user.setUpdatedBy(data.getId());
 
@@ -258,7 +331,8 @@ public class UserServiceImpl extends BaseService implements UserService {
 				dataDto.setVersion(userUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Passowrd " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail()
+						+ ", Passowrd " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -268,7 +342,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
 		return update;
 	}
-	
+
 	@Override
 	public UpdateUserDtoRes changePassword(ChangePasswordDtoReq data) throws Exception {
 		UpdateUserDtoRes update = new UpdateUserDtoRes();
@@ -278,15 +352,16 @@ public class UserServiceImpl extends BaseService implements UserService {
 				User user = userDao.findById(data.getId());
 
 				user.setEmail(data.getEmail());
-				
-				if(passwordEncoder.matches(data.getPassword(), user.getPassword()) == true) {					
+
+				if (passwordEncoder.matches(data.getPassword(), user.getPassword()) == true) {
 					String passwordEncode = passwordEncoder.encode(data.getNewPassword());
 					user.setPassword(passwordEncode);
-				};
+				}
+				;
 
 				Role role = roleDao.findById(data.getRoleId());
 				user.setRoleId(role);
-				
+
 				user.setVersion(data.getVersion());
 				user.setUpdatedBy(data.getId());
 
@@ -302,7 +377,8 @@ public class UserServiceImpl extends BaseService implements UserService {
 				dataDto.setVersion(userUpdate.getVersion());
 
 				update.setData(dataDto);
-				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Passowrd " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
+				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail()
+						+ ", Passowrd " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -317,15 +393,16 @@ public class UserServiceImpl extends BaseService implements UserService {
 	public GetUserByEmailDtoDataRes findByUser(String email) throws Exception {
 		GetUserByEmailDtoDataRes data = new GetUserByEmailDtoDataRes();
 		User user = userDao.findByUser(email);
-		
+
 		data.setId(user.getId());
 		data.setUsername(user.getEmail());
 		data.setPassword(user.getPassword());
+		data.setVerificationCode(user.getVerificationCode());
 		data.setRoleId(user.getRoleId().getId());
 		data.setRoleName(user.getRoleId().getRoleName());
 		data.setVersion(user.getVersion());
 		data.setIsActive(user.getIsActive());
-		
+
 		return data;
 	}
 
@@ -343,4 +420,51 @@ public class UserServiceImpl extends BaseService implements UserService {
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
 				new ArrayList<>());
 	}
+	
+	public String getRandomNumericString(int n) {
+		String randomNumericString = "0123456789";
+		StringBuilder sb = new StringBuilder(n);
+	
+		for (int i = 0; i < n; i++) {
+			int index = (int)(randomNumericString.length()* Math.random());
+			while(i==0 && index==0) {
+				index = (int)(randomNumericString.length()* Math.random());
+			}
+			sb.append(randomNumericString.charAt(index));
+		}
+		return sb.toString();
+	}
+	
+	@Async
+	public void sendEmail(VerificationCodeTemplate verifCode) {
+		MimeMessage message = mailSender.createMimeMessage();
+		try {
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
+					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+
+//			messageHelper.setTo(data.getUsername());
+			messageHelper.setSubject(verifCode.getSubject());
+			messageHelper.setFrom(verifCode.getFrom());
+			messageHelper.setTo(verifCode.getTo());
+			verifCode.setContent(getContentFromTemplate(verifCode.getModel()));
+			messageHelper.setText(verifCode.getContent(), true);
+			mailSender.send(messageHelper.getMimeMessage());
+		}catch(MessagingException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public String getContentFromTemplate(Map<String, Object> model) {
+        StringBuffer content = new StringBuffer();
+
+        try {
+            content.append(FreeMarkerTemplateUtils
+                    .processTemplateIntoString(freeMarkerConfiguration.getTemplate("VerificationCodeEmailTemplate.flth"), model));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return content.toString();
+    }
+	
 }

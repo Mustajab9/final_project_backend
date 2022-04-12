@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Registration Verification Code</title>
+    <style>
+        body {
+            font-family: "Montserrat";
+            font-size: 16px;
+        }
+
+        .email-area {
+            background: rgba(0, 0, 0, .1);
+            color: black;
+            width: 100%;
+            padding: 32px 0;
+        }
+
+        @media (min-width: 640px) {
+            .card {
+                width: 50%;
+            }
+        }
+
+        @media (max-width: 639px) {
+            .card {
+                width: 90%;
+            }
+        }
+
+        .card {
+
+            margin: 0 auto;
+            background-color: white;
+            border: 1px solid rgba(0, 0, 0, .2);
+        }
+
+        .card-header {
+            background: #f1f4f5;
+            padding: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, .2);
+            margin: 0px;
+        }
+
+        .card-header a {
+            color: darkred;
+            text-decoration: none;
+            float: right;
+            padding: 10px;
+            font-weight: normal;
+        }
+
+        .card-body {
+            width: 100%;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .card-title {
+            font-weight: 700;
+            color: rgb(65, 200, 241);
+            width: 90%;
+        }
+
+        .table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .table tr td,
+        .table tr th {
+            padding: 5px 5px;
+            margin: 0px;
+            font-size: 10px;
+        }
+
+        .table tr th {
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .im {
+            color: black !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-area">
+        <div class="card">
+            <div class="card-body">
+                <!-- <h3 class="card-title">Your Account Linov Community has been registered</h3> -->
+                <h3 class="card-title">One More Step to Complete Your Registration</h3>
+                <p class="card-text" style="color: black;">
+                    
+                </p>
+                <p class="card-text" style="color: black;">
+                    Your Verification Code:
+                </p>
+                <table border="1" class="table">
+                    <tr>
+                        <th width="60px" style="background-color: rgb(65, 200, 241); color: white;">Verification Code:
+                        </th>
+                        <td style="color: black;">${verificationCode}</td>
+                    </tr>
+                </table>
+
+                <!-- <p class="card-text" style="color: black;">
+                    Has been approved, Click here for login : <a href="http://google.com/">"https://www.google.com"</a>
+                </p> -->
+
+                <br>
+                <p class="card-text" style="color: black;">Thank you</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

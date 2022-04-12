@@ -105,15 +105,15 @@ WHERE
 	</background>
 	<pageHeader>
 		<band height="92" splitType="Stretch">
-			<image>
-				<reportElement x="181" y="0" width="199" height="42" uuid="8784b09a-2a88-46b5-94fe-5326e169892f"/>
-				<imageExpression><![CDATA["C:/Users/Lawencon/Downloads/lwcn-logo.png"]]></imageExpression>
-			</image>
 			<staticText>
 				<reportElement x="80" y="42" width="400" height="38" uuid="431a6f49-68d2-4656-be91-b3bc49aa929e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Pakuwon Tower, Jl. Casablanca No.Kav 88, RT.6/RW.14, Kb. Baru, Kec. Tebet, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12870]]></text>
 			</staticText>
+			<image>
+				<reportElement x="180" y="0" width="199" height="42" uuid="c0c4ad99-c789-4408-9980-1001748b4dee"/>
+				<imageExpression><![CDATA["D:/projek-akhir/final_project_backend/springboot-bootcamp/l-community/src/main/resources/images/lwcn-logo.png"]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>

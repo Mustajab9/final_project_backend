@@ -4,6 +4,7 @@ public class GetByUserIdDtoDataRes {
 	private String id;
 	private String username;
 	private String password;
+	private String verificationCode;
 	private String roleId;
 	private String roleName;
 	private Integer version;
@@ -31,6 +32,14 @@ public class GetByUserIdDtoDataRes {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getVerificationCode() {
+		return verificationCode;
+	}
+
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
 	}
 
 	public String getRoleId() {

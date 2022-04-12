@@ -43,15 +43,15 @@ GROUP BY e.event_price,
 	</title>
 	<pageHeader>
 		<band height="101" splitType="Stretch">
-			<image>
-				<reportElement x="180" y="0" width="199" height="42" uuid="713adee4-ec7d-4aca-8ef7-fc7c2e2d8651"/>
-				<imageExpression><![CDATA["C:/Users/Lawencon/Downloads/lwcn-logo.png"]]></imageExpression>
-			</image>
 			<staticText>
 				<reportElement x="79" y="42" width="400" height="47" uuid="9e0215d4-e09e-449e-8cb3-f0527b65e2f5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Pakuwon Tower, Jl. Casablanca No.Kav 88, RT.6/RW.14, Kb. Baru, Kec. Tebet, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12870]]></text>
 			</staticText>
+			<image>
+				<reportElement x="180" y="1" width="199" height="42" uuid="18251c58-299d-440b-8e66-6dc6f7bf386a"/>
+				<imageExpression><![CDATA["D:/projek-akhir/final_project_backend/springboot-bootcamp/l-community/src/main/resources/images/lwcn-logo.png"]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>
