@@ -15,5 +15,5 @@ public interface RegencyService {
 	InsertRegencyDtoRes insert(InsertRegencyDtoReq data) throws Exception;
 	UpdateRegencyDtoRes update(UpdateRegencyDtoReq data) throws Exception;
 	DeleteByRegencyIdDtoRes deleteById(String id) throws Exception;
-	GetByProvinceCodeDtoRes findByProvince(String code) throws Exception;
+	GetByProvinceCodeDtoRes findByProvince(String id) throws Exception;
 }

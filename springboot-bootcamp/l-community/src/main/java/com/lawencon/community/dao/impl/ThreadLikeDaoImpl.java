@@ -40,13 +40,17 @@ public class ThreadLikeDaoImpl extends BaseDao<ThreadLike> implements ThreadLike
 	@Override
 	public List<ThreadLike> findByUser(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT tl.id, tl.like_code, t.id, t.thread_code, t.thread_title, t.thread_content, t.is_premium, tt.id, tt.type_code, tt.type_name, tl.version, tl.is_active"); 
+		builder.append("SELECT tl.id AS thread_like_id, tl.like_code, t.id AS thread_id, t.thread_code, t.thread_title, t.thread_content, t.is_premium,");
+		builder.append(" tt.id AS thread_type_id, tt.type_code, tt.type_name, tl.version, tl.is_active");
 		builder.append(" FROM thread_like tl");
 		builder.append(" INNER JOIN threads t ON t.id = tl.thread_id");
 		builder.append(" INNER JOIN thread_types tt ON tt.id = t.type_id");
 		builder.append(" WHERE tl.created_by = :id");
 		
-		List<?> results = createNativeQuery(builder.toString()).setParameter("id", id).getResultList();
+		List<?> results = createNativeQuery(builder.toString())
+				.setParameter("id", id)
+				.getResultList();
+		
 		List<ThreadLike> listResult = new ArrayList<>();
 		
 		results.forEach(result->{

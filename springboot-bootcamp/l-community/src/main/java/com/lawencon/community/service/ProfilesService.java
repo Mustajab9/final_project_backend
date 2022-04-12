@@ -15,5 +15,5 @@ public interface ProfilesService {
 	InsertProfilesDtoRes insert(InsertProfilesDtoReq data) throws Exception;
 	UpdateProfilesDtoRes update(UpdateProfilesDtoReq data) throws Exception;
 	DeleteByProfilesIdDtoRes deleteById(String id) throws Exception;
-	GetProfileByUserDtoRes findByUser(String id) throws Exception;
+	GetProfileByUserDtoRes findByUser() throws Exception;
 }

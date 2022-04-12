@@ -36,11 +36,11 @@ public class ProfileSosmedDaoImpl extends BaseDao<ProfileSosmed> implements Prof
 	@Override
 	public List<ProfileSosmed> findByUser(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT ps.id, ps.accountName, p.id AS profile_id, p.profile_name, sm.id AS social_media_id, sm.social_media_name, ps.version, ps.is_active");
-		builder.append("FROM profile_sosmed ps");
-		builder.append("JOIN profiles p ON p.id = ps.profile_id");
-		builder.append("JOIN social_media sm ON sm.id = ps.social_media_id");
-		builder.append("WHERE p.user_id = :id");
+		builder.append("SELECT ps.id, ps.account_name, p.id AS profile_id, p.profile_name, sm.id AS social_media_id, sm.social_media_name, ps.version, ps.is_active");
+		builder.append(" FROM profile_sosmed ps");
+		builder.append(" JOIN profiles p ON p.id = ps.profile_id");
+		builder.append(" JOIN social_media sm ON sm.id = ps.social_media_id");
+		builder.append(" WHERE p.user_id = :id");
 		
 		List<?> results = createNativeQuery(builder.toString())
 				.setParameter("id", id)
@@ -52,7 +52,7 @@ public class ProfileSosmedDaoImpl extends BaseDao<ProfileSosmed> implements Prof
 			ProfileSosmed data = new ProfileSosmed();
 			
 			data.setId(obj[0].toString());
-			data.setId(obj[1].toString());
+			data.setAccountName(obj[1].toString());
 			
 			Profiles profiles = new Profiles();
 			profiles.setId(obj[2].toString());

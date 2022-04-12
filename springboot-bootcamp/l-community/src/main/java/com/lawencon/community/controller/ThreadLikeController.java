@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.dto.threadlike.DeleteByThreadLikeIdDtoRes;
 import com.lawencon.community.dto.threadlike.GetAllThreadLikeDtoRes;
 import com.lawencon.community.dto.threadlike.GetByThreadLikeIdDtoRes;
+import com.lawencon.community.dto.threadlike.GetByUserIdDtoRes;
 import com.lawencon.community.dto.threadlike.GetThreadLikeByThreadDtoRes;
 import com.lawencon.community.dto.threadlike.InsertThreadLikeDtoReq;
 import com.lawencon.community.dto.threadlike.InsertThreadLikeDtoRes;
@@ -65,5 +66,11 @@ public class ThreadLikeController {
 	public ResponseEntity<GetThreadLikeByThreadDtoRes> getByThreadAndUser(@PathVariable("userId") String userId, @PathVariable("threadId") String threadId) throws Exception{
 		GetThreadLikeByThreadDtoRes getByThread = threadLikeService.findByThreadAndUser(userId, threadId);
 		return new ResponseEntity<GetThreadLikeByThreadDtoRes>(getByThread, HttpStatus.OK);
+	}
+	
+	@GetMapping("user")
+	public ResponseEntity<GetByUserIdDtoRes> getByUser() throws Exception{
+		GetByUserIdDtoRes getByUser = threadLikeService.findByUser();
+		return new ResponseEntity<GetByUserIdDtoRes>(getByUser, HttpStatus.OK);
 	}
 }

@@ -7,14 +7,20 @@ public class GetThreadByUserDtoDataRes {
 	private String threadCode;
 	private String threadTitle;
 	private String threadContent;
+	private String typeCode;
 	private List<String> categoryId;
 	private List<String> categoryName;
 	private List<String> attachmentId;
 	private List<String> attachemntExtension;
 	private String pollingName;
-	private List<String> choiceName;
+	private List<GetThreadPollingChoiceDtoRes> choices;
 	private List<Integer> countVote;
 	private Integer totalVote;
+	private Integer totalLike;
+	private Integer totalComment;
+	private Boolean isLiked = false;
+	private Boolean isBookmarked = false;
+	private Boolean isVoted = false;
 	private Integer version;
 	private Boolean isActive;
 
@@ -48,6 +54,14 @@ public class GetThreadByUserDtoDataRes {
 
 	public void setThreadContent(String threadContent) {
 		this.threadContent = threadContent;
+	}
+
+	public String getTypeCode() {
+		return typeCode;
+	}
+
+	public void setTypeCode(String typeCode) {
+		this.typeCode = typeCode;
 	}
 
 	public List<String> getCategoryId() {
@@ -90,12 +104,12 @@ public class GetThreadByUserDtoDataRes {
 		this.pollingName = pollingName;
 	}
 
-	public List<String> getChoiceName() {
-		return choiceName;
+	public List<GetThreadPollingChoiceDtoRes> getChoices() {
+		return choices;
 	}
 
-	public void setChoiceName(List<String> choiceName) {
-		this.choiceName = choiceName;
+	public void setChoices(List<GetThreadPollingChoiceDtoRes> choices) {
+		this.choices = choices;
 	}
 
 	public List<Integer> getCountVote() {
@@ -112,6 +126,46 @@ public class GetThreadByUserDtoDataRes {
 
 	public void setTotalVote(Integer totalVote) {
 		this.totalVote = totalVote;
+	}
+
+	public Integer getTotalLike() {
+		return totalLike;
+	}
+
+	public void setTotalLike(Integer totalLike) {
+		this.totalLike = totalLike;
+	}
+
+	public Integer getTotalComment() {
+		return totalComment;
+	}
+
+	public void setTotalComment(Integer totalComment) {
+		this.totalComment = totalComment;
+	}
+
+	public Boolean getIsLiked() {
+		return isLiked;
+	}
+
+	public void setIsLiked(Boolean isLiked) {
+		this.isLiked = isLiked;
+	}
+
+	public Boolean getIsBookmarked() {
+		return isBookmarked;
+	}
+
+	public void setIsBookmarked(Boolean isBookmarked) {
+		this.isBookmarked = isBookmarked;
+	}
+
+	public Boolean getIsVoted() {
+		return isVoted;
+	}
+
+	public void setIsVoted(Boolean isVoted) {
+		this.isVoted = isVoted;
 	}
 
 	public Integer getVersion() {

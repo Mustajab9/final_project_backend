@@ -82,7 +82,7 @@ public class ThreadCommentDaoImpl extends BaseDao<ThreadComment> implements Thre
 	@Override
 	public GetCountCommentByThreadDtoRes countByThread(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT COUNT(thread_id) FROM thread_comments");
+		builder.append("SELECT COUNT(thread_id) FROM thread_comments AS tc");
 		builder.append(" WHERE tc.thread_id = :id");
 		
 		GetCountCommentByThreadDtoRes countComment = new GetCountCommentByThreadDtoRes();

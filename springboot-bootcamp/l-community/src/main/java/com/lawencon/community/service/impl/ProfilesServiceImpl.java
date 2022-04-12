@@ -75,10 +75,16 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			data.setUserId(profile.getUserId().getId());
 			data.setEmail(profile.getUserId().getEmail());
 			data.setPassword(profile.getUserId().getPassword());
-			data.setIndustryId(profile.getIndustryId().getId());
-			data.setIndustyName(profile.getIndustryId().getIndustryName());
-			data.setPositionId(profile.getPositionId().getId());
-			data.setPositionName(profile.getPositionId().getPositionName());
+			
+			if(profile.getIndustryId() != null) {
+				data.setIndustryId(profile.getIndustryId().getId());
+				data.setIndustyName(profile.getIndustryId().getIndustryName());
+			}
+			
+			if(profile.getPositionId() != null) {
+				data.setPositionId(profile.getPositionId().getId());
+				data.setPositionName(profile.getPositionId().getPositionName());						
+			}
 			
 			if(profile.getRegencyId() != null) {
 				data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
@@ -120,10 +126,16 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 		data.setUserId(profile.getUserId().getId());
 		data.setEmail(profile.getUserId().getEmail());
 		data.setPassword(profile.getUserId().getPassword());
-		data.setIndustryId(profile.getIndustryId().getId());
-		data.setIndustyName(profile.getIndustryId().getIndustryName());
-		data.setPositionId(profile.getPositionId().getId());
-		data.setPositionName(profile.getPositionId().getPositionName());
+		
+		if(profile.getIndustryId() != null) {
+			data.setIndustryId(profile.getIndustryId().getId());
+			data.setIndustyName(profile.getIndustryId().getIndustryName());
+		}
+		
+		if(profile.getPositionId() != null) {
+			data.setPositionId(profile.getPositionId().getId());
+			data.setPositionName(profile.getPositionId().getPositionName());						
+		}
 		
 		if(profile.getRegencyId() != null) {
 			data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
@@ -248,31 +260,46 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 	}
 	
 	@Override
-	public GetProfileByUserDtoRes findByUser(String id) throws Exception {
+	public GetProfileByUserDtoRes findByUser() throws Exception {
 		GetProfileByUserDtoRes getByUser = new GetProfileByUserDtoRes();
 
-		Profiles profile = profilesDao.findByUser(id);
+		Profiles profile = profilesDao.findByUser(getId());
 		GetProfileByUserDtoDataRes data = new GetProfileByUserDtoDataRes();
 
 		data.setId(profile.getId());
+		
 		data.setProfileName(profile.getProfileName());
 		data.setProfileCompany(profile.getProfileCompany());
 		data.setProfilePhone(profile.getProfilePhone());
+		
+		if(profile.getUserId() != null) {
+			data.setUserId(profile.getUserId().getId());
+			data.setEmail(profile.getUserId().getEmail());			
+		}
 		
 		if(profile.getProfileImage() != null) {				
 			data.setProfileImageId(profile.getProfileImage().getId());
 			data.setProfileImageExtension(profile.getProfileImage().getAttachmentExtension());
 		}
 		
-		data.setIndustryId(profile.getIndustryId().getId());
-		data.setIndustyName(profile.getIndustryId().getIndustryName());
-		data.setPositionId(profile.getPositionId().getId());
-		data.setPositionName(profile.getPositionId().getPositionName());
+		if(profile.getIndustryId() != null) {
+			data.setIndustryId(profile.getIndustryId().getId());
+			data.setIndustyName(profile.getIndustryId().getIndustryName());
+		}
+		
+		if(profile.getPositionId() != null) {
+			data.setPositionId(profile.getPositionId().getId());
+			data.setPositionName(profile.getPositionId().getPositionName());						
+		}
 		
 		if(profile.getRegencyId() != null) {
 			data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
 			data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
+			data.setRegencyId(profile.getRegencyId().getId());
+			data.setRegencyName(profile.getRegencyId().getRegencyName());
 		}
+		
+		
 		data.setVersion(profile.getVersion());
 		data.setIsActive(profile.getIsActive());
 

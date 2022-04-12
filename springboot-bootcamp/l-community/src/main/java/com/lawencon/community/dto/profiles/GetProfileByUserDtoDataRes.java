@@ -2,6 +2,8 @@ package com.lawencon.community.dto.profiles;
 
 public class GetProfileByUserDtoDataRes {
 	private String id;
+	private String userId;
+	private String email;
 	private String profileName;
 	private String profileCompany;
 	private String profilePhone;
@@ -13,6 +15,9 @@ public class GetProfileByUserDtoDataRes {
 	private String positionName;
 	private String provinceId;
 	private String provinceName;
+	private String regencyId;
+	private String regencyName;
+	private String postalCode;
 	private Integer version;
 	private Boolean isActive;
 
@@ -22,6 +27,22 @@ public class GetProfileByUserDtoDataRes {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getProfileName() {
@@ -110,6 +131,30 @@ public class GetProfileByUserDtoDataRes {
 
 	public void setProvinceName(String provinceName) {
 		this.provinceName = provinceName;
+	}
+
+	public String getRegencyId() {
+		return regencyId;
+	}
+
+	public void setRegencyId(String regencyId) {
+		this.regencyId = regencyId;
+	}
+
+	public String getRegencyName() {
+		return regencyName;
+	}
+
+	public void setRegencyName(String regencyName) {
+		this.regencyName = regencyName;
+	}
+
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
 	}
 
 	public Integer getVersion() {

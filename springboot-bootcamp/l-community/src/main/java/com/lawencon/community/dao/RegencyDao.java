@@ -10,6 +10,6 @@ public interface RegencyDao {
 	Regency findById(String id) throws Exception;
 	Regency save(Regency data) throws Exception;
 	boolean deleteById(String id) throws Exception;
-	List<Regency> findByProvince(String code) throws Exception;
+	List<Regency> findByProvince(String id) throws Exception;
 	Long countAll() throws Exception;
 }

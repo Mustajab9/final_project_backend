@@ -49,8 +49,8 @@ public class ThreadController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<GetAllThreadDtoRes> getAll() throws Exception{
-		GetAllThreadDtoRes getAll = threadService.findAll();
+	public ResponseEntity<GetAllThreadDtoRes> getAll(Integer startPage, Integer maxPage) throws Exception{
+		GetAllThreadDtoRes getAll = threadService.findAll(startPage, maxPage);
 		return new ResponseEntity<GetAllThreadDtoRes>(getAll, HttpStatus.OK);
 	}
 	
@@ -66,9 +66,9 @@ public class ThreadController {
 		return new ResponseEntity<DeleteByThreadIdDtoRes>(deleteById, HttpStatus.OK);
 	}
 	
-	@GetMapping("user/{id}")
-	public ResponseEntity<GetThreadByUserDtoRes> getByUser(@PathVariable("id") String id) throws Exception{
-		GetThreadByUserDtoRes getByUser = threadService.findByUser(id);
+	@GetMapping("user")
+	public ResponseEntity<GetThreadByUserDtoRes> getByUser() throws Exception{
+		GetThreadByUserDtoRes getByUser = threadService.findByUser();
 		return new ResponseEntity<GetThreadByUserDtoRes>(getByUser, HttpStatus.OK);
 	}
 	

@@ -1,11 +1,29 @@
 package com.lawencon.community.dto.threadlike;
 
+import java.util.List;
+
+import com.lawencon.community.dto.thread.GetThreadPollingChoiceDtoRes;
+
 public class GetByUserIdDtoDataRes {
 	private String id;
 	private String likeCode;
 	private String threadId;
 	private String threadTitle;
 	private String threadContent;
+	private String typeCode;
+	private List<String> categoryId;
+	private List<String> categoryName;
+	private List<String> attachmentId;
+	private List<String> attachemntExtension;
+	private String pollingName;
+	private List<GetThreadPollingChoiceDtoRes> choices;
+	private List<Integer> countVote;
+	private Integer totalVote;
+	private Integer totalLike;
+	private Integer totalComment;
+	private Boolean isLiked = false;
+	private Boolean isBookmarked = false;
+	private Boolean isVoted = false;
 	private String createdBy;
 	private Integer version;
 	private Boolean isActive;
@@ -50,6 +68,118 @@ public class GetByUserIdDtoDataRes {
 		this.threadContent = threadContent;
 	}
 	
+	public String getTypeCode() {
+		return typeCode;
+	}
+
+	public void setTypeCode(String typeCode) {
+		this.typeCode = typeCode;
+	}
+
+	public List<String> getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(List<String> categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public List<String> getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(List<String> categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	public List<String> getAttachmentId() {
+		return attachmentId;
+	}
+
+	public void setAttachmentId(List<String> attachmentId) {
+		this.attachmentId = attachmentId;
+	}
+
+	public List<String> getAttachemntExtension() {
+		return attachemntExtension;
+	}
+
+	public void setAttachemntExtension(List<String> attachemntExtension) {
+		this.attachemntExtension = attachemntExtension;
+	}
+
+	public String getPollingName() {
+		return pollingName;
+	}
+
+	public void setPollingName(String pollingName) {
+		this.pollingName = pollingName;
+	}
+
+	public List<GetThreadPollingChoiceDtoRes> getChoices() {
+		return choices;
+	}
+
+	public void setChoices(List<GetThreadPollingChoiceDtoRes> choices) {
+		this.choices = choices;
+	}
+
+	public List<Integer> getCountVote() {
+		return countVote;
+	}
+
+	public void setCountVote(List<Integer> countVote) {
+		this.countVote = countVote;
+	}
+
+	public Integer getTotalVote() {
+		return totalVote;
+	}
+
+	public void setTotalVote(Integer totalVote) {
+		this.totalVote = totalVote;
+	}
+
+	public Integer getTotalLike() {
+		return totalLike;
+	}
+
+	public void setTotalLike(Integer totalLike) {
+		this.totalLike = totalLike;
+	}
+
+	public Integer getTotalComment() {
+		return totalComment;
+	}
+
+	public void setTotalComment(Integer totalComment) {
+		this.totalComment = totalComment;
+	}
+
+	public Boolean getIsLiked() {
+		return isLiked;
+	}
+
+	public void setIsLiked(Boolean isLiked) {
+		this.isLiked = isLiked;
+	}
+
+	public Boolean getIsBookmarked() {
+		return isBookmarked;
+	}
+
+	public void setIsBookmarked(Boolean isBookmarked) {
+		this.isBookmarked = isBookmarked;
+	}
+
+	public Boolean getIsVoted() {
+		return isVoted;
+	}
+
+	public void setIsVoted(Boolean isVoted) {
+		this.isVoted = isVoted;
+	}
+
 	public String getCreatedBy() {
 		return createdBy;
 	}

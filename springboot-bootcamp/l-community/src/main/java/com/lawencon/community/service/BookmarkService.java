@@ -13,6 +13,6 @@ public interface BookmarkService {
 	GetByBookmarkIdDtoRes findById(String id) throws Exception;
 	InsertBookmarkDtoRes insert(InsertBookmarkDtoReq data) throws Exception;
 	DeleteByBookmarkIdDtoRes deleteById(String id) throws Exception;
-	GetBookmarkByUserDtoRes findByUser(String id) throws Exception;
+	GetBookmarkByUserDtoRes findByUser() throws Exception;
 	GetBookmarkByUserAndThreadDtoRes findByUserAndThread(String userId, String threadId) throws Exception;
 }

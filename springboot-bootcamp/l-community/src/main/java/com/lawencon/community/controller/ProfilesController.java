@@ -47,9 +47,9 @@ private ProfilesService profileService;
 		return new ResponseEntity<GetByProfilesIdDtoRes>(profile, HttpStatus.OK);
 	}
 	
-	@GetMapping("user/{id}")
-	public ResponseEntity<GetProfileByUserDtoRes> getByUserId(@PathVariable("id") String id) throws Exception {
-		GetProfileByUserDtoRes profile = profileService.findByUser(id);
+	@GetMapping("user")
+	public ResponseEntity<GetProfileByUserDtoRes> getByUserId() throws Exception {
+		GetProfileByUserDtoRes profile = profileService.findByUser();
 		return new ResponseEntity<GetProfileByUserDtoRes>(profile, HttpStatus.OK);
 	}
 	

@@ -44,9 +44,9 @@ public class BookmarkController {
 		return new ResponseEntity<GetByBookmarkIdDtoRes>(data, HttpStatus.OK);
 	}
 	
-	@GetMapping("user/{id}")
-	public ResponseEntity<GetBookmarkByUserDtoRes> getByUser(@PathVariable("id") String id) throws Exception {
-		GetBookmarkByUserDtoRes data = bookmarkService.findByUser(id);
+	@GetMapping("user")
+	public ResponseEntity<GetBookmarkByUserDtoRes> getByUser() throws Exception {
+		GetBookmarkByUserDtoRes data = bookmarkService.findByUser();
 		return new ResponseEntity<GetBookmarkByUserDtoRes>(data, HttpStatus.OK);
 	}
 	

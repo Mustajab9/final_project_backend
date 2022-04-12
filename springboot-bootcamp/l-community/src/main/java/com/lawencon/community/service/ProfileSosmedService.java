@@ -15,5 +15,5 @@ public interface ProfileSosmedService {
 	InsertProfileSosmedDtoRes insert(InsertProfileSosmedDtoReq data) throws Exception;
 	UpdateProfileSosmedDtoRes update(UpdateProfileSosmedDtoReq data) throws Exception;
 	DeleteByProfileSosmedIdDtoRes deleteById(String id) throws Exception;
-	GetProfileSosmedByUserDtoRes findByUser(String id) throws Exception;
+	GetProfileSosmedByUserDtoRes findByUser() throws Exception;
 }

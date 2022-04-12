@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lawencon.community.dto.profilesosmed.DeleteByProfileSosmedIdDtoRes;
 import com.lawencon.community.dto.profilesosmed.GetAllProfileSosmedDtoRes;
 import com.lawencon.community.dto.profilesosmed.GetByProfileSosmedIdDtoRes;
+import com.lawencon.community.dto.profilesosmed.GetProfileSosmedByUserDtoRes;
 import com.lawencon.community.dto.profilesosmed.InsertProfileSosmedDtoReq;
 import com.lawencon.community.dto.profilesosmed.InsertProfileSosmedDtoRes;
 import com.lawencon.community.dto.profilesosmed.UpdateProfileSosmedDtoReq;
@@ -44,6 +45,12 @@ public class ProfilSosmedController {
 	public ResponseEntity<GetByProfileSosmedIdDtoRes> getById(@PathVariable("id") String id) throws Exception {
 		GetByProfileSosmedIdDtoRes profileSosmed = profileSosmedService.findById(id);
 		return new ResponseEntity<GetByProfileSosmedIdDtoRes>(profileSosmed, HttpStatus.OK);
+	}
+	
+	@GetMapping("user")
+	public ResponseEntity<GetProfileSosmedByUserDtoRes> getByUser() throws Exception {
+		GetProfileSosmedByUserDtoRes profileSosmed = profileSosmedService.findByUser();
+		return new ResponseEntity<GetProfileSosmedByUserDtoRes>(profileSosmed, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("{id}")

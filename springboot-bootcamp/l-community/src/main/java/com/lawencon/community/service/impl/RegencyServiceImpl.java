@@ -176,10 +176,10 @@ public class RegencyServiceImpl extends BaseService implements RegencyService {
 	}
 	
 	@Override
-	public GetByProvinceCodeDtoRes findByProvince(String code) throws Exception {
+	public GetByProvinceCodeDtoRes findByProvince(String id) throws Exception {
 		GetByProvinceCodeDtoRes getByProvinceCode = new GetByProvinceCodeDtoRes();
 
-		List<Regency> regencies = regencyDao.findByProvince(code);
+		List<Regency> regencies = regencyDao.findByProvince(id);
 		List<GetByProvinceCodeDtoDataRes> regencyList = new ArrayList<>();
 
 		for (int i = 0; i < regencies.size(); i++) {

@@ -13,8 +13,12 @@ import com.lawencon.community.model.ThreadType;
 public class ThreadDaoImpl extends BaseDao<Thread> implements ThreadDao {
 	
 	@Override
-	public List<Thread> findAll() throws Exception {
-		return super.getAll();
+	public List<Thread> findAll(Integer startPage, Integer maxPage) throws Exception {
+		if(startPage != null && maxPage != null) {
+			return super.getAll(startPage, maxPage);
+		}
+		
+		return super.getAll();			
 	}
 	
 	@Override
@@ -35,7 +39,7 @@ public class ThreadDaoImpl extends BaseDao<Thread> implements ThreadDao {
 	@Override
 	public List<Thread> findByUser(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT t.id, t.thread_code, t.thread_title, t.thread_content, t.is_premium, tt.id,");
+		builder.append("SELECT t.id AS thread_id, t.thread_code, t.thread_title, t.thread_content, t.is_premium, tt.id AS thread_type_id,");
 		builder.append(" type_code, tt.type_name, t.version, t.is_active"); 
 		builder.append(" FROM threads t");
 		builder.append(" INNER JOIN thread_types tt ON tt.id = t.type_id");

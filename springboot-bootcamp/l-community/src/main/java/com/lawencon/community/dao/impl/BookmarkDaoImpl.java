@@ -53,7 +53,10 @@ public class BookmarkDaoImpl extends BaseDao<Bookmark> implements BookmarkDao {
 		builder.append(" INNER JOIN thread_types AS ty ON ty.id = t.type_id");
 		builder.append(" WHERE b.created_by = :id");
 		
-		List<?> results = createNativeQuery(builder.toString()).getResultList();
+		List<?> results = createNativeQuery(builder.toString())
+				.setParameter("id", id)
+				.getResultList();
+		
 		List<Bookmark> listResult = new ArrayList<>();
 		
 		results.forEach(result -> {
@@ -123,7 +126,7 @@ public class BookmarkDaoImpl extends BaseDao<Bookmark> implements BookmarkDao {
 			bookmark.setMsg(null);
 			
 		}catch(NoResultException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		
 		return bookmark;

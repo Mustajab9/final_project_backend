@@ -195,10 +195,10 @@ public class ProfileSosmedServceImpl extends BaseService implements ProfileSosme
 	}
 	
 	@Override
-	public GetProfileSosmedByUserDtoRes findByUser(String id) throws Exception {
+	public GetProfileSosmedByUserDtoRes findByUser() throws Exception {
 		GetProfileSosmedByUserDtoRes getByUser = new GetProfileSosmedByUserDtoRes();
 
-		List<ProfileSosmed> profileSosmeds = profileSosmedDao.findByUser(id);
+		List<ProfileSosmed> profileSosmeds = profileSosmedDao.findByUser(getId());
 		List<GetProfileSosmedByUserDtoDataRes> profileList = new ArrayList<>();
 
 		for (int i = 0; i < profileSosmeds.size(); i++) {

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lawencon.community.dto.regency.DeleteByRegencyIdDtoRes;
 import com.lawencon.community.dto.regency.GetAllRegencyDtoRes;
+import com.lawencon.community.dto.regency.GetByProvinceCodeDtoRes;
 import com.lawencon.community.dto.regency.GetByRegencyIdDtoRes;
 import com.lawencon.community.dto.regency.InsertRegencyDtoReq;
 import com.lawencon.community.dto.regency.InsertRegencyDtoRes;
@@ -44,6 +45,12 @@ private RegencyService regencyService;
 	public ResponseEntity<GetByRegencyIdDtoRes> getById(@PathVariable("id") String id) throws Exception {
 		GetByRegencyIdDtoRes regency = regencyService.findById(id);
 		return new ResponseEntity<GetByRegencyIdDtoRes>(regency, HttpStatus.OK);
+	}
+	
+	@GetMapping("province/{id}")
+	public ResponseEntity<GetByProvinceCodeDtoRes> getByProvinceId(@PathVariable("id") String id) throws Exception {
+		GetByProvinceCodeDtoRes regency = regencyService.findByProvince(id);
+		return new ResponseEntity<GetByProvinceCodeDtoRes>(regency, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("{id}")

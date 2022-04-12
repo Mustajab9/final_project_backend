@@ -7,6 +7,7 @@ public class GetByThreadIdDtoDataRes {
 	private String threadCode;
 	private String threadTitle;
 	private String threadContent;
+	private String typeCode;
 	private List<String> categoryId;
 	private List<String> categoryName;
 	private List<String> attachmentId;
@@ -53,6 +54,14 @@ public class GetByThreadIdDtoDataRes {
 
 	public void setThreadContent(String threadContent) {
 		this.threadContent = threadContent;
+	}
+
+	public String getTypeCode() {
+		return typeCode;
+	}
+
+	public void setTypeCode(String typeCode) {
+		this.typeCode = typeCode;
 	}
 
 	public List<String> getCategoryId() {

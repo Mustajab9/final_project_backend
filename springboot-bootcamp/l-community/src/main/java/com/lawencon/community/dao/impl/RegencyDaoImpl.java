@@ -57,15 +57,15 @@ public class RegencyDaoImpl extends BaseDao<Regency> implements RegencyDao {
 	}
 	
 	@Override
-	public List<Regency> findByProvince(String code) throws Exception {
+	public List<Regency> findByProvince(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT r.id, r.regency_code, r.regency_name, p.id, p.province_code, p.province_name, r.version, r.is_active");
+		builder.append("SELECT r.id AS regency_id, r.regency_code, r.regency_name, p.id AS province_id, p.province_code, p.province_name, r.version, r.is_active");
 		builder.append(" FROM regencies r");
 		builder.append(" JOIN provinces p ON p.id = r.province_id");
-		builder.append(" WHERE p.province_code = :code");
+		builder.append(" WHERE p.id = :id");
 		
 		List<?> results = createNativeQuery(builder.toString())
-				.setParameter("code", code)
+				.setParameter("id", id)
 				.getResultList();
 		List<Regency> listResult = new ArrayList<>();
 		
