@@ -20,6 +20,7 @@ import com.lawencon.community.dto.event.GetAllEventDtoDataRes;
 import com.lawencon.community.dto.event.GetAllEventDtoRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoDataRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoRes;
+import com.lawencon.community.dto.event.GetCountNotPaidDtoDataRes;
 import com.lawencon.community.dto.event.GetReportIncomeEventDto;
 import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
 import com.lawencon.community.dto.event.InsertEventDtoDataRes;
@@ -87,7 +88,8 @@ public class EventServiceImpl extends BaseService implements EventService {
 				data.setAttachmentId(event.getAttachmentId().getId());
 				data.setAttachmentExtension(event.getAttachmentId().getAttachmentExtension());
 			}
-
+			
+			data.setCreatedBy(event.getCreatedBy());
 			data.setVersion(event.getVersion());
 			data.setIsActive(event.getIsActive());
 
@@ -158,6 +160,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 
 			EventType eventType = eventTypeDao.findById(dataInsert.getEventTypeId());
 			event.setTypeId(eventType);
+			
 			
 			if(EventTypeConstant.COURSE.getCode().equals(eventType.getTypeCode())) {
 				PriceListEvent priceListEvent = priceListEventDao.findByCode(EventTypeConstant.COURSE.getCodePrice());
@@ -262,55 +265,19 @@ public class EventServiceImpl extends BaseService implements EventService {
 
 	@Override
 	public GetAllEventDtoRes findEnrollEvent(String id) throws Exception {
-		GetAllEventDtoRes getEnrollEvent = new GetAllEventDtoRes();
-
-		List<Event> events = eventDao.findEnrollEvent(id);
-		List<GetAllEventDtoDataRes> listEvent = new ArrayList<>();
-
-		for (int i = 0; i < events.size(); i++) {
-			Event event = events.get(i);
-			GetAllEventDtoDataRes data = new GetAllEventDtoDataRes();
-
-			data.setId(event.getId());
-			data.setEventCode(event.getEventCode());
-			data.setEventTitle(event.getEventTitle());
-			data.setEventProvider(event.getEventProvider());
-			data.setEventLocation(event.getLocation());
-			data.setEventPrice(event.getEventPrice());
-			data.setEventTimeStart(event.getEventTimeStart());
-			data.setEventTimeEnd(event.getEventTimeEnd());
-			data.setEventDateStart(event.getEventDateStart());
-			data.setEventDateEnd(event.getEventDateEnd());
-			data.setIsApprove(event.getIsApprove());
-			data.setCategoryId(event.getCategoryId().getId());
-			data.setCategoryName(event.getCategoryId().getCategoryName());
-			data.setTypeId(event.getTypeId().getId());
-			data.setTypeName(event.getTypeId().getTypeName());
-			data.setPriceId(event.getPriceId().getId());
-			data.setPriceName(event.getPriceId().getPriceName());
-
-			if (event.getAttachmentId() != null) {
-				data.setAttachmentId(event.getAttachmentId().getId());
-				data.setAttachmentExtension(event.getAttachmentId().getAttachmentExtension());
-			}
-
-			data.setVersion(event.getVersion());
-			data.setIsActive(event.getIsActive());
-
-			listEvent.add(data);
-		}
-
-		getEnrollEvent.setData(listEvent);
-		getEnrollEvent.setMsg(null);
-
-		return getEnrollEvent;
+		GetAllEventDtoRes dtoRes = new GetAllEventDtoRes();
+		List<GetAllEventDtoDataRes> findEnrollEvent = eventDao.findEnrollEvent(id);
+		
+		dtoRes.setData(findEnrollEvent);
+		dtoRes.setMsg(null);
+		return dtoRes;
 	}
 
 	@Override
-	public GetAllEventDtoRes findNotEnrollEvent(String id) throws Exception {
+	public GetAllEventDtoRes findNotEnrollEvent() throws Exception {
 		GetAllEventDtoRes getNotEnrollEvent = new GetAllEventDtoRes();
 
-		List<Event> events = eventDao.findNotEnrollEvent(id);
+		List<Event> events = eventDao.findNotEnrollEvent(getId());
 		List<GetAllEventDtoDataRes> listEvent = new ArrayList<>();
 
 		for (int i = 0; i < events.size(); i++) {
@@ -332,8 +299,6 @@ public class EventServiceImpl extends BaseService implements EventService {
 			data.setCategoryName(event.getCategoryId().getCategoryName());
 			data.setTypeId(event.getTypeId().getId());
 			data.setTypeName(event.getTypeId().getTypeName());
-			data.setPriceId(event.getPriceId().getId());
-			data.setPriceName(event.getPriceId().getPriceName());
 
 			if (event.getAttachmentId() != null) {
 				data.setAttachmentId(event.getAttachmentId().getId());
@@ -384,5 +349,20 @@ public class EventServiceImpl extends BaseService implements EventService {
 		dtoRes.setData(findEventNotApprove);
 		dtoRes.setMsg(null);
 		return dtoRes;
+	}
+	
+	@Override
+	public GetAllEventDtoRes findEventNotPaid(String id) throws Exception {
+		GetAllEventDtoRes dtoRes = new GetAllEventDtoRes();
+		List<GetAllEventDtoDataRes> findEventNotPaid = eventDao.findEventNotPaid(id);
+		
+		dtoRes.setData(findEventNotPaid);
+		dtoRes.setMsg(null);
+		return dtoRes;
+	}
+	
+	@Override
+	public GetCountNotPaidDtoDataRes countNotPaid() throws Exception {
+		return eventDao.countNotPaid(getId());
 	}
 }

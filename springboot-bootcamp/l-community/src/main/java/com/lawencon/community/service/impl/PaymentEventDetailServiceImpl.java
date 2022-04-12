@@ -157,6 +157,7 @@ public class PaymentEventDetailServiceImpl extends BaseService implements Paymen
 			
 			Event event = eventDao.findById(data.getEventId());
 			paymentDetail.setEventId(event);
+			paymentDetail.setCreatedBy(getId());
 			
 			begin();
 			PaymentEventDetail paymentDetailInsert = paymentDetailDao.save(paymentDetail);

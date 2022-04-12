@@ -27,6 +27,9 @@ public class GetAllEventDtoDataRes {
 	private String paymentAttachment;
 	private String paymentId;
 	private String paymentName;
+	private Boolean enrollIsApprove;
+	private String enrollInvoice;
+	private String createdBy;
 	private Integer version;
 	private Boolean isActive;
 
@@ -204,6 +207,30 @@ public class GetAllEventDtoDataRes {
 
 	public void setPaymentName(String paymentName) {
 		this.paymentName = paymentName;
+	}
+
+	public Boolean getEnrollIsApprove() {
+		return enrollIsApprove;
+	}
+
+	public void setEnrollIsApprove(Boolean enrollIsApprove) {
+		this.enrollIsApprove = enrollIsApprove;
+	}
+
+	public String getEnrollInvoice() {
+		return enrollInvoice;
+	}
+
+	public void setEnrollInvoice(String enrollInvoice) {
+		this.enrollInvoice = enrollInvoice;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public Integer getVersion() {

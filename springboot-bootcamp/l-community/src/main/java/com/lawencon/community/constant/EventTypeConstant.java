@@ -9,19 +9,19 @@ public enum EventTypeConstant {
 	
 	private EventTypeConstant(String detail, String code, String codePrice){
 		this.detail = detail;
-		this.codePrice = code;
+		this.code = code;
 		this.codePrice = codePrice;
 	}
 
 	public String getDetail() {
-		return detail;
+		return this.detail;
 	}
 	
 	public String getCode() {
-		return code;
+		return this.code;
 	}
 
 	public String getCodePrice() {
-		return codePrice;
+		return this.codePrice;
 	}
 }

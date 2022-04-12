@@ -34,6 +34,7 @@ public class GetAllEnrollEventDtoDataRes {
 	private String attachmentExtension;
 	private String paymentId;
 	private String paymentName;
+	private String createdBy;
 	private Integer version;
 	private Boolean isActive;
 
@@ -267,6 +268,14 @@ public class GetAllEnrollEventDtoDataRes {
 
 	public void setPaymentName(String paymentName) {
 		this.paymentName = paymentName;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public Integer getVersion() {

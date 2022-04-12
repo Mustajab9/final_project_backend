@@ -13,6 +13,7 @@ import com.lawencon.community.dao.AttachmentDao;
 import com.lawencon.community.dao.EnrollEventDao;
 import com.lawencon.community.dao.EventDao;
 import com.lawencon.community.dao.PaymentMethodDao;
+import com.lawencon.community.dao.ProfilesDao;
 import com.lawencon.community.dto.enrollevent.DeleteByEnrollEventIdDtoRes;
 import com.lawencon.community.dto.enrollevent.GetAllEnrollEventDtoDataRes;
 import com.lawencon.community.dto.enrollevent.GetAllEnrollEventDtoRes;
@@ -30,6 +31,7 @@ import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.EnrollEvent;
 import com.lawencon.community.model.Event;
 import com.lawencon.community.model.PaymentMethod;
+import com.lawencon.community.model.Profiles;
 import com.lawencon.community.service.EnrollEventService;
 
 @Service
@@ -38,13 +40,15 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 	private PaymentMethodDao paymentMethodDao;
 	private AttachmentDao attachmentDao;
 	private EventDao eventDao;
+	private ProfilesDao profilesDao;
 
 	@Autowired
-	public EnrollEventServiceImpl(EnrollEventDao enrollEventDao, PaymentMethodDao paymentMethodDao, AttachmentDao attachmentDao, EventDao eventDao) {
+	public EnrollEventServiceImpl(EnrollEventDao enrollEventDao, PaymentMethodDao paymentMethodDao, AttachmentDao attachmentDao, EventDao eventDao, ProfilesDao profilesDao) {
 		this.enrollEventDao = enrollEventDao;
 		this.paymentMethodDao = paymentMethodDao;
 		this.attachmentDao = attachmentDao;
 		this.eventDao = eventDao;
+		this.profilesDao = profilesDao;
 	}
 	
 	@Override
@@ -85,10 +89,11 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 			if(enrollEvent.getAttachmentId() != null) {
 				data.setAttachmentId(enrollEvent.getAttachmentId().getId());
 				data.setAttachmentExtension(enrollEvent.getAttachmentId().getAttachmentExtension());
+				data.setPaymentId(enrollEvent.getPaymentId().getId());
+				data.setPaymentName(enrollEvent.getPaymentId().getPaymentName());
 			}
 			
-			data.setPaymentId(enrollEvent.getPaymentId().getId());
-			data.setPaymentName(enrollEvent.getPaymentId().getPaymentName());
+			data.setCreatedBy(enrollEvent.getCreatedBy());
 			data.setVersion(enrollEvent.getVersion());
 			data.setIsActive(enrollEvent.getIsActive());
 
@@ -135,10 +140,10 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 		if(enrollEvent.getAttachmentId() != null) {
 			data.setAttachmentId(enrollEvent.getAttachmentId().getId());
 			data.setAttachmentExtension(enrollEvent.getAttachmentId().getAttachmentExtension());
+			data.setPaymentId(enrollEvent.getPaymentId().getId());
+			data.setPaymentName(enrollEvent.getPaymentId().getPaymentName());
 		}
 		
-		data.setPaymentId(enrollEvent.getPaymentId().getId());
-		data.setPaymentName(enrollEvent.getPaymentId().getPaymentName());
 		data.setVersion(enrollEvent.getVersion());
 		data.setIsActive(enrollEvent.getIsActive());
 		
@@ -157,20 +162,26 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 			EnrollEvent enrollEvent = new EnrollEvent();
 			enrollEvent.setEnrollCode(getAlphaNumericString(5));
 			
+			Profiles profiles = profilesDao.findByUser(getId());
+			enrollEvent.setProfileId(profiles);
+			
 			Event event = eventDao.findById(enrollEventDto.getEventId());
 			enrollEvent.setEventId(event);
 
 			PaymentMethod paymentMethod = paymentMethodDao.findById(enrollEventDto.getPaymentId());
 			enrollEvent.setPaymentId(paymentMethod);
 			
+			enrollEvent.setIsApprove(false);
 			enrollEvent.setCreatedBy(getId());
 			
 			if(file != null) {
 				Attachment attachment = new Attachment();
+				attachment.setAttachmentCode(getAlphaNumericString(5));
 				attachment.setAttachmentContent(file.getBytes());
 				
 				String extension = fileExtensionName(file);
 				attachment.setAttachmentExtension(extension);
+				attachment.setCreatedBy(getId());
 				
 				Attachment attachmentInsert = attachmentDao.save(attachment);
 				enrollEvent.setAttachmentId(attachmentInsert);
@@ -272,10 +283,10 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 			if(enrollEvent.getAttachmentId() != null) {
 				data.setAttachmentId(enrollEvent.getAttachmentId().getId());
 				data.setAttachmentExtension(enrollEvent.getAttachmentId().getAttachmentExtension());
+				data.setPaymentId(enrollEvent.getPaymentId().getId());
+				data.setPaymentName(enrollEvent.getPaymentId().getPaymentName());
 			}
 			
-			data.setPaymentId(enrollEvent.getPaymentId().getId());
-			data.setPaymentName(enrollEvent.getPaymentId().getPaymentName());
 			data.setVersion(enrollEvent.getVersion());
 			data.setIsActive(enrollEvent.getIsActive());
 			

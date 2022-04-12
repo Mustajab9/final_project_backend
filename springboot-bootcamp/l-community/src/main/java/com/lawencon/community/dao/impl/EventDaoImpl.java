@@ -6,10 +6,13 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.community.dao.EventDao;
 import com.lawencon.community.dto.event.GetAllEventDtoDataRes;
+import com.lawencon.community.dto.event.GetCountNotPaidDtoDataRes;
 import com.lawencon.community.dto.event.GetReportIncomeEventDto;
 import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
 import com.lawencon.community.model.Attachment;
@@ -65,24 +68,26 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 	}
 
 	@Override
-	public List<Event> findEnrollEvent(String id) throws Exception {
+	public List<GetAllEventDtoDataRes> findEnrollEvent(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT e.id, e.event_code, e.event_title, e.event_provider, e.event_price, e.event_time_start, e.event_time_end,");
-		builder.append(" e.event_date_start, e.event_date_end, e.is_approve, c.id AS category_id, c.category_code, c.category_name, t.id AS type_id, t.type_code, t.type_name,");
-		builder.append(" a.id AS attachment_id, a.attachment_extension, e.created_by, e.version, e.is_active, e.location");
-		builder.append(" FROM events SA e");
-		builder.append(" INNER JOIN categories AS c ON category_id = e.category_id");
-		builder.append(" INNER JOIN event_types AS t ON type_id = e.type_id");
-		builder.append(" LEFT JOIN attachments AS a ON attachment_id = e.attachment_id");
-		builder.append(" WHERE e.id IN (SELECT ee.id FROM enroll_events ee JOIN profiles p ON p.id = ee.profile_id WHERE p.user_id = :id)");
+		builder.append(" e.event_date_start, e.event_date_end, e.is_approve, c.id AS category_id, c.category_name, t.id AS type_id, t.type_name,");
+		builder.append(" a.id AS attachment_id, a.attachment_extension, e.created_by, e.version, e.is_active, e.location, ee.is_approve AS enroll_approve, ee.enroll_invoice");
+		builder.append(" FROM events AS e");
+		builder.append(" INNER JOIN categories AS c ON c.id = e.category_id");
+		builder.append(" INNER JOIN event_types AS t ON t.id = e.type_id");
+		builder.append(" LEFT JOIN attachments AS a ON a.id = e.attachment_id");
+		builder.append(" LEFT JOIN enroll_events AS ee ON e.id = ee.event_id");
+		builder.append(" WHERE e.id IN (SELECT ee.event_id FROM enroll_events AS ee WHERE ee.created_by = :id)");
 		builder.append(" AND e.is_approve = true");
+		builder.append(" ORDER BY e.event_date_start ASC");
 
 		List<?> results = createNativeQuery(builder.toString()).setParameter("id", id).getResultList();
-		List<Event> listResult = new ArrayList<>();
+		List<GetAllEventDtoDataRes> listResult = new ArrayList<>();
 
 		results.forEach(result -> {
 			Object[] obj = (Object[]) result;
-			Event data = new Event();
+			GetAllEventDtoDataRes data = new GetAllEventDtoDataRes();
 
 			data.setId(obj[0].toString());
 			data.setEventCode(obj[1].toString());
@@ -94,30 +99,22 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 			data.setEventDateStart((Date) obj[7]);
 			data.setEventDateEnd((Date) obj[8]);
 			data.setIsApprove(Boolean.valueOf(obj[9].toString()));
+			data.setCategoryId(obj[10].toString());
+			data.setCategoryName(obj[11].toString());
+			data.setTypeId(obj[12].toString());
+			data.setTypeName(obj[13].toString());
 
-			Category category = new Category();
-			category.setId(obj[10].toString());
-			category.setCategoryCode(obj[11].toString());
-			category.setCategoryName(obj[12].toString());
-			data.setCategoryId(category);
-
-			EventType type = new EventType();
-			type.setId(obj[13].toString());
-			type.setTypeCode(obj[14].toString());
-			type.setTypeName(obj[15].toString());
-			data.setTypeId(type);
-
-			if (obj[16] != null) {
-				Attachment attachment = new Attachment();
-				attachment.setId(obj[16].toString());
-				attachment.setAttachmentExtension(obj[17].toString());
-				data.setAttachmentId(attachment);
+			if (obj[14] != null) {
+				data.setAttachmentId(obj[14].toString());
+				data.setAttachmentExtension(obj[15].toString());
 			}
 
-			data.setCreatedBy(obj[18].toString());
-			data.setVersion(Integer.valueOf(obj[19].toString()));
-			data.setIsActive(Boolean.valueOf(obj[20].toString()));
-			data.setLocation(obj[21].toString());
+			data.setCreatedBy(obj[16].toString());
+			data.setVersion(Integer.valueOf(obj[17].toString()));
+			data.setIsActive(Boolean.valueOf(obj[18].toString()));
+			data.setEventLocation(obj[19].toString());
+			data.setEnrollIsApprove(Boolean.valueOf(obj[20].toString()));
+			data.setEnrollInvoice(obj[21].toString());
 			
 			listResult.add(data);
 		});
@@ -131,12 +128,12 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 		builder.append("SELECT e.id, e.event_code, e.event_title, e.event_provider, e.event_price, e.event_time_start, e.event_time_end,");
 		builder.append(" e.event_date_start, e.event_date_end, e.is_approve, c.id AS category_id, c.category_code, c.category_name, t.id AS type_id, t.type_code, t.type_name,");
 		builder.append(" a.id AS attachment_id, a.attachment_extension, e.created_by, e.version, e.is_active, e.location");
-		builder.append(" FROM events SA e");
-		builder.append(" INNER JOIN categories AS c ON category_id = e.category_id");
-		builder.append(" INNER JOIN event_types AS t ON type_id = e.type_id");
-		builder.append(" LEFT JOIN attachments AS a ON attachment_id = e.attachment_id");
-		builder.append(" WHERE e.id NOT IN (SELECT ee.id FROM enroll_events ee JOIN profiles p ON p.id = ee.profile_id WHERE p.user_id = :id)");
-		builder.append(" AND e.is_approve = true");
+		builder.append(" FROM events AS e");
+		builder.append(" INNER JOIN categories AS c ON c.id = e.category_id");
+		builder.append(" INNER JOIN event_types AS t ON t.id = e.type_id");
+		builder.append(" LEFT JOIN attachments AS a ON a.id = e.attachment_id");
+		builder.append(" WHERE e.id NOT IN (SELECT ee.event_id FROM enroll_events AS ee WHERE ee.created_by = :id)");
+		builder.append(" AND e.created_by != :id AND e.is_approve = true");
 
 		List<?> results = createNativeQuery(builder.toString()).setParameter("id", id).getResultList();
 		List<Event> listResult = new ArrayList<>();
@@ -202,8 +199,10 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 		builder.append(" INNER JOIN provinces pr ON pr.id = r.province_id");
 		builder.append(" INNER JOIN events e ON e.id = :eventId");
 		builder.append(" WHERE p.id IN (SELECT profile_id FROM enroll_events WHERE enroll_events.event_id = :eventId)");
+		
 		List<?> results = createNativeQuery(builder.toString()).setParameter("eventId", eventId).getResultList();
 		List<GetReportProfileAttendanceEventDto> listResult = new ArrayList<>();
+		
 		results.forEach(result -> {
 			Object[] obj = (Object[]) result;
 			GetReportProfileAttendanceEventDto data = new GetReportProfileAttendanceEventDto();
@@ -266,7 +265,7 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 		builder.append(" e.event_time_start, e.event_time_end, e.event_date_start, e.event_date_end, e.is_approve,");
 		builder.append(" c.id AS category_id, c.category_name, t.id AS type_id, t.type_name, a.id AS attachment_id, a.attachment_extension,");
 		builder.append(" ee.attachment_id AS payment_attachment, pm.id AS payment_id, pm.payment_name, e.version, e.is_active");
-		builder.append(" FROM event AS e");
+		builder.append(" FROM events AS e");
 		builder.append(" INNER JOIN categories AS c ON c.id = e.category_id");
 		builder.append(" INNER JOIN event_types AS t ON t.id = e.type_id");
 		builder.append(" INNER JOIN attachments AS a ON a.id = e.attachment_id");
@@ -329,7 +328,7 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 		builder.append(" e.event_time_start, e.event_time_end, e.event_date_start, e.event_date_end, e.is_approve,");
 		builder.append(" c.id AS category_id, c.category_name, t.id AS type_id, t.type_name, a.id AS attachment_id, a.attachment_extension,");
 		builder.append(" pe.attachment_id AS payment_attachment, pm.id AS payment_id, pm.payment_name, e.version, e.is_active");
-		builder.append(" FROM event AS e");
+		builder.append(" FROM events AS e");
 		builder.append(" INNER JOIN categories AS c ON c.id = e.category_id");
 		builder.append(" INNER JOIN event_types AS t ON t.id = e.type_id");
 		builder.append(" INNER JOIN attachments AS a ON a.id = e.attachment_id");
@@ -384,5 +383,97 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 		});
 
 		return listResult;
+	}
+	
+	@Override
+	public List<GetAllEventDtoDataRes> findEventNotPaid(String id) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT e.id, e.event_code, e.event_title, e.event_provider, e.event_price, e.location,");
+		builder.append(" e.event_time_start, e.event_time_end, e.event_date_start, e.event_date_end, e.is_approve,");
+		builder.append(" c.id AS category_id, c.category_name, t.id AS type_id, t.type_name, a.id AS attachment_id, a.attachment_extension,");
+		builder.append(" pe.attachment_id AS payment_attachment, pm.id AS payment_id, pm.payment_name, e.version, e.is_active");
+		builder.append(" FROM events AS e");
+		builder.append(" INNER JOIN categories AS c ON c.id = e.category_id");
+		builder.append(" INNER JOIN event_types AS t ON t.id = e.type_id");
+		builder.append(" INNER JOIN attachments AS a ON a.id = e.attachment_id");
+		builder.append(" LEFT JOIN payment_event_detail AS ped ON e.id = ped.event_id");
+		builder.append(" LEFT JOIN payment_events AS pe ON pe.id = ped.payment_event_id");
+		builder.append(" LEFT JOIN attachments AS attac ON attac.id = pe.attachment_id");
+		builder.append(" LEFT JOIN payment_method AS pm ON pm.id = pe.payment_id");
+		builder.append(" WHERE e.id NOT IN (SELECT ped.event_id FROM payment_event_detail ped WHERE e.created_by = :id)");
+		builder.append(" AND e.created_by = :id");
+		
+		List<?> results = createNativeQuery(builder.toString())
+							.setParameter("id", id)
+							.getResultList();
+		List<GetAllEventDtoDataRes> listResult = new ArrayList<>();
+		
+		results.forEach(result -> {
+			Object[] obj = (Object[]) result;
+			GetAllEventDtoDataRes data = new GetAllEventDtoDataRes();
+			
+			data.setId(obj[0].toString());
+			data.setEventCode(obj[1].toString());
+			data.setEventTitle(obj[2].toString());
+			data.setEventProvider(obj[3].toString());
+			data.setEventPrice(BigInteger.valueOf(((Number) obj[4]).longValue()));
+			data.setEventLocation(obj[5].toString());
+			data.setEventTimeStart((Time) obj[6]);
+			data.setEventTimeEnd((Time) obj[7]);
+			data.setEventDateStart((Date) obj[8]);
+			data.setEventDateEnd((Date) obj[9]);
+			data.setIsApprove(Boolean.valueOf(obj[10].toString()));
+			data.setCategoryId(obj[11].toString());
+			data.setCategoryName(obj[12].toString());
+			data.setTypeId(obj[13].toString());
+			data.setTypeName(obj[14].toString());
+			
+			if (obj[15] != null) {
+				data.setAttachmentId(obj[15].toString());
+				data.setAttachmentExtension(obj[16].toString());
+			}
+			
+			if(obj[17] != null) {
+				data.setPaymentAttachment(obj[17].toString());
+				data.setPaymentId(obj[18].toString());
+				data.setPaymentName(obj[19].toString());
+			}
+			
+			data.setVersion(Integer.valueOf(obj[20].toString()));
+			data.setIsActive(Boolean.valueOf(obj[21].toString()));
+			
+			listResult.add(data);
+		});
+		
+		return listResult;
+	}
+	
+	@Override
+	public GetCountNotPaidDtoDataRes countNotPaid(String id) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT COUNT(e.id)");
+		builder.append(" FROM events AS e");
+		builder.append(" INNER JOIN categories AS c ON c.id = e.category_id");
+		builder.append(" INNER JOIN event_types AS t ON t.id = e.type_id");
+		builder.append(" INNER JOIN attachments AS a ON a.id = e.attachment_id");
+		builder.append(" LEFT JOIN payment_event_detail AS ped ON e.id = ped.event_id");
+		builder.append(" LEFT JOIN payment_events AS pe ON pe.id = ped.payment_event_id");
+		builder.append(" LEFT JOIN attachments AS attac ON attac.id = pe.attachment_id");
+		builder.append(" LEFT JOIN payment_method AS pm ON pm.id = pe.payment_id");
+		builder.append(" WHERE e.id NOT IN (SELECT ped.event_id FROM payment_event_detail ped WHERE e.created_by = :id)");
+		builder.append(" AND e.created_by = :id");
+		
+		GetCountNotPaidDtoDataRes countNotPaid = new GetCountNotPaidDtoDataRes();
+		try {
+			Object result = createNativeQuery(builder.toString())
+					.setParameter("id", id)
+					.getSingleResult();
+			
+			countNotPaid.setCountNotPaid(Integer.valueOf(result.toString()));
+			
+		}catch (NoResultException e) {
+			e.printStackTrace();
+		}
+		return countNotPaid;
 	}
 }

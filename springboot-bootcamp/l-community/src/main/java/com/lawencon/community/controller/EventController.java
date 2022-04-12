@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.lawencon.community.dto.event.DeleteByEventIdDtoRes;
 import com.lawencon.community.dto.event.GetAllEventDtoRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoRes;
+import com.lawencon.community.dto.event.GetCountNotPaidDtoDataRes;
 import com.lawencon.community.dto.event.GetReportIncomeEventDto;
 import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
 import com.lawencon.community.dto.event.InsertEventDtoRes;
@@ -66,7 +67,7 @@ public class EventController {
 				.body(out);
 	}
 	
-	@GetMapping("income_report/{eventId}")
+	@GetMapping("report/income_report/{eventId}")
 	public ResponseEntity<?> getReportIncome(@PathVariable("eventId") String eventId) throws Exception {
 		List<GetReportIncomeEventDto> data = eventService.getReportIncome(eventId);
 		
@@ -95,9 +96,9 @@ public class EventController {
 		return new ResponseEntity<GetAllEventDtoRes>(data, HttpStatus.OK);
 	}
 	
-	@GetMapping("not-enroll/{id}")
-	public ResponseEntity<GetAllEventDtoRes> getByNotEnroll(@PathVariable("id") String id) throws Exception {
-		GetAllEventDtoRes data = eventService.findNotEnrollEvent(id);
+	@GetMapping("not-enroll")
+	public ResponseEntity<GetAllEventDtoRes> getByNotEnroll() throws Exception {
+		GetAllEventDtoRes data = eventService.findNotEnrollEvent();
 		return new ResponseEntity<GetAllEventDtoRes>(data, HttpStatus.OK);
 	}
 	
@@ -107,10 +108,22 @@ public class EventController {
 		return new ResponseEntity<GetAllEventDtoRes>(data, HttpStatus.OK);
 	}
 	
-	@GetMapping("	/{id}/{isApprove}")
+	@GetMapping("event-not-approve/{id}/{isApprove}")
 	public ResponseEntity<GetAllEventDtoRes> getByNotEnroll(@PathVariable("id") String id, @PathVariable("isApprove") boolean isApprove) throws Exception {
 		GetAllEventDtoRes data = eventService.findEventNotApprove(id, isApprove);
 		return new ResponseEntity<GetAllEventDtoRes>(data, HttpStatus.OK);
+	}
+	
+	@GetMapping("event-not-paid/{id}")
+	public ResponseEntity<GetAllEventDtoRes> getEventNotPaid(@PathVariable("id") String id) throws Exception {
+		GetAllEventDtoRes data = eventService.findEventNotPaid(id);
+		return new ResponseEntity<GetAllEventDtoRes>(data, HttpStatus.OK);
+	}
+	
+	@GetMapping("count-not-paid")
+	public ResponseEntity<GetCountNotPaidDtoDataRes> getCountNotPaid() throws Exception {
+		GetCountNotPaidDtoDataRes data = eventService.countNotPaid();
+		return new ResponseEntity<GetCountNotPaidDtoDataRes>(data, HttpStatus.OK);
 	}
 
 	@DeleteMapping("{id}")
