@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 
 import org.springframework.stereotype.Repository;
 
 import com.lawencon.community.dao.EventDao;
 import com.lawencon.community.dto.event.GetAllEventDtoDataRes;
+import com.lawencon.community.dto.event.GetByEventIdDtoDataRes;
 import com.lawencon.community.dto.event.GetCountNotPaidDtoDataRes;
 import com.lawencon.community.dto.event.GetReportIncomeEventDto;
 import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
@@ -322,7 +324,7 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 	}
 	
 	@Override
-	public List<GetAllEventDtoDataRes> findEventNotApprove(String id, boolean isApprove) throws Exception {
+	public GetByEventIdDtoDataRes findEventStatus(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT e.id, e.event_code, e.event_title, e.event_provider, e.event_price, e.location,");
 		builder.append(" e.event_time_start, e.event_time_end, e.event_date_start, e.event_date_end, e.is_approve,");
@@ -336,19 +338,19 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 		builder.append(" INNER JOIN payment_events AS pe ON pe.id = ped.payment_event_id");
 		builder.append(" INNER JOIN attachments AS attac ON attac.id = pe.attachment_id");
 		builder.append(" INNER JOIN payment_method AS pm ON pm.id = pe.payment_id");
-		builder.append(" WHERE pe.is_approve = :isApprove");
-		builder.append(" AND e.created_by = :id");
+		builder.append(" WHERE e.id = :id");
 
-		List<?> results = createNativeQuery(builder.toString())
-							.setParameter("isApprove", isApprove)
-							.setParameter("id", id)
-							.getResultList();
-		List<GetAllEventDtoDataRes> listResult = new ArrayList<>();
-
-		results.forEach(result -> {
+		
+		GetByEventIdDtoDataRes data = null;
+		try {
+			Object result = createNativeQuery(builder.toString())
+					.setParameter("id", id)
+					.getSingleResult();
+			
+			
 			Object[] obj = (Object[]) result;
-			GetAllEventDtoDataRes data = new GetAllEventDtoDataRes();
-
+			
+			data = new GetByEventIdDtoDataRes();
 			data.setId(obj[0].toString());
 			data.setEventCode(obj[1].toString());
 			data.setEventTitle(obj[2].toString());
@@ -364,7 +366,7 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 			data.setCategoryName(obj[12].toString());
 			data.setTypeId(obj[13].toString());
 			data.setTypeName(obj[14].toString());
-
+			
 			if (obj[15] != null) {
 				data.setAttachmentId(obj[15].toString());
 				data.setAttachmentExtension(obj[16].toString());
@@ -375,14 +377,15 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 				data.setPaymentId(obj[18].toString());
 				data.setPaymentName(obj[19].toString());
 			}
-
+			
 			data.setVersion(Integer.valueOf(obj[20].toString()));
 			data.setIsActive(Boolean.valueOf(obj[21].toString()));
+		
+		}catch(NoResultException | NonUniqueResultException e) {
+			e.printStackTrace();
+		}
 
-			listResult.add(data);
-		});
-
-		return listResult;
+		return data;
 	}
 	
 	@Override

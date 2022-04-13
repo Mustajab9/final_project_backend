@@ -3,6 +3,7 @@ package com.lawencon.community.dao;
 import java.util.List;
 
 import com.lawencon.community.dto.event.GetAllEventDtoDataRes;
+import com.lawencon.community.dto.event.GetByEventIdDtoDataRes;
 import com.lawencon.community.dto.event.GetCountNotPaidDtoDataRes;
 import com.lawencon.community.dto.event.GetReportIncomeEventDto;
 import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
@@ -20,7 +21,7 @@ public interface EventDao {
 	List<GetReportIncomeEventDto> getReportIncome(String eventId) throws Exception;
 	Long countAll() throws Exception;
 	List<GetAllEventDtoDataRes> findEnrollStatus(String id, boolean isApprove) throws Exception;
-	List<GetAllEventDtoDataRes> findEventNotApprove(String id, boolean isApprove) throws Exception;
+	GetByEventIdDtoDataRes findEventStatus(String id) throws Exception;
 	List<GetAllEventDtoDataRes> findEventNotPaid(String id) throws Exception;
 	GetCountNotPaidDtoDataRes countNotPaid(String id) throws Exception;
 }

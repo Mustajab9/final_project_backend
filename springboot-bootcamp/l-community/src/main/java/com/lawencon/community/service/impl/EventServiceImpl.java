@@ -89,6 +89,13 @@ public class EventServiceImpl extends BaseService implements EventService {
 				data.setAttachmentExtension(event.getAttachmentId().getAttachmentExtension());
 			}
 			
+			GetByEventIdDtoDataRes eventData = eventDao.findEventStatus(event.getId());
+			if(eventData.getPaymentAttachment() != null) {
+				data.setPaymentAttachment(eventData.getPaymentAttachment());
+				data.setPaymentId(eventData.getPaymentId());
+				data.setPaymentName(eventData.getPaymentName());
+			}
+			
 			data.setCreatedBy(event.getCreatedBy());
 			data.setVersion(event.getVersion());
 			data.setIsActive(event.getIsActive());
@@ -342,9 +349,9 @@ public class EventServiceImpl extends BaseService implements EventService {
 	}
 	
 	@Override
-	public GetAllEventDtoRes findEventNotApprove(String id, boolean isApprove) throws Exception {
-		GetAllEventDtoRes dtoRes = new GetAllEventDtoRes();
-		List<GetAllEventDtoDataRes> findEventNotApprove = eventDao.findEventNotApprove(id, isApprove);
+	public GetByEventIdDtoRes findEventStatus(String id) throws Exception {
+		GetByEventIdDtoRes dtoRes = new GetByEventIdDtoRes();
+		GetByEventIdDtoDataRes findEventNotApprove = eventDao.findEventStatus(id);
 		
 		dtoRes.setData(findEventNotApprove);
 		dtoRes.setMsg(null);

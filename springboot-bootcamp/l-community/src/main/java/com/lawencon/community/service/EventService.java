@@ -25,7 +25,7 @@ public interface EventService {
 	List<GetReportProfileAttendanceEventDto> getReportEnroll(String eventId) throws Exception;
 	List<GetReportIncomeEventDto> getReportIncome(String eventId) throws Exception;
 	GetAllEventDtoRes findEnrollStatus(String id, boolean isApprove) throws Exception;
-	GetAllEventDtoRes findEventNotApprove(String id, boolean isApprove) throws Exception;
+	GetByEventIdDtoRes findEventStatus(String id) throws Exception;
 	GetAllEventDtoRes findEventNotPaid(String id) throws Exception;
 	GetCountNotPaidDtoDataRes countNotPaid() throws Exception;
 }

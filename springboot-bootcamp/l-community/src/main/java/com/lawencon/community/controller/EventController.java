@@ -108,10 +108,10 @@ public class EventController {
 		return new ResponseEntity<GetAllEventDtoRes>(data, HttpStatus.OK);
 	}
 	
-	@GetMapping("event-not-approve/{id}/{isApprove}")
-	public ResponseEntity<GetAllEventDtoRes> getByNotEnroll(@PathVariable("id") String id, @PathVariable("isApprove") boolean isApprove) throws Exception {
-		GetAllEventDtoRes data = eventService.findEventNotApprove(id, isApprove);
-		return new ResponseEntity<GetAllEventDtoRes>(data, HttpStatus.OK);
+	@GetMapping("event-not-approve/{id}")
+	public ResponseEntity<GetByEventIdDtoRes> getByNotEnroll(@PathVariable("id") String id) throws Exception {
+		GetByEventIdDtoRes data = eventService.findEventStatus(id);
+		return new ResponseEntity<GetByEventIdDtoRes>(data, HttpStatus.OK);
 	}
 	
 	@GetMapping("event-not-paid/{id}")
