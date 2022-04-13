@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Room Verification</title>
+    <title>Your Event Invoice</title>
     <style>
         body {
             font-family: "Montserrat";
-            font-size:16px;
+            font-size: 16px;
         }
-        .email-area{
+
+        .email-area {
             background: rgba(0, 0, 0, .1);
             color: black;
             width: 100%;
@@ -29,46 +31,49 @@
         }
 
         .card {
-            
+
             margin: 0 auto;
             background-color: white;
             border: 1px solid rgba(0, 0, 0, .2);
         }
 
-        .card-header{
-            background:#f1f4f5;
+        .card-header {
+            background: #f1f4f5;
             padding: 16px;
             border-bottom: 1px solid rgba(0, 0, 0, .2);
-            margin:0px;
+            margin: 0px;
         }
 
-        .card-header a{
-            color:darkred;
+        .card-header a {
+            color: darkred;
             text-decoration: none;
-            float:right;
-            padding:10px;
+            float: right;
+            padding: 10px;
             font-weight: normal;
         }
 
-        .card-body{
+        .card-body {
             width: 100%;
             padding: 16px;
             box-sizing: border-box;
         }
 
-        .card-title{
+        .card-title {
             font-weight: 700;
-            color:darkred;
-            width:90%;
+            color: rgb(65, 200, 241);
+            width: 90%;
         }
+
         .table {
             border-collapse: collapse;
             width: 100%;
         }
-        .table tr td,.table tr th {
-            padding:5px 5px;
-            margin:0px;
-            font-size:10px;
+
+        .table tr td,
+        .table tr th {
+            padding: 5px 5px;
+            margin: 0px;
+            font-size: 10px;
         }
 
         .table tr th {
@@ -81,37 +86,52 @@
         }
     </style>
 </head>
+
 <body>
     <div class="email-area">
         <div class="card">
             <div class="card-body">
-                <h3 class="card-title">Your Account Ticket Management System has been registered</h3>
+                <!-- <h3 class="card-title">Your Account Linov Community has been registered</h3> -->
+                <h3 class="card-title">Event Invoice</h3>
                 <p class="card-text" style="color: black;">
                     Dear ${profileName},
                 </p>
                 <p class="card-text" style="color: black;">
-                    Your Account:
+                    Your Event Data:
                 </p>
                 <table border="1" class="table">
                     <tr>
-                        <th width="60px" style="background-color: darkred; color: white;">Email</th>
-                        <td style="color: black;">${userEmail}</td> 
+                        <th width="60px" style="background-color: rgb(65, 200, 241); color: white;">Invoice:
+                        </th>
+                        <td style="color: black;">${enrollInvoice}</td>
                     </tr>
                     <tr>
-                        <th style="background-color: darkred; color: white;">Password</th>
-                        <td style="color: black;">${userPassword}</td>
+                        <th width="60px" style="background-color: rgb(65, 200, 241); color: white;">Event Title:
+                        </th>
+                        <td style="color: black;">${eventTitle}</td>
+                    </tr>
+                    <tr>
+                        <th width="60px" style="background-color: rgb(65, 200, 241); color: white;">Event Provider:
+                        </th>
+                        <td style="color: black;">${eventProvider}</td>
+                    </tr>
+                    <tr>
+                        <th width="60px" style="background-color: rgb(65, 200, 241); color: white;">Event Price:
+                        </th>
+                        <td style="color: black;">${eventPrice} IDR</td>
+                    </tr>
+                    <tr>
+                        <th width="60px" style="background-color: rgb(65, 200, 241); color: white;">Event Date:
+                        </th>
+                        <td style="color: black;">${eventDateStart} - ${eventDateEnd} : ${eventTimeStart} -
+                            ${eventTimeEnd}</td>
                     </tr>
                 </table>
-
-                <!--<p class="card-text" style="color: black;">
-                        Has been approved, Click here for login : _url_
-                </p>-->
-
-                <p class="card-text" style="color: black;">If you have any questions, please contact Administrator</p>
                 <br>
                 <p class="card-text" style="color: black;">Thank you</p>
             </div>
         </div>
     </div>
 </body>
+
 </html>
