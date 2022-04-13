@@ -37,10 +37,9 @@ public class ProfileSosmedDaoImpl extends BaseDao<ProfileSosmed> implements Prof
 	public List<ProfileSosmed> findByUser(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT ps.id, ps.account_name, p.id AS profile_id, p.profile_name, sm.id AS social_media_id, sm.social_media_name, ps.version, ps.is_active");
-		builder.append(" FROM profile_sosmed ps");
-		builder.append(" JOIN profiles p ON p.id = ps.profile_id");
-		builder.append(" JOIN social_media sm ON sm.id = ps.social_media_id");
-		builder.append(" WHERE p.user_id = :id");
+		builder.append(" FROM social_media sm");
+		builder.append(" LEFT JOIN profile_sosmed ps ON ps.social_media_id = sm.id");
+		builder.append(" LEFT JOIN profiles p ON p.id = ps.profile_id AND p.user_id = :id");
 		
 		List<?> results = createNativeQuery(builder.toString())
 				.setParameter("id", id)
@@ -51,23 +50,25 @@ public class ProfileSosmedDaoImpl extends BaseDao<ProfileSosmed> implements Prof
 			Object[] obj = (Object[]) result;
 			ProfileSosmed data = new ProfileSosmed();
 			
-			data.setId(obj[0].toString());
-			data.setAccountName(obj[1].toString());
-			
-			Profiles profiles = new Profiles();
-			profiles.setId(obj[2].toString());
-			profiles.setProfileName(obj[3].toString());
-			data.setProfileId(profiles);
+			if(obj[0] != null) {
+				data.setId(obj[0].toString());
+				data.setAccountName(obj[1].toString());
+				
+				Profiles profiles = new Profiles();
+				profiles.setId(obj[2].toString());
+				profiles.setProfileName(obj[3].toString());
+				data.setProfileId(profiles);
+				
+				data.setVersion(Integer.valueOf(obj[6].toString()));
+				data.setIsActive(Boolean.valueOf(obj[7].toString()));
+			}
 			
 			SocialMedia socialMedia = new SocialMedia();
 			socialMedia.setId(obj[4].toString());
 			socialMedia.setSocialMediaName(obj[5].toString());
 			data.setSocialMediaId(socialMedia);
 			
-			data.setVersion(Integer.valueOf(obj[6].toString()));
-			data.setIsActive(Boolean.valueOf(obj[7].toString()));
-			
-			listResult.add(data);
+			listResult.add(data);				
 		});
 		
 		return listResult;

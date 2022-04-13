@@ -207,12 +207,17 @@ public class ProfileSosmedServceImpl extends BaseService implements ProfileSosme
 
 			data.setId(profileSosmed.getId());
 			data.setAccountName(profileSosmed.getAccountName());
-			data.setProfileId(profileSosmed.getProfileId().getId());
-			data.setProfileName(profileSosmed.getProfileId().getProfileName());
+			
+			if(profileSosmed.getProfileId() != null) {
+				data.setProfileId(profileSosmed.getProfileId().getId());
+				data.setProfileName(profileSosmed.getProfileId().getProfileName());
+				
+				data.setVersion(profileSosmed.getVersion());
+				data.setIsActive(profileSosmed.getIsActive());
+			}
+			
 			data.setSocialMediaid(profileSosmed.getSocialMediaId().getId());
 			data.setSocialMediaName(profileSosmed.getSocialMediaId().getSocialMediaName());
-			data.setVersion(profileSosmed.getVersion());
-			data.setIsActive(profileSosmed.getIsActive());
 
 			profileList.add(data);
 		}
