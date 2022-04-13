@@ -103,7 +103,7 @@
                     <tr>
                         <th width="60px" style="background-color: rgb(65, 200, 241); color: white;">Invoice:
                         </th>
-                        <td style="color: black;">${enrollInvoice}</td>
+                        <td style="color: black;">${invoice}</td>
                     </tr>
                     <tr>
                         <th width="60px" style="background-color: rgb(65, 200, 241); color: white;">Event Title:

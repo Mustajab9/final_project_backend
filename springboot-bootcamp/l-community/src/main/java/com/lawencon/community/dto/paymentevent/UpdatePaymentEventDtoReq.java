@@ -2,6 +2,7 @@ package com.lawencon.community.dto.paymentevent;
 
 public class UpdatePaymentEventDtoReq {
 	private String id;
+	private String invoice;
 	private Boolean isApprove;
 	private Integer version;
 	private Boolean isActive;
@@ -12,6 +13,14 @@ public class UpdatePaymentEventDtoReq {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getInvoice() {
+		return invoice;
+	}
+
+	public void setInvoice(String invoice) {
+		this.invoice = invoice;
 	}
 
 	public Boolean getIsApprove() {

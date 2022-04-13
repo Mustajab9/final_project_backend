@@ -180,6 +180,7 @@ public class PaymentEventServiceImpl extends BaseService implements PaymentEvent
 			if (data.getVersion() != null) {
 				PaymentEvent paymentEvent = paymentEventDao.findById(data.getId());
 
+				paymentEvent.setPaymentEventInvoice(data.getInvoice());
 				paymentEvent.setIsApprove(data.getIsApprove());
 				paymentEvent.setUpdatedBy(getId());
 				paymentEvent.setVersion(data.getVersion());

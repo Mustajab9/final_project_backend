@@ -37,7 +37,7 @@ import com.lawencon.community.dto.user.InsertUserDtoRes;
 import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
 import com.lawencon.community.dto.user.UpdateUserDtoReq;
 import com.lawencon.community.dto.user.UpdateUserDtoRes;
-import com.lawencon.community.dto.user.VerificationCodeTemplate;
+import com.lawencon.community.dto.user.EmailDtoReq;
 import com.lawencon.community.model.Role;
 import com.lawencon.community.model.User;
 import com.lawencon.community.service.UserService;
@@ -47,8 +47,6 @@ import freemarker.template.Configuration;
 
 @Service
 public class UserServiceImpl extends BaseService implements UserService {
-	private static final String text = "Kode Verifikasi Akun Anda : ";
-//	private static final String subject = "Password App E-Learning";
 	private static final String subject = "Registration Verification Code";
 	private static final String email = "mustajabsa@gmail.com";
 	private static final Boolean isActive = false;
@@ -124,60 +122,6 @@ public class UserServiceImpl extends BaseService implements UserService {
 		return getById;
 	}
 
-//	@Override
-//	public InsertUserDtoRes insert(InsertUserDtoReq data) throws Exception {
-//		InsertUserDtoRes insert = new InsertUserDtoRes();
-//
-//		try {
-//			User user = new User();
-//			user.setEmail(data.getUsername());
-//
-//			String password = data.getPassword();
-//
-//			String passwordEncode = passwordEncoder.encode(password);
-//			user.setPassword(passwordEncode);
-//			
-//			String verificationCode = getAlphaNumericString(5);
-//			user.setVerificationCode(verificationCode);
-//
-//			Role role = roleDao.findByCode(data.getRoleCode());
-//			user.setRoleId(role);
-//			user.setIsActive(isActive);
-//			
-//			begin();
-//			User insertUser = userDao.save(user);
-//			commit();
-//
-//			MimeMessage message = mailSender.createMimeMessage();
-//			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
-//					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-//
-//			messageHelper.setTo(data.getUsername());
-//			messageHelper.setText(text + verificationCode, true);
-//			messageHelper.setSubject(subject);
-//			messageHelper.setFrom(email);
-//
-//			ExecutorService executor = Executors.newSingleThreadExecutor();
-//
-//			executor.submit(() -> {
-//				mailSender.send(message);
-//			});
-//			executor.shutdown();
-//
-//			InsertUserDtoDataRes dataDto = new InsertUserDtoDataRes();
-//			dataDto.setId(insertUser.getId());
-//
-//			insert.setData(dataDto);
-//			insert.setMsg("Registrasi " + CommonConstant.SUCCESS.getDetail());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			rollback();
-//			throw new Exception(e);
-//		}
-//
-//		return insert;
-//	}
-
 	@Override
 	public InsertUserDtoRes insert(InsertUserDtoReq data) throws Exception {
 		InsertUserDtoRes dataRes = new InsertUserDtoRes();
@@ -204,20 +148,18 @@ public class UserServiceImpl extends BaseService implements UserService {
 			User insertUser = userDao.save(user);
 			commit();
 			
-			VerificationCodeTemplate verifCodeTemplate = new VerificationCodeTemplate();
-			verifCodeTemplate.setTo(insertUser.getEmail());
-			verifCodeTemplate.setFrom(email);
-			verifCodeTemplate.setSubject(subject);
+			EmailDtoReq emailReq = new EmailDtoReq();
+			emailReq.setTo(insertUser.getEmail());
+			emailReq.setFrom(email);
+			emailReq.setSubject(subject);
 			Map<String, Object> model = new HashMap<>();
-//	        model.put("userEmail", insertUser.getEmail());
 	        model.put("verificationCode", insertUser.getVerificationCode());
-			verifCodeTemplate.setModel(model);
+	        emailReq.setModel(model);
 	        
 			ExecutorService executor = Executors.newSingleThreadExecutor();
 
 			executor.submit(() -> {
-//				mailSender.send(messageHelper.getMimeMessage());
-				sendEmail(verifCodeTemplate);
+				sendEmail(emailReq);
 			});
 			executor.shutdown();
 
@@ -356,8 +298,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 				if (passwordEncoder.matches(data.getPassword(), user.getPassword()) == true) {
 					String passwordEncode = passwordEncoder.encode(data.getNewPassword());
 					user.setPassword(passwordEncode);
-				}
-				;
+				};
 
 				Role role = roleDao.findById(data.getRoleId());
 				user.setRoleId(role);
@@ -436,18 +377,17 @@ public class UserServiceImpl extends BaseService implements UserService {
 	}
 	
 	@Async
-	public void sendEmail(VerificationCodeTemplate verifCode) {
+	public void sendEmail(EmailDtoReq emailReq) {
 		MimeMessage message = mailSender.createMimeMessage();
 		try {
 			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
 					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
-//			messageHelper.setTo(data.getUsername());
-			messageHelper.setSubject(verifCode.getSubject());
-			messageHelper.setFrom(verifCode.getFrom());
-			messageHelper.setTo(verifCode.getTo());
-			verifCode.setContent(getContentFromTemplate(verifCode.getModel()));
-			messageHelper.setText(verifCode.getContent(), true);
+			messageHelper.setSubject(emailReq.getSubject());
+			messageHelper.setFrom(emailReq.getFrom());
+			messageHelper.setTo(emailReq.getTo());
+			emailReq.setContent(getContentFromTemplate(emailReq.getModel()));
+			messageHelper.setText(emailReq.getContent(), true);
 			mailSender.send(messageHelper.getMimeMessage());
 		}catch(MessagingException e) {
 			e.printStackTrace();
@@ -466,5 +406,4 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
         return content.toString();
     }
-	
 }

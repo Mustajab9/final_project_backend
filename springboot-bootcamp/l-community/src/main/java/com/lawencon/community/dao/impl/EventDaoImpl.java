@@ -17,6 +17,7 @@ import com.lawencon.community.dto.event.GetByEventIdDtoDataRes;
 import com.lawencon.community.dto.event.GetCountNotPaidDtoDataRes;
 import com.lawencon.community.dto.event.GetReportIncomeEventDto;
 import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
+import com.lawencon.community.dto.event.InvoiceEventDtoReq;
 import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.Category;
 import com.lawencon.community.model.Event;
@@ -477,6 +478,56 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 		}catch (NoResultException e) {
 			e.printStackTrace();
 		}
+		
 		return countNotPaid;
+	}
+	
+	@Override
+	public InvoiceEventDtoReq getDataSendInvoice(String id) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT p.profile_name, pe.payment_events_invoice, e.event_provider, e.event_price,");
+		builder.append(" e.event_date_start, e.event_date_end, e.event_time_start, e.event_time_end, pe.id, u.email, e.event_title");
+		builder.append(" FROM events AS e");
+		builder.append(" LEFT JOIN payment_event_detail AS ped ON e.id = ped.event_id");
+		builder.append(" LEFT JOIN payment_events AS pe ON pe.id = ped.payment_event_id");
+		builder.append(" INNER JOIN profiles AS p ON p.user_id = ped.created_by");
+		builder.append(" INNER JOIN users AS u ON u.id = p.user_id");
+		builder.append(" WHERE e.id = :id");
+		
+		InvoiceEventDtoReq data = null;
+		try {
+			Object result = createNativeQuery(builder.toString())
+					.setParameter("id", id)
+					.getSingleResult();
+			
+			
+			Object[] obj = (Object[]) result;
+			
+			data = new InvoiceEventDtoReq();
+			data.setProfileName(obj[0].toString());
+			
+			if(obj[1] != null) {				
+				data.setInvoice(obj[1].toString());
+			}
+			
+			data.setEventProvider(obj[2].toString());
+			data.setEventPrice(obj[3].toString());
+			data.setEventDateStart(obj[4].toString());
+			data.setEventDateEnd(obj[5].toString());
+			data.setEventTimeStart(obj[6].toString());
+			data.setEventTimeEnd(obj[7].toString());
+			
+			if(obj[8] != null) {				
+				data.setPaymentId(obj[8].toString());
+			}
+			
+			data.setEmail(obj[9].toString());
+			data.setEventTitle(obj[10].toString());
+			
+		}catch (NoResultException e) {
+			e.printStackTrace();
+		}
+		
+		return data;
 	}
 }

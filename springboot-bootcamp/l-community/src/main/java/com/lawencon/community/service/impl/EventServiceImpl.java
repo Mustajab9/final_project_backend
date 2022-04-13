@@ -1,10 +1,25 @@
 package com.lawencon.community.service.impl;
 
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +29,7 @@ import com.lawencon.community.dao.AttachmentDao;
 import com.lawencon.community.dao.CategoryDao;
 import com.lawencon.community.dao.EventDao;
 import com.lawencon.community.dao.EventTypeDao;
+import com.lawencon.community.dao.PaymentEventDao;
 import com.lawencon.community.dao.PriceListEventDao;
 import com.lawencon.community.dto.event.DeleteByEventIdDtoRes;
 import com.lawencon.community.dto.event.GetAllEventDtoDataRes;
@@ -26,33 +42,58 @@ import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
 import com.lawencon.community.dto.event.InsertEventDtoDataRes;
 import com.lawencon.community.dto.event.InsertEventDtoReq;
 import com.lawencon.community.dto.event.InsertEventDtoRes;
+import com.lawencon.community.dto.event.InvoiceEventDtoReq;
 import com.lawencon.community.dto.event.UpdateEventDtoDataRes;
 import com.lawencon.community.dto.event.UpdateEventDtoReq;
 import com.lawencon.community.dto.event.UpdateEventDtoRes;
+import com.lawencon.community.dto.paymentevent.UpdatePaymentEventDtoReq;
+import com.lawencon.community.dto.user.EmailDtoReq;
 import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.Category;
 import com.lawencon.community.model.Event;
 import com.lawencon.community.model.EventType;
+import com.lawencon.community.model.PaymentEvent;
 import com.lawencon.community.model.PriceListEvent;
 import com.lawencon.community.service.EventService;
+import com.lawencon.community.service.PaymentEventService;
 import com.lawencon.model.SearchQuery;
+
+import freemarker.template.Configuration;
 
 @Service
 public class EventServiceImpl extends BaseService implements EventService {
+	private static final String email = "mustajabsa@gmail.com";
 	private EventDao eventDao;
 	private EventTypeDao eventTypeDao;
 	private CategoryDao categoryDao;
 	private AttachmentDao attachmentDao;
 	private PriceListEventDao priceListEventDao;
+	private JavaMailSender mailSender;
+	private PaymentEventDao paymentEventDao;
+	private PaymentEventService paymentEventService;
 
 	@Autowired
 	public EventServiceImpl(EventDao eventDao, EventTypeDao eventTypeDao, CategoryDao categoryDao,
-			AttachmentDao attachmentDao, PriceListEventDao priceListEventDao) {
+			AttachmentDao attachmentDao, PriceListEventDao priceListEventDao, JavaMailSender mailSender) {
 		this.eventDao = eventDao;
 		this.eventTypeDao = eventTypeDao;
 		this.categoryDao = categoryDao;
 		this.attachmentDao = attachmentDao;
 		this.priceListEventDao = priceListEventDao;
+		this.mailSender = mailSender;
+	}
+	
+	@Autowired
+    private Configuration freeMarkerConfiguration;
+	
+	@Autowired
+	public void setPaymentEventDao(PaymentEventDao paymentEventDao) {
+		this.paymentEventDao = paymentEventDao;
+	}
+	
+	@Autowired
+	public void setPaymentEventService(PaymentEventService paymentEventService) {
+		this.paymentEventService = paymentEventService;
 	}
 
 	@Override
@@ -90,7 +131,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 			}
 			
 			GetByEventIdDtoDataRes eventData = eventDao.findEventStatus(event.getId());
-			if(eventData.getPaymentAttachment() != null) {
+			if(eventData != null) {
 				data.setPaymentAttachment(eventData.getPaymentAttachment());
 				data.setPaymentId(eventData.getPaymentId());
 				data.setPaymentName(eventData.getPaymentName());
@@ -138,7 +179,15 @@ public class EventServiceImpl extends BaseService implements EventService {
 			data.setAttachmentId(event.getAttachmentId().getId());
 			data.setAttachmentExtension(event.getAttachmentId().getAttachmentExtension());
 		}
-
+		
+		GetByEventIdDtoDataRes eventData = eventDao.findEventStatus(event.getId());
+		if(eventData != null) {
+			data.setPaymentAttachment(eventData.getPaymentAttachment());
+			data.setPaymentId(eventData.getPaymentId());
+			data.setPaymentName(eventData.getPaymentName());
+		}
+		
+		data.setCreatedBy(event.getCreatedBy());
 		data.setVersion(event.getVersion());
 		data.setIsActive(event.getIsActive());
 
@@ -222,6 +271,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 		try {
 			if (data.getVersion() != null) {
 				Event event = eventDao.findById(data.getId());
+				
 				event.setIsApprove(data.getIsApprove());
 				event.setUpdatedBy(getId());
 				event.setVersion(data.getVersion());
@@ -236,6 +286,51 @@ public class EventServiceImpl extends BaseService implements EventService {
 
 				UpdateEventDtoDataRes dataDto = new UpdateEventDtoDataRes();
 				dataDto.setVersion(eventUpdate.getVersion());
+				
+				if(eventUpdate.getIsApprove() == true) {
+					InvoiceEventDtoReq invoiceReq = eventDao.getDataSendInvoice(data.getId());
+					UpdatePaymentEventDtoReq updateReq = new UpdatePaymentEventDtoReq();
+					
+					Date date = new Date();
+					LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					int month = localDate.getMonthValue();
+					
+					PaymentEvent paymentEvent = paymentEventDao.findById(invoiceReq.getPaymentId());
+					updateReq.setId(paymentEvent.getId());
+					String invoice = "IN" + month + "-" + getRandomNumericString(4);
+					updateReq.setInvoice(invoice);
+					updateReq.setIsApprove(true);
+					updateReq.setVersion(paymentEvent.getVersion());
+					updateReq.setIsActive(paymentEvent.getIsActive());
+					
+					paymentEventService.update(updateReq);
+					
+					invoiceReq.setInvoice(invoice);
+					String subject = "Invoice Number " + invoiceReq.getEventTitle();
+					
+					EmailDtoReq emailReq = new EmailDtoReq();
+					emailReq.setTo(invoiceReq.getEmail());
+					emailReq.setFrom(email);
+					emailReq.setSubject(subject);
+					Map<String, Object> model = new HashMap<>();
+			        model.put("profileName", invoiceReq.getProfileName());
+			        model.put("invoice", invoice);
+			        model.put("eventTitle", invoiceReq.getEventTitle());
+			        model.put("eventProvider", invoiceReq.getEventProvider());
+			        model.put("eventPrice", invoiceReq.getEventPrice());
+			        model.put("eventDateStart", invoiceReq.getEventDateStart());
+			        model.put("eventDateEnd", invoiceReq.getEventDateEnd());
+			        model.put("eventTimeStart", invoiceReq.getEventTimeStart());
+			        model.put("eventTimeEnd", invoiceReq.getEventTimeEnd());
+			        emailReq.setModel(model);
+			        
+			        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+					executor.submit(() -> {
+						sendEmail(emailReq);
+					});
+					executor.shutdown();
+				}
 
 				update.setData(dataDto);
 				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Event " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
@@ -372,4 +467,49 @@ public class EventServiceImpl extends BaseService implements EventService {
 	public GetCountNotPaidDtoDataRes countNotPaid() throws Exception {
 		return eventDao.countNotPaid(getId());
 	}
+	
+	public String getRandomNumericString(int n) {
+		String randomNumericString = "0123456789";
+		StringBuilder sb = new StringBuilder(n);
+	
+		for (int i = 0; i < n; i++) {
+			int index = (int)(randomNumericString.length()* Math.random());
+			while(i==0 && index==0) {
+				index = (int)(randomNumericString.length()* Math.random());
+			}
+			sb.append(randomNumericString.charAt(index));
+		}
+		return sb.toString();
+	}
+	
+	@Async
+	public void sendEmail(EmailDtoReq emailReq) {
+		MimeMessage message = mailSender.createMimeMessage();
+		try {
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
+					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+
+			messageHelper.setSubject(emailReq.getSubject());
+			messageHelper.setFrom(emailReq.getFrom());
+			messageHelper.setTo(emailReq.getTo());
+			emailReq.setContent(getContentFromTemplate(emailReq.getModel()));
+			messageHelper.setText(emailReq.getContent(), true);
+			mailSender.send(messageHelper.getMimeMessage());
+		}catch(MessagingException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public String getContentFromTemplate(Map<String, Object> model) {
+        StringBuffer content = new StringBuffer();
+
+        try {
+            content.append(FreeMarkerTemplateUtils
+                    .processTemplateIntoString(freeMarkerConfiguration.getTemplate("EventInvoiceEmailTemplate.flth"), model));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return content.toString();
+    }
 }

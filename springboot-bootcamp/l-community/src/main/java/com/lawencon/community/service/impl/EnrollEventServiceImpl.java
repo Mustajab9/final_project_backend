@@ -1,10 +1,25 @@
 package com.lawencon.community.service.impl;
 
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +42,7 @@ import com.lawencon.community.dto.enrollevent.InsertEnrollEventDtoRes;
 import com.lawencon.community.dto.enrollevent.UpdateEnrollEventDtoDataRes;
 import com.lawencon.community.dto.enrollevent.UpdateEnrollEventDtoReq;
 import com.lawencon.community.dto.enrollevent.UpdateEnrollEventDtoRes;
+import com.lawencon.community.dto.user.EmailDtoReq;
 import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.EnrollEvent;
 import com.lawencon.community.model.Event;
@@ -34,22 +50,30 @@ import com.lawencon.community.model.PaymentMethod;
 import com.lawencon.community.model.Profiles;
 import com.lawencon.community.service.EnrollEventService;
 
+import freemarker.template.Configuration;
+
 @Service
 public class EnrollEventServiceImpl extends BaseService implements EnrollEventService {
+	private static final String email = "mustajabsa@gmail.com";
 	private EnrollEventDao enrollEventDao;
 	private PaymentMethodDao paymentMethodDao;
 	private AttachmentDao attachmentDao;
 	private EventDao eventDao;
 	private ProfilesDao profilesDao;
+	private JavaMailSender mailSender;
 
 	@Autowired
-	public EnrollEventServiceImpl(EnrollEventDao enrollEventDao, PaymentMethodDao paymentMethodDao, AttachmentDao attachmentDao, EventDao eventDao, ProfilesDao profilesDao) {
+	public EnrollEventServiceImpl(EnrollEventDao enrollEventDao, PaymentMethodDao paymentMethodDao, AttachmentDao attachmentDao, EventDao eventDao, ProfilesDao profilesDao, JavaMailSender mailSender) {
 		this.enrollEventDao = enrollEventDao;
 		this.paymentMethodDao = paymentMethodDao;
 		this.attachmentDao = attachmentDao;
 		this.eventDao = eventDao;
 		this.profilesDao = profilesDao;
+		this.mailSender = mailSender;
 	}
+	
+	@Autowired
+    private Configuration freeMarkerConfiguration;
 	
 	@Override
 	public GetAllEnrollEventDtoRes findAll() throws Exception {
@@ -212,7 +236,13 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 		try {
 			if (data.getVersion() != null) {
 				EnrollEvent enrollEvent = enrollEventDao.findById(data.getId());
-
+				
+				Date date = new Date();
+				LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				int month = localDate.getMonthValue();
+				String invoice = "IN" + month + "-" + getRandomNumericString(4);
+				
+				enrollEvent.setEnrollInvoice(invoice);
 				enrollEvent.setIsApprove(data.getIsApprove());
 				enrollEvent.setUpdatedBy(getId());
 				enrollEvent.setVersion(data.getVersion());
@@ -227,6 +257,36 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 
 				UpdateEnrollEventDtoDataRes dataDto = new UpdateEnrollEventDtoDataRes();
 				dataDto.setVersion(enrollEventUpdate.getVersion());
+				
+				if(enrollEventUpdate.getIsApprove() == true) {
+					EnrollEvent invoiceReq = enrollEventDao.findById(data.getId());
+					
+					invoiceReq.setEnrollInvoice(invoice);
+					String subject = "Invoice Number " + invoiceReq.getEventId().getEventTitle();
+					
+					EmailDtoReq emailReq = new EmailDtoReq();
+					emailReq.setTo(invoiceReq.getProfileId().getUserId().getEmail());
+					emailReq.setFrom(email);
+					emailReq.setSubject(subject);
+					Map<String, Object> model = new HashMap<>();
+			        model.put("profileName", invoiceReq.getProfileId().getProfileName());
+			        model.put("invoice", invoice);
+			        model.put("eventTitle", invoiceReq.getEventId().getEventTitle());
+			        model.put("eventProvider", invoiceReq.getEventId().getEventProvider());
+			        model.put("eventPrice", invoiceReq.getEventId().getEventPrice());
+			        model.put("eventDateStart", invoiceReq.getEventId().getEventDateStart());
+			        model.put("eventDateEnd", invoiceReq.getEventId().getEventDateEnd());
+			        model.put("eventTimeStart", invoiceReq.getEventId().getEventTimeStart());
+			        model.put("eventTimeEnd", invoiceReq.getEventId().getEventTimeEnd());
+			        emailReq.setModel(model);
+			        
+			        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+					executor.submit(() -> {
+						sendEmail(emailReq);
+					});
+					executor.shutdown();
+				}
 
 				update.setData(dataDto);
 				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Enroll Event " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
@@ -298,4 +358,49 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 
 		return getByUser;
 	}
+	
+	public String getRandomNumericString(int n) {
+		String randomNumericString = "0123456789";
+		StringBuilder sb = new StringBuilder(n);
+	
+		for (int i = 0; i < n; i++) {
+			int index = (int)(randomNumericString.length()* Math.random());
+			while(i==0 && index==0) {
+				index = (int)(randomNumericString.length()* Math.random());
+			}
+			sb.append(randomNumericString.charAt(index));
+		}
+		return sb.toString();
+	}
+	
+	@Async
+	public void sendEmail(EmailDtoReq emailReq) {
+		MimeMessage message = mailSender.createMimeMessage();
+		try {
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
+					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+
+			messageHelper.setSubject(emailReq.getSubject());
+			messageHelper.setFrom(emailReq.getFrom());
+			messageHelper.setTo(emailReq.getTo());
+			emailReq.setContent(getContentFromTemplate(emailReq.getModel()));
+			messageHelper.setText(emailReq.getContent(), true);
+			mailSender.send(messageHelper.getMimeMessage());
+		}catch(MessagingException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public String getContentFromTemplate(Map<String, Object> model) {
+        StringBuffer content = new StringBuffer();
+
+        try {
+            content.append(FreeMarkerTemplateUtils
+                    .processTemplateIntoString(freeMarkerConfiguration.getTemplate("EventInvoiceEmailTemplate.flth"), model));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return content.toString();
+    }
 }

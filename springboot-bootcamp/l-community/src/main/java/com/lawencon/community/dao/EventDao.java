@@ -7,6 +7,7 @@ import com.lawencon.community.dto.event.GetByEventIdDtoDataRes;
 import com.lawencon.community.dto.event.GetCountNotPaidDtoDataRes;
 import com.lawencon.community.dto.event.GetReportIncomeEventDto;
 import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
+import com.lawencon.community.dto.event.InvoiceEventDtoReq;
 import com.lawencon.community.model.Event;
 import com.lawencon.model.SearchQuery;
 
@@ -24,4 +25,5 @@ public interface EventDao {
 	GetByEventIdDtoDataRes findEventStatus(String id) throws Exception;
 	List<GetAllEventDtoDataRes> findEventNotPaid(String id) throws Exception;
 	GetCountNotPaidDtoDataRes countNotPaid(String id) throws Exception;
+	InvoiceEventDtoReq getDataSendInvoice(String id) throws Exception;
 }
