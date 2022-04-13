@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,11 +38,14 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 	private ProfilesDao profileDao;
 	private SubscriptionDetailService subscriptionDetailService;
 
+	Logger log = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
+	
 	@Autowired
 	public SubscriptionServiceImpl(SubscriptionDao subscriptionDao, ProfilesDao profileDao) {
 		this.subscriptionDao = subscriptionDao;
 		this.profileDao = profileDao;
 	}
+	
 	
 	@Autowired
 	public void setSubscriptionDetailService(SubscriptionDetailService subscriptionDetailService) {

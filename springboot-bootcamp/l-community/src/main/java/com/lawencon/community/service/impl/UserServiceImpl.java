@@ -332,7 +332,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
 				update.setData(dataDto);
 				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail()
-						+ ", Passowrd " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
+						+ ", Password " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -378,7 +378,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
 				update.setData(dataDto);
 				update.setMsg(CommonConstant.ACTION_EDIT.getDetail() + " " + CommonConstant.SUCCESS.getDetail()
-						+ ", Passowrd " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
+						+ ", Password " + CommonConstant.HAS_BEEN_UPDATED.getDetail());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
