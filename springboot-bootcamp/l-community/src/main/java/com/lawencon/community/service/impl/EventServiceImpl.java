@@ -37,6 +37,8 @@ import com.lawencon.community.dto.event.GetAllEventDtoRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoDataRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoRes;
 import com.lawencon.community.dto.event.GetCountNotPaidDtoDataRes;
+import com.lawencon.community.dto.event.GetEventByCategoryDtoDataRes;
+import com.lawencon.community.dto.event.GetEventByCategoryDtoRes;
 import com.lawencon.community.dto.event.GetReportIncomeEventDto;
 import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
 import com.lawencon.community.dto.event.InsertEventDtoDataRes;
@@ -466,6 +468,17 @@ public class EventServiceImpl extends BaseService implements EventService {
 	@Override
 	public GetCountNotPaidDtoDataRes countNotPaid() throws Exception {
 		return eventDao.countNotPaid(getId());
+	}
+	
+	@Override
+	public GetEventByCategoryDtoRes findByCategory(String id) throws Exception {
+		GetEventByCategoryDtoRes dtoRes = new GetEventByCategoryDtoRes();
+		List<GetEventByCategoryDtoDataRes> data = eventDao.findByCategory(id);
+		
+		dtoRes.setData(data);
+		dtoRes.setMsg(null);
+		
+		return dtoRes;
 	}
 	
 	public String getRandomNumericString(int n) {

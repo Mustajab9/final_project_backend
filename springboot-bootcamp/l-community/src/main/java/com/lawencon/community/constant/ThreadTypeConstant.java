@@ -1,7 +1,7 @@
 package com.lawencon.community.constant;
 
 public enum ThreadTypeConstant {
-	THREAD("Thread", "TY02"), POLLING("Polling", "TY01");
+	THREAD("Thread", "TY02"), POLLING("Polling", "TY01"), ARTICLE("Article", "TY03");
 	
 	private String detail;
 	private String code;

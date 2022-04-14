@@ -5,6 +5,7 @@ import java.util.List;
 import com.lawencon.community.dto.event.GetAllEventDtoDataRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoDataRes;
 import com.lawencon.community.dto.event.GetCountNotPaidDtoDataRes;
+import com.lawencon.community.dto.event.GetEventByCategoryDtoDataRes;
 import com.lawencon.community.dto.event.GetReportIncomeEventDto;
 import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
 import com.lawencon.community.dto.event.InvoiceEventDtoReq;
@@ -26,4 +27,5 @@ public interface EventDao {
 	List<GetAllEventDtoDataRes> findEventNotPaid(String id) throws Exception;
 	GetCountNotPaidDtoDataRes countNotPaid(String id) throws Exception;
 	InvoiceEventDtoReq getDataSendInvoice(String id) throws Exception;
+	List<GetEventByCategoryDtoDataRes> findByCategory(String id) throws Exception;
 }

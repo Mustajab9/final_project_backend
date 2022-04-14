@@ -26,6 +26,7 @@ import com.lawencon.community.dto.event.DeleteByEventIdDtoRes;
 import com.lawencon.community.dto.event.GetAllEventDtoRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoRes;
 import com.lawencon.community.dto.event.GetCountNotPaidDtoDataRes;
+import com.lawencon.community.dto.event.GetEventByCategoryDtoRes;
 import com.lawencon.community.dto.event.GetReportIncomeEventDto;
 import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
 import com.lawencon.community.dto.event.InsertEventDtoRes;
@@ -124,6 +125,12 @@ public class EventController {
 	public ResponseEntity<GetCountNotPaidDtoDataRes> getCountNotPaid() throws Exception {
 		GetCountNotPaidDtoDataRes data = eventService.countNotPaid();
 		return new ResponseEntity<GetCountNotPaidDtoDataRes>(data, HttpStatus.OK);
+	}
+	
+	@GetMapping("category/{id}")
+	public ResponseEntity<GetEventByCategoryDtoRes> getByCategory(@PathVariable("id") String id) throws Exception {
+		GetEventByCategoryDtoRes data = eventService.findByCategory(id);
+		return new ResponseEntity<GetEventByCategoryDtoRes>(data, HttpStatus.OK);
 	}
 
 	@DeleteMapping("{id}")

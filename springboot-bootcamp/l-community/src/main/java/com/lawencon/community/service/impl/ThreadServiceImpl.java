@@ -187,12 +187,10 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				data.setChoices(listChoiceName);
 				data.setCountVote(listCountVote);
 				data.setTotalVote(totalVote);
-				
-				if(getId() != null) {					
-					GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
-					if(choiceVoteByUser.getData() != null) {
-						data.setIsVoted(true);
-					}
+							
+				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+				if(choiceVoteByUser.getData() != null) {
+					data.setIsVoted(true);
 				}
 			}
 			
@@ -204,16 +202,15 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				data.setTotalComment(threadComment.getCountComment());				
 			}
 			
-			if(getId() != null) {				
-				GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
-				if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
-					data.setIsLiked(true);
-				}
+				
+			GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
+			if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
+				data.setIsLiked(true);
+			}
 
-				GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
-				if(bookmarkByUserAndThread.getData() != null) {
-					data.setIsBookmarked(true);
-				}
+			GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
+			if(bookmarkByUserAndThread.getData() != null) {
+				data.setIsBookmarked(true);
 			}
 			
 			Profiles profiles = profilesDao.findByUser(thread.getCreatedBy());
@@ -309,12 +306,10 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 			data.setChoices(listChoiceName);
 			data.setCountVote(listCountVote);
 			data.setTotalVote(totalVote);
-			
-			if(getId() != null) {				
-				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
-				if(choiceVoteByUser.getData() != null) {
-					data.setIsVoted(true);
-				}
+							
+			GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+			if(choiceVoteByUser.getData() != null) {
+				data.setIsVoted(true);
 			}
 		}
 		
@@ -323,17 +318,15 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 		
 		GetCountCommentByThreadDtoRes threadComment = threadCommentDao.countByThread(thread.getId());
 		data.setTotalComment(threadComment.getCountComment());
+					
+		GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
+		if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
+			data.setIsLiked(true);
+		}
 		
-		if(getId() != null) {			
-			GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
-			if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
-				data.setIsLiked(true);
-			}
-			
-			GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
-			if(bookmarkByUserAndThread.getData() != null) {
-				data.setIsBookmarked(true);
-			}
+		GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
+		if(bookmarkByUserAndThread.getData() != null) {
+			data.setIsBookmarked(true);
 		}
 		
 		Profiles profiles = profilesDao.findByUser(thread.getCreatedBy());
@@ -485,121 +478,119 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 	public GetThreadByUserDtoRes findByUser() throws Exception {
 		GetThreadByUserDtoRes getByUser = new GetThreadByUserDtoRes();
 		
-		if(getId() != null) {
-			List<Thread> threads = threadDao.findByUser(getId());
-			List<GetThreadByUserDtoDataRes> listThread = new ArrayList<>();
+		List<Thread> threads = threadDao.findByUser(getId());
+		List<GetThreadByUserDtoDataRes> listThread = new ArrayList<>();
 
-			for (int i = 0; i < threads.size(); i++) {
-				Thread thread = threads.get(i);
-				GetThreadByUserDtoDataRes data = new GetThreadByUserDtoDataRes();
+		for (int i = 0; i < threads.size(); i++) {
+			Thread thread = threads.get(i);
+			GetThreadByUserDtoDataRes data = new GetThreadByUserDtoDataRes();
 
-				data.setId(thread.getId());
-				data.setThreadCode(thread.getThreadCode());
-				data.setThreadTitle(thread.getThreadTitle());
-				data.setThreadContent(thread.getThreadContent());
-				data.setTypeCode(thread.getTypeId().getTypeCode());
-				
-				List<ThreadCategory> categories = threadCategoryDao.findByThread(thread.getId());		
-				List<String> listCategoryId = new ArrayList<>();
-				List<String> listCategoryName = new ArrayList<>();
-				for(int x = 0; x < categories.size(); x++) {
-					ThreadCategory category = categories.get(x);
-					
-					String categoryId = category.getCategoryId().getId();
-					String categoryName = category.getCategoryId().getCategoryName();
-					
-					listCategoryId.add(categoryId);
-					listCategoryName.add(categoryName);
-				}
-				
-				data.setCategoryId(listCategoryId);
-				data.setCategoryName(listCategoryName);
-				
-				List<ThreadAttachment> attachments = threadAttachmentDao.findByThread(thread.getId());
-				
-				if(attachments != null) {
-					List<String> listAttachmentId = new ArrayList<>();
-					List<String> listAttachemntExtension = new ArrayList<>();
-					for(int x = 0; x < attachments.size(); x++) {
-						ThreadAttachment attcahment = attachments.get(x);
-						
-						String attachmentId = attcahment.getAttachmentId().getId();
-						String attachemntExtension = attcahment.getAttachmentId().getAttachmentExtension();
-						
-						listAttachmentId.add(attachmentId);
-						listAttachemntExtension.add(attachemntExtension);
-					}
-					
-					data.setAttachmentId(listAttachmentId);
-					data.setAttachemntExtension(listAttachemntExtension);
-				}
-				
-				if(thread.getTypeId().getTypeCode().equals(ThreadTypeConstant.POLLING.getCode())) {
-					List<GetCountVoteByThreadDtoDataRes> listChoice = choiceVoteDao.findCountByThread(thread.getId());
-					GetCountVoteByThreadDtoDataRes getPollingName = choiceVoteDao.findPollingNameByThread(thread.getId());
-					data.setPollingName(getPollingName.getPollingName());
-					
-					List<GetThreadPollingChoiceDtoRes> listChoiceName = new ArrayList<>();
-					List<Integer> listCountVote = new ArrayList<>();
-					Integer totalVote = 0;
-					for(int z = 0; z < listChoice.size(); z++) {
-						GetCountVoteByThreadDtoDataRes choiceVote = listChoice.get(z);
-						
-						GetThreadPollingChoiceDtoRes threadPollingChoice = new GetThreadPollingChoiceDtoRes();
-						threadPollingChoice.setChoiceId(choiceVote.getChoiceId());
-						threadPollingChoice.setChoiceName(choiceVote.getChoiceName());
-						
-						Integer countVote = choiceVote.getCountVote();
-						
-						listChoiceName.add(threadPollingChoice);
-						listCountVote.add(countVote);
-						totalVote = totalVote + choiceVote.getCountVote();
-						
-					}
-					
-					data.setChoices(listChoiceName);
-					data.setCountVote(listCountVote);
-					data.setTotalVote(totalVote);
-					
-					GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
-					if(choiceVoteByUser.getData() != null) {
-						data.setIsVoted(true);
-					}
-				}
-				
-				GetThreadLikeByThreadDtoRes threadLike = threadLikeDao.countByThread(thread.getId());
-				data.setTotalLike(threadLike.getData().getCountLike());
-				
-				GetCountCommentByThreadDtoRes threadComment = threadCommentDao.countByThread(thread.getId());
-				data.setTotalComment(threadComment.getCountComment());
-				
-				GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
-				if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
-					data.setIsLiked(true);
-				}
-				
-				GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
-				if(bookmarkByUserAndThread.getData() != null) {
-					data.setIsBookmarked(true);
-				}
-				
-				Profiles profiles = profilesDao.findByUser(thread.getCreatedBy());
-				data.setProfileName(profiles.getProfileName());
-				
-				if(profiles.getProfileImage() != null) {
-					data.setProfileImage(profiles.getProfileImage().getId());
-				}
-							 
-				data.setVersion(thread.getVersion());
-				data.setIsActive(thread.getIsActive());
-
-				listThread.add(data);
-			}
-
-			getByUser.setData(listThread);
-			getByUser.setMsg(null);
+			data.setId(thread.getId());
+			data.setThreadCode(thread.getThreadCode());
+			data.setThreadTitle(thread.getThreadTitle());
+			data.setThreadContent(thread.getThreadContent());
+			data.setTypeCode(thread.getTypeId().getTypeCode());
 			
+			List<ThreadCategory> categories = threadCategoryDao.findByThread(thread.getId());		
+			List<String> listCategoryId = new ArrayList<>();
+			List<String> listCategoryName = new ArrayList<>();
+			for(int x = 0; x < categories.size(); x++) {
+				ThreadCategory category = categories.get(x);
+				
+				String categoryId = category.getCategoryId().getId();
+				String categoryName = category.getCategoryId().getCategoryName();
+				
+				listCategoryId.add(categoryId);
+				listCategoryName.add(categoryName);
+			}
+			
+			data.setCategoryId(listCategoryId);
+			data.setCategoryName(listCategoryName);
+			
+			List<ThreadAttachment> attachments = threadAttachmentDao.findByThread(thread.getId());
+			
+			if(attachments != null) {
+				List<String> listAttachmentId = new ArrayList<>();
+				List<String> listAttachemntExtension = new ArrayList<>();
+				for(int x = 0; x < attachments.size(); x++) {
+					ThreadAttachment attcahment = attachments.get(x);
+					
+					String attachmentId = attcahment.getAttachmentId().getId();
+					String attachemntExtension = attcahment.getAttachmentId().getAttachmentExtension();
+					
+					listAttachmentId.add(attachmentId);
+					listAttachemntExtension.add(attachemntExtension);
+				}
+				
+				data.setAttachmentId(listAttachmentId);
+				data.setAttachemntExtension(listAttachemntExtension);
+			}
+			
+			if(thread.getTypeId().getTypeCode().equals(ThreadTypeConstant.POLLING.getCode())) {
+				List<GetCountVoteByThreadDtoDataRes> listChoice = choiceVoteDao.findCountByThread(thread.getId());
+				GetCountVoteByThreadDtoDataRes getPollingName = choiceVoteDao.findPollingNameByThread(thread.getId());
+				data.setPollingName(getPollingName.getPollingName());
+				
+				List<GetThreadPollingChoiceDtoRes> listChoiceName = new ArrayList<>();
+				List<Integer> listCountVote = new ArrayList<>();
+				Integer totalVote = 0;
+				for(int z = 0; z < listChoice.size(); z++) {
+					GetCountVoteByThreadDtoDataRes choiceVote = listChoice.get(z);
+					
+					GetThreadPollingChoiceDtoRes threadPollingChoice = new GetThreadPollingChoiceDtoRes();
+					threadPollingChoice.setChoiceId(choiceVote.getChoiceId());
+					threadPollingChoice.setChoiceName(choiceVote.getChoiceName());
+					
+					Integer countVote = choiceVote.getCountVote();
+					
+					listChoiceName.add(threadPollingChoice);
+					listCountVote.add(countVote);
+					totalVote = totalVote + choiceVote.getCountVote();
+					
+				}
+				
+				data.setChoices(listChoiceName);
+				data.setCountVote(listCountVote);
+				data.setTotalVote(totalVote);
+				
+				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+				if(choiceVoteByUser.getData() != null) {
+					data.setIsVoted(true);
+				}
+			}
+			
+			GetThreadLikeByThreadDtoRes threadLike = threadLikeDao.countByThread(thread.getId());
+			data.setTotalLike(threadLike.getData().getCountLike());
+			
+			GetCountCommentByThreadDtoRes threadComment = threadCommentDao.countByThread(thread.getId());
+			data.setTotalComment(threadComment.getCountComment());
+			
+			GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
+			if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
+				data.setIsLiked(true);
+			}
+			
+			GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
+			if(bookmarkByUserAndThread.getData() != null) {
+				data.setIsBookmarked(true);
+			}
+			
+			Profiles profiles = profilesDao.findByUser(thread.getCreatedBy());
+			data.setProfileName(profiles.getProfileName());
+			
+			if(profiles.getProfileImage() != null) {
+				data.setProfileImage(profiles.getProfileImage().getId());
+			}
+						 
+			data.setVersion(thread.getVersion());
+			data.setIsActive(thread.getIsActive());
+
+			listThread.add(data);
 		}
+
+		getByUser.setData(listThread);
+		getByUser.setMsg(null);
+			
 		return getByUser;
 	}
 	
@@ -680,12 +671,10 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				data.setChoices(listChoiceName);
 				data.setCountVote(listCountVote);
 				data.setTotalVote(totalVote);
-				
-				if(getId() != null) {					
-					GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
-					if(choiceVoteByUser.getData() != null) {
-						data.setIsVoted(true);
-					}
+									
+				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+				if(choiceVoteByUser.getData() != null) {
+					data.setIsVoted(true);
 				}
 			}
 			
@@ -695,16 +684,14 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 			GetCountCommentByThreadDtoRes threadComment = threadCommentDao.countByThread(thread.getId());
 			data.setTotalComment(threadComment.getCountComment());
 			
-			if(getId() != null) {
-				GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
-				if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
-					data.setIsLiked(true);
-				}
-				
-				GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
-				if(bookmarkByUserAndThread.getData() != null) {
-					data.setIsBookmarked(true);
-				}
+			GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
+			if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
+				data.setIsLiked(true);
+			}
+			
+			GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
+			if(bookmarkByUserAndThread.getData() != null) {
+				data.setIsBookmarked(true);
 			}
 			
 			Profiles profiles = profilesDao.findByUser(thread.getCreatedBy());

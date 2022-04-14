@@ -8,6 +8,7 @@ import com.lawencon.community.dto.event.DeleteByEventIdDtoRes;
 import com.lawencon.community.dto.event.GetAllEventDtoRes;
 import com.lawencon.community.dto.event.GetByEventIdDtoRes;
 import com.lawencon.community.dto.event.GetCountNotPaidDtoDataRes;
+import com.lawencon.community.dto.event.GetEventByCategoryDtoRes;
 import com.lawencon.community.dto.event.GetReportIncomeEventDto;
 import com.lawencon.community.dto.event.GetReportProfileAttendanceEventDto;
 import com.lawencon.community.dto.event.InsertEventDtoRes;
@@ -28,4 +29,5 @@ public interface EventService {
 	GetByEventIdDtoRes findEventStatus(String id) throws Exception;
 	GetAllEventDtoRes findEventNotPaid(String id) throws Exception;
 	GetCountNotPaidDtoDataRes countNotPaid() throws Exception;
+	GetEventByCategoryDtoRes findByCategory(String id) throws Exception;
 }
