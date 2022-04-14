@@ -12,6 +12,9 @@ public class GetThreadCommentByThreadDtoDataRes {
 	private String typeId;
 	private String typeCode;
 	private String typeName;
+	private String profileName;
+	private String profileImage;
+	private String createdBy;
 	private Integer version;
 	private Boolean isActive;
 
@@ -101,6 +104,30 @@ public class GetThreadCommentByThreadDtoDataRes {
 
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
+	}
+
+	public String getProfileName() {
+		return profileName;
+	}
+
+	public void setProfileName(String profileName) {
+		this.profileName = profileName;
+	}
+
+	public String getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public Integer getVersion() {

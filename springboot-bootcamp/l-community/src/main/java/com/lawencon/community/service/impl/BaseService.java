@@ -36,12 +36,14 @@ public class BaseService extends BaseServiceImpl {
 	
 	protected String getId() throws Exception {
 		String auth = null;
-		
-		try {
-			auth = authPrincipal.getAuthentication().getPrincipal().toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception();
+		if(authPrincipal.getAuthentication() != null && authPrincipal.getAuthentication().getPrincipal() != null) {
+			
+			try {
+				auth = authPrincipal.getAuthentication().getPrincipal().toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new Exception();
+			}
 		}
 		
 		return auth;

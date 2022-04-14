@@ -139,6 +139,17 @@ public class EventServiceImpl extends BaseService implements EventService {
 				data.setPaymentName(eventData.getPaymentName());
 			}
 			
+			if(getId() != null) {				
+				GetCountNotPaidDtoDataRes count = eventDao.findIsEnroll(getId());
+				if(count.getCountNotPaid() > 0) {
+					data.setIsEnroll(true);
+				}else {
+					data.setIsEnroll(false);
+				}
+			}else {
+				data.setIsEnroll(false);
+			}
+			
 			data.setCreatedBy(event.getCreatedBy());
 			data.setVersion(event.getVersion());
 			data.setIsActive(event.getIsActive());
@@ -187,6 +198,17 @@ public class EventServiceImpl extends BaseService implements EventService {
 			data.setPaymentAttachment(eventData.getPaymentAttachment());
 			data.setPaymentId(eventData.getPaymentId());
 			data.setPaymentName(eventData.getPaymentName());
+		}
+		
+		if(getId() != null) {				
+			GetCountNotPaidDtoDataRes count = eventDao.findIsEnroll(getId());
+			if(count.getCountNotPaid() > 0) {
+				data.setIsEnroll(true);
+			}else {
+				data.setIsEnroll(false);
+			}
+		}else {
+			data.setIsEnroll(false);
 		}
 		
 		data.setCreatedBy(event.getCreatedBy());
@@ -473,7 +495,13 @@ public class EventServiceImpl extends BaseService implements EventService {
 	@Override
 	public GetEventByCategoryDtoRes findByCategory(String id) throws Exception {
 		GetEventByCategoryDtoRes dtoRes = new GetEventByCategoryDtoRes();
-		List<GetEventByCategoryDtoDataRes> data = eventDao.findByCategory(id);
+		
+		List<GetEventByCategoryDtoDataRes> data = null;
+		if(getId() != null) {			
+			data = eventDao.findByCategory(id, getId());
+		}else {
+			data  = eventDao.findByCategory(id);
+		}
 		
 		dtoRes.setData(data);
 		dtoRes.setMsg(null);

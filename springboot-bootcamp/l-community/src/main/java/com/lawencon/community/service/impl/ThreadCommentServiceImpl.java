@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.community.constant.CommonConstant;
+import com.lawencon.community.dao.ProfilesDao;
 import com.lawencon.community.dao.ThreadCommentDao;
 import com.lawencon.community.dao.ThreadDao;
 import com.lawencon.community.dto.threadcomment.DeleteByThreadCommentIdDtoRes;
@@ -20,6 +21,7 @@ import com.lawencon.community.dto.threadcomment.GetThreadCommentByThreadDtoRes;
 import com.lawencon.community.dto.threadcomment.InsertThreadCommentDtoDataRes;
 import com.lawencon.community.dto.threadcomment.InsertThreadCommentDtoReq;
 import com.lawencon.community.dto.threadcomment.InsertThreadCommentDtoRes;
+import com.lawencon.community.model.Profiles;
 import com.lawencon.community.model.Thread;
 import com.lawencon.community.model.ThreadComment;
 import com.lawencon.community.service.ThreadCommentService;
@@ -28,9 +30,10 @@ import com.lawencon.community.service.ThreadCommentService;
 public class ThreadCommentServiceImpl extends BaseService implements ThreadCommentService {
 	private ThreadCommentDao threadCommentDao;
 	private ThreadDao threadDao;
+	private ProfilesDao profileDao;
 
 	@Autowired
-	public ThreadCommentServiceImpl(ThreadCommentDao threadCommentDao, ThreadDao threadDao) {
+	public ThreadCommentServiceImpl(ThreadCommentDao threadCommentDao, ThreadDao threadDao, ProfilesDao profileDao) {
 		this.threadCommentDao = threadCommentDao;
 		this.threadDao = threadDao;
 	}
@@ -52,6 +55,16 @@ public class ThreadCommentServiceImpl extends BaseService implements ThreadComme
 			data.setThreadId(threadComment.getThreadId().getId());
 			data.setThreadTitle(threadComment.getThreadId().getThreadTitle());
 			data.setThreadContent(threadComment.getThreadId().getThreadContent());
+			
+			Profiles profile = profileDao.findByUser(threadComment.getCreatedBy());
+			data.setProfileName(profile.getProfileName());
+			
+			if(profile.getProfileImage() != null) {
+				data.setProfileImage(profile.getProfileImage().getId());
+			}
+			
+			data.setProfileImage(getId());
+			data.setCreatedBy(threadComment.getCreatedBy());
 			data.setVersion(threadComment.getVersion());
 			data.setIsActive(threadComment.getIsActive());
 
@@ -77,6 +90,13 @@ public class ThreadCommentServiceImpl extends BaseService implements ThreadComme
 		data.setThreadId(threadComment.getThreadId().getId());
 		data.setThreadTitle(threadComment.getThreadId().getThreadTitle());
 		data.setThreadContent(threadComment.getThreadId().getThreadContent());
+		
+		Profiles profile = profileDao.findByUser(threadComment.getCreatedBy());
+		data.setProfileName(profile.getProfileName());
+		
+		if(profile.getProfileImage() != null) {
+			data.setProfileImage(profile.getProfileImage().getId());
+		}
 		data.setVersion(threadComment.getVersion());
 		data.setIsActive(threadComment.getIsActive());
 
@@ -162,6 +182,13 @@ public class ThreadCommentServiceImpl extends BaseService implements ThreadComme
 			data.setTypeId(threadComment.getThreadId().getTypeId().getId());
 			data.setTypeCode(threadComment.getThreadId().getTypeId().getTypeCode());
 			data.setTypeName(threadComment.getThreadId().getTypeId().getTypeName());
+			
+			Profiles profile = profileDao.findByUser(threadComment.getCreatedBy());
+			data.setProfileName(profile.getProfileName());
+			
+			if(profile.getProfileImage() != null) {
+				data.setProfileImage(profile.getProfileImage().getId());
+			}
 			data.setVersion(threadComment.getVersion());
 			data.setIsActive(threadComment.getIsActive());
 
