@@ -12,6 +12,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -159,7 +160,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 			ExecutorService executor = Executors.newSingleThreadExecutor();
 
 			executor.submit(() -> {
-				sendEmail(emailReq);
+				sendEmail("images/image-1.png", "VerificationCodeEmailTemplate.flth",emailReq);
 			});
 			executor.shutdown();
 
@@ -377,7 +378,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 	}
 	
 	@Async
-	public void sendEmail(EmailDtoReq emailReq) {
+	public void sendEmail(String image, String template, EmailDtoReq emailReq) {
 		MimeMessage message = mailSender.createMimeMessage();
 		try {
 			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
@@ -386,8 +387,9 @@ public class UserServiceImpl extends BaseService implements UserService {
 			messageHelper.setSubject(emailReq.getSubject());
 			messageHelper.setFrom(emailReq.getFrom());
 			messageHelper.setTo(emailReq.getTo());
-			emailReq.setContent(getContentFromTemplate(emailReq.getModel()));
+			emailReq.setContent(getContentFromTemplate(template, emailReq.getModel()));
 			messageHelper.setText(emailReq.getContent(), true);
+			messageHelper.addInline("myLogo", new ClassPathResource(image));
 			mailSender.send(messageHelper.getMimeMessage());
 		}catch(MessagingException e) {
 			e.printStackTrace();
@@ -395,12 +397,12 @@ public class UserServiceImpl extends BaseService implements UserService {
 		
 	}
 	
-	public String getContentFromTemplate(Map<String, Object> model) {
+	public String getContentFromTemplate(String template, Map<String, Object> model) {
         StringBuffer content = new StringBuffer();
 
         try {
             content.append(FreeMarkerTemplateUtils
-                    .processTemplateIntoString(freeMarkerConfiguration.getTemplate("VerificationCodeEmailTemplate.flth"), model));
+                    .processTemplateIntoString(freeMarkerConfiguration.getTemplate(template), model));
         } catch (Exception e) {
             e.printStackTrace();
         }
