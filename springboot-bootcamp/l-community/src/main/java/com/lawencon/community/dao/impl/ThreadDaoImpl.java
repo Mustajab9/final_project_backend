@@ -40,7 +40,7 @@ public class ThreadDaoImpl extends BaseDao<Thread> implements ThreadDao {
 	public List<Thread> findByUser(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT t.id AS thread_id, t.thread_code, t.thread_title, t.thread_content, t.is_premium, tt.id AS thread_type_id,");
-		builder.append(" type_code, tt.type_name, t.version, t.is_active"); 
+		builder.append(" type_code, tt.type_name, t.created_by, t.version, t.is_active"); 
 		builder.append(" FROM threads t");
 		builder.append(" INNER JOIN thread_types tt ON tt.id = t.type_id");
 		builder.append(" WHERE t.created_by = :id");
@@ -65,8 +65,9 @@ public class ThreadDaoImpl extends BaseDao<Thread> implements ThreadDao {
 			threadType.setTypeName(obj[7].toString());
 			thread.setTypeId(threadType);
 			
-			thread.setVersion(Integer.valueOf(obj[8].toString()));
-			thread.setIsActive(Boolean.valueOf(obj[9].toString()));
+			thread.setCreatedBy(obj[8].toString());
+			thread.setVersion(Integer.valueOf(obj[9].toString()));
+			thread.setIsActive(Boolean.valueOf(obj[10].toString()));
 			
 			listResult.add(thread);
 		});
@@ -78,7 +79,7 @@ public class ThreadDaoImpl extends BaseDao<Thread> implements ThreadDao {
 	public List<Thread> findByCategory(String[] id) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT t.id, t.threadTitle, t.threadCode, t.threadContent, t.isPremium,");
-		builder.append(" tt.id, tt.typeCode, tt.typeName, t.version, t.isActive");
+		builder.append(" tt.id, tt.typeCode, tt.typeName, t.created_by, t.version, t.isActive");
 		builder.append(" FROM Thread AS t");
 		builder.append(" INNER JOIN ThreadType AS tt ON t.typeId.id = tt.id");
 		builder.append(" INNER JOIN ThreadCategory AS tc ON tc.threadId.id = t.id");
@@ -105,8 +106,9 @@ public class ThreadDaoImpl extends BaseDao<Thread> implements ThreadDao {
 			threadType.setTypeName(obj[7].toString());
 			thread.setTypeId(threadType);
 			
-			thread.setVersion(Integer.valueOf(obj[8].toString()));
-			thread.setIsActive(Boolean.valueOf(obj[9].toString()));
+			thread.setCreatedBy(obj[8].toString());
+			thread.setVersion(Integer.valueOf(obj[9].toString()));
+			thread.setIsActive(Boolean.valueOf(obj[10].toString()));
 			
 			listResult.add(thread);
 		});

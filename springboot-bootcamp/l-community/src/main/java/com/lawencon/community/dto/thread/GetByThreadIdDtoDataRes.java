@@ -21,6 +21,8 @@ public class GetByThreadIdDtoDataRes {
 	private Boolean isLiked = false;
 	private Boolean isBookmarked = false;
 	private Boolean isVoted = false;
+	private String profileName;
+	private String profileImage;
 	private Integer version;
 	private Boolean isActive;
 
@@ -166,6 +168,22 @@ public class GetByThreadIdDtoDataRes {
 
 	public void setIsVoted(Boolean isVoted) {
 		this.isVoted = isVoted;
+	}
+
+	public String getProfileName() {
+		return profileName;
+	}
+
+	public void setProfileName(String profileName) {
+		this.profileName = profileName;
+	}
+
+	public String getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
 	}
 
 	public Integer getVersion() {
