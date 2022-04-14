@@ -10,8 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lawencon.community.constant.CommonConstant;
+import com.lawencon.community.constant.RoleConstant;
 import com.lawencon.community.dao.ProfilesDao;
+import com.lawencon.community.dao.RoleDao;
 import com.lawencon.community.dao.SubscriptionDao;
+import com.lawencon.community.dao.UserDao;
 import com.lawencon.community.dto.subscription.DeleteBySubscriptionIdDtoRes;
 import com.lawencon.community.dto.subscription.GetAllSubscriptionDtoDataRes;
 import com.lawencon.community.dto.subscription.GetAllSubscriptionDtoRes;
@@ -27,7 +30,9 @@ import com.lawencon.community.dto.subscription.UpdateSubscriptionDtoReq;
 import com.lawencon.community.dto.subscription.UpdateSubscriptionDtoRes;
 import com.lawencon.community.dto.subscriptiondetail.InsertSubscriptionDetailDtoReq;
 import com.lawencon.community.model.Profiles;
+import com.lawencon.community.model.Role;
 import com.lawencon.community.model.Subscription;
+import com.lawencon.community.model.User;
 import com.lawencon.community.service.SubscriptionDetailService;
 import com.lawencon.community.service.SubscriptionService;
 import com.lawencon.model.SearchQuery;
@@ -36,14 +41,18 @@ import com.lawencon.model.SearchQuery;
 public class SubscriptionServiceImpl extends BaseService implements SubscriptionService {
 	private SubscriptionDao subscriptionDao;
 	private ProfilesDao profileDao;
+	private UserDao userDao;
+	private RoleDao roleDao;
 	private SubscriptionDetailService subscriptionDetailService;
 
 	Logger log = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
 	
 	@Autowired
-	public SubscriptionServiceImpl(SubscriptionDao subscriptionDao, ProfilesDao profileDao) {
+	public SubscriptionServiceImpl(SubscriptionDao subscriptionDao, ProfilesDao profileDao, UserDao userDao, RoleDao roleDao) {
 		this.subscriptionDao = subscriptionDao;
 		this.profileDao = profileDao;
+		this.userDao = userDao;
+		this.roleDao = roleDao;
 	}
 	
 	
@@ -144,6 +153,16 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 				detailReq.setPriceId(data.getPriceId());
 				
 				subscriptionDetailService.insert(detailReq);
+				
+				Profiles profile = profileDao.findById(data.getProfileId());
+				
+				User user = userDao.findById(profile.getUserId().getId());
+				Role role = roleDao.findByCode(RoleConstant.MEMBER.getCode());
+				user.setRoleId(role);
+				
+				begin();
+				userDao.save(user);
+				commit();
 			}
 
 			insert.setData(dataDto);
@@ -231,5 +250,28 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 		getById.setMsg(null);
 
 		return getById;
+	}
+	
+	@Override
+	public void expiredSubscription() throws Exception {
+		SearchQuery<Subscription> subscriptions = subscriptionDao.findAll(null, null, null);
+		
+		List<Subscription> listSubscription = subscriptions.getData();
+		int data = listSubscription.size();
+		for(int i = 0; i < data; i++) {
+			Subscription subscription = listSubscription.get(i);
+			
+			if(subscription.getSubscriptionDuration().compareTo(new Date()) > 0) {
+				Profiles profile = profileDao.findById(subscription.getProfileId().getId());
+				
+				User user = userDao.findById(profile.getUserId().getId());
+				Role role = roleDao.findByCode(RoleConstant.USER.getCode());
+				user.setRoleId(role);
+				
+				begin();
+				userDao.save(user);
+				commit();
+			}
+		}
 	}
 }

@@ -16,4 +16,5 @@ public interface SubscriptionService {
 	UpdateSubscriptionDtoRes update(UpdateSubscriptionDtoReq data) throws Exception;
 	DeleteBySubscriptionIdDtoRes deleteById(String id) throws Exception;
 	GetSubscriptionByUserDtoRes findByUser(String id) throws Exception;
+	void expiredSubscription() throws Exception;
 }
