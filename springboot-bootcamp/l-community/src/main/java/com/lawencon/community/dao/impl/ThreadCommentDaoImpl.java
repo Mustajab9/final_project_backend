@@ -40,7 +40,7 @@ public class ThreadCommentDaoImpl extends BaseDao<ThreadComment> implements Thre
 	public List<ThreadComment> findByThread(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT tc.id, tc.comment_code, tc.comment_content, t.id AS thread_id, t.thread_code, t.thread_title,");
-		builder.append(" t.thread_content, t.is_premium, tt.id AS thread_type_id, tt.type_code, tt.type_name, tc.version, tc.is_active");
+		builder.append(" t.thread_content, t.is_premium, tt.id AS thread_type_id, tt.type_code, tt.type_name, tc.created_by, tc.version, tc.is_active");
 		builder.append(" FROM thread_comments tc");
 		builder.append(" INNER JOIN threads t ON t.id =  tc.thread_id");
 		builder.append(" INNER JOIN thread_types tt ON tt.id = t.type_id");
@@ -72,8 +72,9 @@ public class ThreadCommentDaoImpl extends BaseDao<ThreadComment> implements Thre
 			thread.setTypeId(threadType);
 			threadComment.setThreadId(thread);
 
-			threadComment.setVersion(Integer.valueOf(obj[11].toString()));
-			threadComment.setIsActive(Boolean.valueOf(obj[12].toString()));
+			threadComment.setCreatedBy(obj[11].toString());
+			threadComment.setVersion(Integer.valueOf(obj[12].toString()));
+			threadComment.setIsActive(Boolean.valueOf(obj[13].toString()));
 
 			listResult.add(threadComment);
 		});

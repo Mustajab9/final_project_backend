@@ -22,6 +22,7 @@ public class GetEventByCategoryDtoDataRes {
 	private String typeName;
 	private String attachmentId;
 	private String attachmentExtension;
+	private Boolean isEnroll;
 	private String createdBy;
 	private Integer version;
 	private Boolean isActive;
@@ -160,6 +161,14 @@ public class GetEventByCategoryDtoDataRes {
 
 	public void setAttachmentExtension(String attachmentExtension) {
 		this.attachmentExtension = attachmentExtension;
+	}
+
+	public Boolean getIsEnroll() {
+		return isEnroll;
+	}
+
+	public void setIsEnroll(Boolean isEnroll) {
+		this.isEnroll = isEnroll;
 	}
 
 	public String getCreatedBy() {

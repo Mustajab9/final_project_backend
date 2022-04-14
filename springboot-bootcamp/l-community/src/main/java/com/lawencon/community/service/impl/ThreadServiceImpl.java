@@ -188,9 +188,13 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				data.setCountVote(listCountVote);
 				data.setTotalVote(totalVote);
 							
-				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
-				if(choiceVoteByUser.getData() != null) {
-					data.setIsVoted(true);
+				if(getId() != null) {					
+					GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+					if(choiceVoteByUser.getData() != null) {
+						data.setIsVoted(true);
+					}
+				}else {
+					data.setIsVoted(false);
 				}
 			}
 			
@@ -202,15 +206,22 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				data.setTotalComment(threadComment.getCountComment());				
 			}
 			
-				
-			GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
-			if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
-				data.setIsLiked(true);
+			if(getId() != null) {				
+				GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
+				if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
+					data.setIsLiked(true);
+				}
+			}else {
+				data.setIsLiked(false);
 			}
 
-			GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
-			if(bookmarkByUserAndThread.getData() != null) {
-				data.setIsBookmarked(true);
+			if(getId() != null) {				
+				GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
+				if(bookmarkByUserAndThread.getData() != null) {
+					data.setIsBookmarked(true);
+				}
+			}else {
+				data.setIsBookmarked(false);
 			}
 			
 			Profiles profiles = profilesDao.findByUser(thread.getCreatedBy());
@@ -308,9 +319,13 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 			data.setCountVote(listCountVote);
 			data.setTotalVote(totalVote);
 							
-			GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
-			if(choiceVoteByUser.getData() != null) {
-				data.setIsVoted(true);
+			if(getId() != null) {					
+				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+				if(choiceVoteByUser.getData() != null) {
+					data.setIsVoted(true);
+				}
+			}else {
+				data.setIsVoted(false);
 			}
 		}
 		
@@ -318,16 +333,26 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 		data.setTotalLike(threadLike.getData().getCountLike());
 		
 		GetCountCommentByThreadDtoRes threadComment = threadCommentDao.countByThread(thread.getId());
-		data.setTotalComment(threadComment.getCountComment());
-					
-		GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
-		if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
-			data.setIsLiked(true);
+		if(threadComment.getCountComment() != null) {
+			data.setTotalComment(threadComment.getCountComment());				
 		}
 		
-		GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
-		if(bookmarkByUserAndThread.getData() != null) {
-			data.setIsBookmarked(true);
+		if(getId() != null) {				
+			GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
+			if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
+				data.setIsLiked(true);
+			}
+		}else {
+			data.setIsLiked(false);
+		}
+
+		if(getId() != null) {				
+			GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
+			if(bookmarkByUserAndThread.getData() != null) {
+				data.setIsBookmarked(true);
+			}
+		}else {
+			data.setIsBookmarked(false);
 		}
 		
 		Profiles profiles = profilesDao.findByUser(thread.getCreatedBy());
@@ -554,9 +579,13 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				data.setCountVote(listCountVote);
 				data.setTotalVote(totalVote);
 				
-				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
-				if(choiceVoteByUser.getData() != null) {
-					data.setIsVoted(true);
+				if(getId() != null) {					
+					GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+					if(choiceVoteByUser.getData() != null) {
+						data.setIsVoted(true);
+					}
+				}else {
+					data.setIsVoted(false);
 				}
 			}
 			
@@ -564,16 +593,26 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 			data.setTotalLike(threadLike.getData().getCountLike());
 			
 			GetCountCommentByThreadDtoRes threadComment = threadCommentDao.countByThread(thread.getId());
-			data.setTotalComment(threadComment.getCountComment());
-			
-			GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
-			if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
-				data.setIsLiked(true);
+			if(threadComment.getCountComment() != null) {
+				data.setTotalComment(threadComment.getCountComment());				
 			}
 			
-			GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
-			if(bookmarkByUserAndThread.getData() != null) {
-				data.setIsBookmarked(true);
+			if(getId() != null) {				
+				GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
+				if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
+					data.setIsLiked(true);
+				}
+			}else {
+				data.setIsLiked(false);
+			}
+
+			if(getId() != null) {				
+				GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
+				if(bookmarkByUserAndThread.getData() != null) {
+					data.setIsBookmarked(true);
+				}
+			}else {
+				data.setIsBookmarked(false);
 			}
 			
 			Profiles profiles = profilesDao.findByUser(thread.getCreatedBy());
@@ -673,9 +712,13 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				data.setCountVote(listCountVote);
 				data.setTotalVote(totalVote);
 									
-				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
-				if(choiceVoteByUser.getData() != null) {
-					data.setIsVoted(true);
+				if(getId() != null) {					
+					GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+					if(choiceVoteByUser.getData() != null) {
+						data.setIsVoted(true);
+					}
+				}else {
+					data.setIsVoted(false);
 				}
 			}
 			
@@ -683,16 +726,26 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 			data.setTotalLike(threadLike.getData().getCountLike());
 			
 			GetCountCommentByThreadDtoRes threadComment = threadCommentDao.countByThread(thread.getId());
-			data.setTotalComment(threadComment.getCountComment());
-			
-			GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
-			if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
-				data.setIsLiked(true);
+			if(threadComment.getCountComment() != null) {
+				data.setTotalComment(threadComment.getCountComment());				
 			}
 			
-			GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
-			if(bookmarkByUserAndThread.getData() != null) {
-				data.setIsBookmarked(true);
+			if(getId() != null) {				
+				GetThreadLikeByThreadDtoRes threadLikeByUser = threadLikeDao.countByThreadAndUser(getId(), thread.getId());
+				if(threadLikeByUser.getData() != null && threadLikeByUser.getData().getCountLike() != 0) {
+					data.setIsLiked(true);
+				}
+			}else {
+				data.setIsLiked(false);
+			}
+
+			if(getId() != null) {				
+				GetBookmarkByUserAndThreadDtoRes bookmarkByUserAndThread = bookmarkDao.findByUserAndThread(getId(), thread.getId());
+				if(bookmarkByUserAndThread.getData() != null) {
+					data.setIsBookmarked(true);
+				}
+			}else {
+				data.setIsBookmarked(false);
 			}
 			
 			Profiles profiles = profilesDao.findByUser(thread.getCreatedBy());

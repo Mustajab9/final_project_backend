@@ -45,19 +45,13 @@ public class EventController {
 		this.eventService = eventService;
 	}
 
-	@GetMapping
-	public ResponseEntity<GetAllEventDtoRes> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
-		GetAllEventDtoRes result = eventService.findAll(query, startPage, maxPage);
-		return new ResponseEntity<GetAllEventDtoRes>(result, HttpStatus.OK);
-	}
-
 	@GetMapping("report/{eventId}")
 	public ResponseEntity<?> getReportProfileAttendance(@PathVariable("eventId") String eventId) throws Exception {
 		List<GetReportProfileAttendanceEventDto> data = eventService.getReportEnroll(eventId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("id", eventId);
-
+		
 		byte[] out = JasperUtil.responseToByteArray(data, "member_list_event", map);
 		
 		String fileName = "member list " + data.get(0).getEventTitle() + ".pdf";
@@ -74,7 +68,7 @@ public class EventController {
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("id", eventId);
-
+		
 		byte[] out = JasperUtil.responseToByteArray(data, "income_list_event", map);
 		
 		String fileName = "income event " + data.get(0).getEventTitle() + ".pdf";
@@ -84,6 +78,13 @@ public class EventController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName+ "\"")
 				.body(out);
 	}
+	
+	@GetMapping
+	public ResponseEntity<GetAllEventDtoRes> getAll(String query, Integer startPage, Integer maxPage) throws Exception {
+		GetAllEventDtoRes result = eventService.findAll(query, startPage, maxPage);
+		return new ResponseEntity<GetAllEventDtoRes>(result, HttpStatus.OK);
+	}
+
 	
 	@GetMapping("{id}")
 	public ResponseEntity<GetByEventIdDtoRes> getById(@PathVariable("id") String id) throws Exception {
@@ -129,6 +130,25 @@ public class EventController {
 	
 	@GetMapping("category/{id}")
 	public ResponseEntity<GetEventByCategoryDtoRes> getByCategory(@PathVariable("id") String id) throws Exception {
+		GetEventByCategoryDtoRes data = eventService.findByCategory(id);
+		return new ResponseEntity<GetEventByCategoryDtoRes>(data, HttpStatus.OK);
+	}
+	
+	@GetMapping("nl")
+	public ResponseEntity<GetAllEventDtoRes> getAllNl(String query, Integer startPage, Integer maxPage) throws Exception {
+		GetAllEventDtoRes result = eventService.findAll(query, startPage, maxPage);
+		return new ResponseEntity<GetAllEventDtoRes>(result, HttpStatus.OK);
+	}
+
+	
+	@GetMapping("nl/{id}")
+	public ResponseEntity<GetByEventIdDtoRes> getByIdNl(@PathVariable("id") String id) throws Exception {
+		GetByEventIdDtoRes data = eventService.findById(id);
+		return new ResponseEntity<GetByEventIdDtoRes>(data, HttpStatus.OK);
+	}
+	
+	@GetMapping("nl/category/{id}")
+	public ResponseEntity<GetEventByCategoryDtoRes> getByCategoryNl(@PathVariable("id") String id) throws Exception {
 		GetEventByCategoryDtoRes data = eventService.findByCategory(id);
 		return new ResponseEntity<GetEventByCategoryDtoRes>(data, HttpStatus.OK);
 	}

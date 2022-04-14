@@ -484,6 +484,31 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 	}
 	
 	@Override
+	public GetCountNotPaidDtoDataRes findIsEnroll(String id) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT COUNT(e.id)");
+		builder.append(" FROM events AS e");
+		builder.append(" WHERE e.id IN");
+		builder.append(" (SELECT ee.event_id FROM enroll_events ee");
+		builder.append(" INNER JOIN profiles p ON p.id = ee.profile_id");
+		builder.append(" INNER JOIN users u ON u.id = p.user_id WHERE u.id =:id)");
+		
+		GetCountNotPaidDtoDataRes countNotPaid = new GetCountNotPaidDtoDataRes();
+		try {
+			Object result = createNativeQuery(builder.toString())
+					.setParameter("id", id)
+					.getSingleResult();
+			
+			countNotPaid.setCountNotPaid(Integer.valueOf(result.toString()));
+			
+		}catch (NoResultException e) {
+			e.printStackTrace();
+		}
+		
+		return countNotPaid;
+	}
+	
+	@Override
 	public InvoiceEventDtoReq getDataSendInvoice(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT p.profile_name, pe.payment_events_invoice, e.event_provider, e.event_price,");
@@ -533,6 +558,70 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 	}
 	
 	@Override
+	public List<GetEventByCategoryDtoDataRes> findByCategory(String id, String userId) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT e.id, e.event_code, e.event_title, e.event_provider, e.event_price, e.event_time_start, e.event_time_end,");
+		builder.append(" e.event_date_start, e.event_date_end, e.is_approve, c.id AS category_id, c.category_name, t.id AS type_id, t.type_name,");
+		builder.append(" a.id AS attachment_id, a.attachment_extension, e.created_by, e.version, e.is_active, e.location");
+		builder.append(" FROM events AS e");
+		builder.append(" INNER JOIN categories AS c ON c.id = e.category_id");
+		builder.append(" INNER JOIN event_types AS t ON t.id = e.type_id");
+		builder.append(" LEFT JOIN attachments AS a ON a.id = e.attachment_id");
+		builder.append(" WHERE c.id = :id");
+		
+		List<?> results = createNativeQuery(builder.toString())
+				.setParameter("id", id)
+				.getResultList();
+		
+		List<GetEventByCategoryDtoDataRes> resultList = new ArrayList<>();
+		results.forEach(result -> {
+			Object[] obj = (Object[]) result;
+			GetEventByCategoryDtoDataRes data = new GetEventByCategoryDtoDataRes();
+			
+			data.setId(obj[0].toString());
+			data.setEventCode(obj[1].toString());
+			data.setEventTitle(obj[2].toString());
+			data.setEventProvider(obj[3].toString());
+			data.setEventPrice(BigInteger.valueOf(((Number) obj[4]).longValue()));
+			data.setEventTimeStart((Time) obj[5]);
+			data.setEventTimeEnd((Time) obj[6]);
+			data.setEventDateStart((Date) obj[7]);
+			data.setEventDateEnd((Date) obj[8]);
+			data.setIsApprove(Boolean.valueOf(obj[9].toString()));
+			data.setCategoryId(obj[10].toString());
+			data.setCategoryName(obj[11].toString());
+			data.setTypeId(obj[12].toString());
+			data.setTypeName(obj[13].toString());
+
+			if (obj[14] != null) {
+				data.setAttachmentId(obj[14].toString());
+				data.setAttachmentExtension(obj[15].toString());
+			}
+					
+			try {
+				GetCountNotPaidDtoDataRes count = findIsEnroll(userId);
+				if(count.getCountNotPaid() > 0) {
+					data.setIsEnroll(true);
+				}else {
+					data.setIsEnroll(false);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+
+			data.setCreatedBy(obj[16].toString());
+			data.setVersion(Integer.valueOf(obj[17].toString()));
+			data.setIsActive(Boolean.valueOf(obj[18].toString()));
+			data.setEventLocation(obj[19].toString());
+			
+			resultList.add(data);
+		});
+		
+		return resultList;
+	}
+	
+	@Override
 	public List<GetEventByCategoryDtoDataRes> findByCategory(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT e.id, e.event_code, e.event_title, e.event_provider, e.event_price, e.event_time_start, e.event_time_end,");
@@ -572,7 +661,8 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 				data.setAttachmentId(obj[14].toString());
 				data.setAttachmentExtension(obj[15].toString());
 			}
-
+						
+			data.setIsEnroll(false);
 			data.setCreatedBy(obj[16].toString());
 			data.setVersion(Integer.valueOf(obj[17].toString()));
 			data.setIsActive(Boolean.valueOf(obj[18].toString()));

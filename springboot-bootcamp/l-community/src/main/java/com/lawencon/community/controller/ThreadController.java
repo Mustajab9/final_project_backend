@@ -77,4 +77,28 @@ public class ThreadController {
 		GetThreadByCategoryDtoRes getByCategory = threadService.findByCategory(id);
 		return new ResponseEntity<GetThreadByCategoryDtoRes>(getByCategory, HttpStatus.OK);
 	}
+	
+	@GetMapping("nl")
+	public ResponseEntity<GetAllThreadDtoRes> getAllNl(Integer startPage, Integer maxPage) throws Exception{
+		GetAllThreadDtoRes getAll = threadService.findAll(startPage, maxPage);
+		return new ResponseEntity<GetAllThreadDtoRes>(getAll, HttpStatus.OK);
+	}
+	
+	@GetMapping("nl/{id}")
+	public ResponseEntity<GetByThreadIdDtoRes> getByIdNl(@PathVariable("id") String id) throws Exception{
+		GetByThreadIdDtoRes getById = threadService.findById(id);
+		return new ResponseEntity<GetByThreadIdDtoRes>(getById, HttpStatus.OK);
+	}
+	
+	@GetMapping("nl/user")
+	public ResponseEntity<GetThreadByUserDtoRes> getByUserNl() throws Exception{
+		GetThreadByUserDtoRes getByUser = threadService.findByUser();
+		return new ResponseEntity<GetThreadByUserDtoRes>(getByUser, HttpStatus.OK);
+	}
+	
+	@GetMapping("nl/category/{id}")
+	public ResponseEntity<GetThreadByCategoryDtoRes> getByCategoryNl(@PathVariable("id") String[] id) throws Exception{
+		GetThreadByCategoryDtoRes getByCategory = threadService.findByCategory(id);
+		return new ResponseEntity<GetThreadByCategoryDtoRes>(getByCategory, HttpStatus.OK);
+	}
 }

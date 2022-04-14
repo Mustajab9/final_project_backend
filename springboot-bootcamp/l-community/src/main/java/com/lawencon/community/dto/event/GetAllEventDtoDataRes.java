@@ -29,6 +29,7 @@ public class GetAllEventDtoDataRes {
 	private String paymentName;
 	private Boolean enrollIsApprove;
 	private String enrollInvoice;
+	private Boolean isEnroll;
 	private String createdBy;
 	private Integer version;
 	private Boolean isActive;
@@ -223,6 +224,14 @@ public class GetAllEventDtoDataRes {
 
 	public void setEnrollInvoice(String enrollInvoice) {
 		this.enrollInvoice = enrollInvoice;
+	}
+
+	public Boolean getIsEnroll() {
+		return isEnroll;
+	}
+
+	public void setIsEnroll(Boolean isEnroll) {
+		this.isEnroll = isEnroll;
 	}
 
 	public String getCreatedBy() {

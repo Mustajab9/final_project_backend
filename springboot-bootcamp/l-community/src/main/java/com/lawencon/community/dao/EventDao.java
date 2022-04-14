@@ -26,6 +26,8 @@ public interface EventDao {
 	GetByEventIdDtoDataRes findEventStatus(String id) throws Exception;
 	List<GetAllEventDtoDataRes> findEventNotPaid(String id) throws Exception;
 	GetCountNotPaidDtoDataRes countNotPaid(String id) throws Exception;
+	GetCountNotPaidDtoDataRes findIsEnroll(String id) throws Exception;
 	InvoiceEventDtoReq getDataSendInvoice(String id) throws Exception;
+	List<GetEventByCategoryDtoDataRes> findByCategory(String id, String userId) throws Exception;
 	List<GetEventByCategoryDtoDataRes> findByCategory(String id) throws Exception;
 }
