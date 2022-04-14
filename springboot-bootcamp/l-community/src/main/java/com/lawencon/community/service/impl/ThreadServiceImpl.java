@@ -282,7 +282,8 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 		
 		if(thread.getTypeId().getTypeCode().equals(ThreadTypeConstant.POLLING.getCode())) {
 			List<GetCountVoteByThreadDtoDataRes> listChoice = choiceVoteDao.findCountByThread(thread.getId());
-			data.setPollingName(listChoice.get(0).getPollingName());
+			GetCountVoteByThreadDtoDataRes getPollingName = choiceVoteDao.findPollingNameByThread(thread.getId());
+			data.setPollingName(getPollingName.getPollingName());
 			
 			List<GetThreadPollingChoiceDtoRes> listChoiceName = new ArrayList<>();
 			List<Integer> listCountVote = new ArrayList<>();
