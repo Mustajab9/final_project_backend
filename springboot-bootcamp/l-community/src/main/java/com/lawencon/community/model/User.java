@@ -3,7 +3,7 @@ package com.lawencon.community.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -29,7 +29,7 @@ public class User extends BaseEntity {
 	@Column(name = "verification_code", length = 5)
 	private String verificationCode;
 
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "role_id")
 	private Role roleId;
 

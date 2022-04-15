@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -46,19 +47,19 @@ public class Profiles extends BaseEntity {
 	@JoinColumn(name = "profile_image")
 	private Attachment profileImage;
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "user_id")
 	private User userId;
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "industry_id")
 	private Industry industryId;
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "position_id")
 	private Position positionId;
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "regency_id")
 	private Regency regencyId;
 	
