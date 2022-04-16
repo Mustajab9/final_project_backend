@@ -78,12 +78,6 @@ public class ThreadController {
 		return new ResponseEntity<GetThreadByCategoryDtoRes>(getByCategory, HttpStatus.OK);
 	}
 	
-	@PostMapping("category/{id}")
-	public ResponseEntity<GetThreadByCategoryDtoRes> getByCategoryId(Integer startPage, Integer maxPage, @RequestBody String[] id) throws Exception{
-		GetThreadByCategoryDtoRes getByCategory = threadService.findByCategory(id);
-		return new ResponseEntity<GetThreadByCategoryDtoRes>(getByCategory, HttpStatus.OK);
-	}
-	
 	@GetMapping("nl")
 	public ResponseEntity<GetAllThreadDtoRes> getAllNl(Integer startPage, Integer maxPage) throws Exception{
 		GetAllThreadDtoRes getAll = threadService.findAll(startPage, maxPage);
