@@ -48,9 +48,9 @@ public class ChoiceVoteController {
 		return new ResponseEntity<GetByPollingChoiceIdDtoRes>(data, HttpStatus.OK);
 	}
 	
-	@GetMapping("user/{id}")
-	public ResponseEntity<GetChoiceVoteByUserDtoRes> getChoiceVoteByUser(@PathVariable("id") String id) throws Exception {
-		GetChoiceVoteByUserDtoRes data = choiceVoteService.findByUser(id);
+	@GetMapping("user/{id}/{thread}")
+	public ResponseEntity<GetChoiceVoteByUserDtoRes> getChoiceVoteByUser(@PathVariable("id") String id, @PathVariable("thread") String thread) throws Exception {
+		GetChoiceVoteByUserDtoRes data = choiceVoteService.findByUser(id, thread);
 		return new ResponseEntity<GetChoiceVoteByUserDtoRes>(data, HttpStatus.OK);
 	}
 
