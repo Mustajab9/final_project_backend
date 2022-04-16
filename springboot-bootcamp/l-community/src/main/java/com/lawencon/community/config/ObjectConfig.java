@@ -46,7 +46,7 @@ public class ObjectConfig {
 	public SimpleTriggerFactoryBean trigger(JobDetail job) {
 	    SimpleTriggerFactoryBean trigger = new SimpleTriggerFactoryBean();
 	    trigger.setJobDetail(job);
-	    trigger.setRepeatInterval(3000);
+	    trigger.setRepeatInterval(10000);
 	    trigger.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
 	    return trigger;
 	}

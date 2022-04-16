@@ -189,7 +189,7 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				data.setTotalVote(totalVote);
 							
 				if(getId() != null) {					
-					GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+					GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId(), thread.getId());
 					if(choiceVoteByUser.getData() != null) {
 						data.setIsVoted(true);
 					}
@@ -320,7 +320,7 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 			data.setTotalVote(totalVote);
 							
 			if(getId() != null) {					
-				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId(), thread.getId());
 				if(choiceVoteByUser.getData() != null) {
 					data.setIsVoted(true);
 				}
@@ -394,7 +394,6 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 
 			begin();
 			Thread threadInsert = threadDao.save(thread);
-			commit();
 
 			InsertThreadDtoDataRes dataDto = new InsertThreadDtoDataRes();
 			dataDto.setId(threadInsert.getId());
@@ -431,6 +430,7 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 					pollingService.insert(pollingReq);
 				}
 			}
+			commit();
 			
 			insert.setData(dataDto);
 			insert.setMsg(CommonConstant.ACTION_ADD.getDetail() + " " + CommonConstant.SUCCESS.getDetail() + ", Thread " + CommonConstant.HAS_BEEN_ADDED.getDetail());
@@ -580,7 +580,7 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				data.setTotalVote(totalVote);
 				
 				if(getId() != null) {					
-					GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+					GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId(), thread.getId());
 					if(choiceVoteByUser.getData() != null) {
 						data.setIsVoted(true);
 					}
@@ -713,7 +713,7 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				data.setTotalVote(totalVote);
 									
 				if(getId() != null) {					
-					GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+					GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId(), thread.getId());
 					if(choiceVoteByUser.getData() != null) {
 						data.setIsVoted(true);
 					}

@@ -106,9 +106,7 @@ public class PollingServiceImpl extends BaseService implements PollingService {
 			polling.setThreadId(thread);
 			polling.setCreatedBy(getId());
 
-			begin();
 			Polling pollingInsert = pollingDao.save(polling);
-			commit();
 
 			InsertPollingDtoDataRes dataDto = new InsertPollingDtoDataRes();
 			dataDto.setId(pollingInsert.getId());

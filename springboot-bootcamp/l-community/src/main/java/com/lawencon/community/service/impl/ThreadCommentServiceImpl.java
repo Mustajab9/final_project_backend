@@ -36,6 +36,7 @@ public class ThreadCommentServiceImpl extends BaseService implements ThreadComme
 	public ThreadCommentServiceImpl(ThreadCommentDao threadCommentDao, ThreadDao threadDao, ProfilesDao profileDao) {
 		this.threadCommentDao = threadCommentDao;
 		this.threadDao = threadDao;
+		this.profileDao = profileDao;
 	}
 	
 	@Override

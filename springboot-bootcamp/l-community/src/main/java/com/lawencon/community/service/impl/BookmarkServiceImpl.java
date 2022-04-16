@@ -240,7 +240,7 @@ public class BookmarkServiceImpl extends BaseService implements BookmarkService 
 				data.setCountVote(listCountVote);
 				data.setTotalVote(totalVote);
 				
-				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId(), bookmark.getThreadId().getId());
 				if(choiceVoteByUser.getData() != null) {
 					data.setIsVoted(true);
 				}

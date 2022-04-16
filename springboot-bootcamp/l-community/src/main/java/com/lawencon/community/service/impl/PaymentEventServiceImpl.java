@@ -128,6 +128,7 @@ public class PaymentEventServiceImpl extends BaseService implements PaymentEvent
 			
 			paymentEvent.setCreatedBy(getId());
 			
+			begin();
 			if(file != null) {
 				Attachment attachment = new Attachment();
 				attachment.setAttachmentCode(getAlphaNumericString(5));
@@ -140,10 +141,8 @@ public class PaymentEventServiceImpl extends BaseService implements PaymentEvent
 				Attachment attachmentInsert = attachmentDao.save(attachment);
 				paymentEvent.setAttachmentId(attachmentInsert);
 			}
-
-			begin();
-			PaymentEvent paymentEventInsert = paymentEventDao.save(paymentEvent);
-			commit();
+		
+			PaymentEvent paymentEventInsert = paymentEventDao.save(paymentEvent);		
 
 			InsertPaymentEventDtoDataRes dataDto = new InsertPaymentEventDtoDataRes();
 			dataDto.setId(paymentEventInsert.getId());
@@ -160,6 +159,7 @@ public class PaymentEventServiceImpl extends BaseService implements PaymentEvent
 					paymentEventDetailService.insert(detailInsert);
 				}
 			}
+			commit();
 
 			insert.setData(dataDto);
 			insert.setMsg("You " + CommonConstant.SUCCESS.getDetail() + " Payment Event");

@@ -102,9 +102,7 @@ public class ThreadAttachmentServiceImpl extends BaseService implements ThreadAt
 			threadAttachment.setAttachmentId(attachment);
 			threadAttachment.setCreatedBy(getId());
 
-			begin();
 			ThreadAttachment threadAttachmentInsert = threadAttachmentDao.save(threadAttachment);
-			commit();
 
 			InsertThreadAttachmentDtoDataRes dataDto = new InsertThreadAttachmentDtoDataRes();
 			dataDto.setId(threadAttachmentInsert.getId());

@@ -12,16 +12,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.lawencon.community.dto.profiles.DeleteByProfilesIdDtoRes;
 import com.lawencon.community.dto.profiles.GetAllProfilesDtoRes;
 import com.lawencon.community.dto.profiles.GetByProfilesIdDtoRes;
 import com.lawencon.community.dto.profiles.GetProfileByUserDtoRes;
+import com.lawencon.community.dto.profiles.InsertProfilePictureDtoRes;
 import com.lawencon.community.dto.profiles.InsertProfilesDtoReq;
 import com.lawencon.community.dto.profiles.InsertProfilesDtoRes;
 import com.lawencon.community.dto.profiles.UpdateProfilesDtoReq;
 import com.lawencon.community.dto.profiles.UpdateProfilesDtoRes;
+import com.lawencon.community.dto.thread.InsertThreadDtoRes;
 import com.lawencon.community.service.ProfilesService;
 
 @RestController
@@ -64,6 +68,12 @@ private ProfilesService profileService;
 		InsertProfilesDtoRes dtoRes = profileService.insert(dtoReq);
 		return new ResponseEntity<InsertProfilesDtoRes>(dtoRes, HttpStatus.CREATED);
 	}
+	
+//	@PostMapping
+//	public ResponseEntity<InsertProfilePictureDtoRes> insertData(@RequestPart(name = "content") String content, @RequestPart(required = false) MultipartFile[] file) throws Exception{
+//		InsertProfilePictureDtoRes insertData = profileService.insert(content, file);
+//		return new ResponseEntity<InsertProfilePictureDtoRes>(insertData, HttpStatus.CREATED);
+//	}
 	
 	@PutMapping
 	public ResponseEntity<UpdateProfilesDtoRes> update(@RequestBody @Valid UpdateProfilesDtoReq dtoReq) throws Exception {

@@ -6,6 +6,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.lawencon.base.ConnHandler;
 import com.lawencon.community.service.SubscriptionService;
 
 @Component
@@ -20,6 +21,10 @@ public class SubscriptionJob implements Job {
 			subscriptionService.expiredSubscription();
 		} catch (Exception e) {
 			throw new RuntimeException();
-		}	
+		} finally {
+			ConnHandler.commit();
+			ConnHandler.clear();			
+		}
+		
 	}
 }

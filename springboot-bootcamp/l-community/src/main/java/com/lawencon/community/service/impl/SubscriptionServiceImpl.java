@@ -142,7 +142,6 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 			
 			begin();
 			Subscription subscriptionInsert = subscriptionDao.save(subscription);
-			commit();
 
 			InsertSubscriptionDtoDataRes dataDto = new InsertSubscriptionDtoDataRes();
 			dataDto.setId(subscriptionInsert.getId());
@@ -160,10 +159,9 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 				Role role = roleDao.findByCode(RoleConstant.MEMBER.getCode());
 				user.setRoleId(role);
 				
-				begin();
 				userDao.save(user);
-				commit();
 			}
+			commit();
 
 			insert.setData(dataDto);
 			insert.setMsg("You " + CommonConstant.SUCCESS.getDetail() + " Upgrade to Membership");
@@ -257,15 +255,16 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 		SearchQuery<Subscription> subscriptions = subscriptionDao.findAll(null, null, null);
 		
 		List<Subscription> listSubscription = subscriptions.getData();
+		Role role = roleDao.findByCode(RoleConstant.USER.getCode());
+		
 		int data = listSubscription.size();
 		for(int i = 0; i < data; i++) {
 			Subscription subscription = listSubscription.get(i);
 			
-			if(subscription.getSubscriptionDuration().compareTo(new Date()) > 0) {
-				Profiles profile = profileDao.findById(subscription.getProfileId().getId());
+			if(subscription.getSubscriptionDuration().before(new Date())) {
+//				Profiles profile = profileDao.findById(subscription.getProfileId().getId());
 				
-				User user = userDao.findById(profile.getUserId().getId());
-				Role role = roleDao.findByCode(RoleConstant.USER.getCode());
+				User user = userDao.findById(subscription.getProfileId().getUserId().getId());
 				user.setRoleId(role);
 				
 				begin();

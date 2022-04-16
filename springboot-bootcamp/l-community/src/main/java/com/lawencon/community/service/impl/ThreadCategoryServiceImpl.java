@@ -102,9 +102,7 @@ public class ThreadCategoryServiceImpl extends BaseService implements ThreadCate
 			threadCategory.setCategoryId(category);
 			threadCategory.setCreatedBy(getId());
 
-			begin();
 			ThreadCategory threadCategoryInsert = threadCategoryDao.save(threadCategory);
-			commit();
 
 			InsertThreadCategoryDtoDataRes dataDto = new InsertThreadCategoryDtoDataRes();
 			dataDto.setId(threadCategoryInsert.getId());

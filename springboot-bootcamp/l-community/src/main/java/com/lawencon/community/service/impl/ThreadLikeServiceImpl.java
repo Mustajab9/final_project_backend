@@ -256,7 +256,7 @@ public class ThreadLikeServiceImpl extends BaseService implements ThreadLikeServ
 				data.setCountVote(listCountVote);
 				data.setTotalVote(totalVote);
 				
-				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId());
+				GetChoiceVoteByUserDtoRes choiceVoteByUser = choiceVoteDao.findByUser(getId(), threadLike.getThreadId().getId());
 				if(choiceVoteByUser.getData() != null) {
 					data.setIsVoted(true);
 				}

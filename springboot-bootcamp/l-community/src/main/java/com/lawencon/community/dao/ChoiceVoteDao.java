@@ -14,5 +14,5 @@ public interface ChoiceVoteDao {
 	List<ChoiceVote> findByChoice(String id) throws Exception;
 	List<GetCountVoteByThreadDtoDataRes> findCountByThread(String id) throws Exception;
 	GetCountVoteByThreadDtoDataRes findPollingNameByThread(String id) throws Exception;
-	GetChoiceVoteByUserDtoRes findByUser(String id) throws Exception;
+	GetChoiceVoteByUserDtoRes findByUser(String id, String thread) throws Exception;
 }

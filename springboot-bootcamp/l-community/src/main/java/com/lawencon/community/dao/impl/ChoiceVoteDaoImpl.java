@@ -139,15 +139,19 @@ public class ChoiceVoteDaoImpl extends BaseDao<ChoiceVote> implements ChoiceVote
 	}
 	
 	@Override
-	public GetChoiceVoteByUserDtoRes findByUser(String id) throws Exception {
+	public GetChoiceVoteByUserDtoRes findByUser(String id, String thread) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT cv.id, cv.created_by FROM choice_votes cv");
-		builder.append(" WHERE :id IN (cv.created_by)");
+		builder.append(" INNER JOIN polling_choices pc ON cv.choice_id = pc.id");
+		builder.append(" INNER JOIN pollings p ON pc.polling_id = p.id");
+		builder.append(" INNER JOIN threads t ON p.thread_id = t.id");
+		builder.append(" WHERE :id IN (cv.created_by) AND t.id = :thread");
 		
 		GetChoiceVoteByUserDtoRes getChoiceVoteByUser = new GetChoiceVoteByUserDtoRes();
 		try {
 			Object result = createNativeQuery(builder.toString())
 					.setParameter("id", id)
+					.setParameter("thread", thread)
 					.getSingleResult();
 			
 			Object[] obj = (Object[]) result;

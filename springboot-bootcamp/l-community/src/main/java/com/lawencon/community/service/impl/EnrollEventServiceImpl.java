@@ -198,6 +198,7 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 			enrollEvent.setIsApprove(false);
 			enrollEvent.setCreatedBy(getId());
 			
+			begin();
 			if(file != null) {
 				Attachment attachment = new Attachment();
 				attachment.setAttachmentCode(getAlphaNumericString(5));
@@ -210,8 +211,7 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 				Attachment attachmentInsert = attachmentDao.save(attachment);
 				enrollEvent.setAttachmentId(attachmentInsert);
 			}
-
-			begin();
+			
 			EnrollEvent enrollEventInsert = enrollEventDao.save(enrollEvent);
 			commit();
 

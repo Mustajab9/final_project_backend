@@ -14,5 +14,5 @@ public interface ChoiceVoteService {
 	InsertChoiceVoteDtoRes insert(InsertChoiceVoteDtoReq data) throws Exception;
 	GetByPollingChoiceIdDtoRes findByChoice(String id) throws Exception;
 	GetCountVoteByThreadDtoRes findCountByThread(String id) throws Exception;
-	GetChoiceVoteByUserDtoRes findByUser(String id) throws Exception;
+	GetChoiceVoteByUserDtoRes findByUser(String id, String threadId) throws Exception;
 }

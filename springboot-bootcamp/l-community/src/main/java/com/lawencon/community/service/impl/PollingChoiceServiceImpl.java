@@ -106,9 +106,7 @@ public class PollingChoiceServiceImpl extends BaseService implements PollingChoi
 			pollingChoice.setPollingId(polling);
 			pollingChoice.setCreatedBy(getId());
 
-			begin();
 			PollingChoice pollingChoiceInsert = pollingChoiceDao.save(pollingChoice);
-			commit();
 
 			InsertPollingChoiceDtoDataRes dataDto = new InsertPollingChoiceDtoDataRes();
 			dataDto.setId(pollingChoiceInsert.getId());

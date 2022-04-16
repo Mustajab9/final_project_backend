@@ -174,7 +174,7 @@ public class ChoiceVoteServiceImpl extends BaseService implements ChoiceVoteServ
 	}
 	
 	@Override
-	public GetChoiceVoteByUserDtoRes findByUser(String id) throws Exception {
-		return choiceVoteDao.findByUser(id);
+	public GetChoiceVoteByUserDtoRes findByUser(String id, String threadId) throws Exception {
+		return choiceVoteDao.findByUser(id, threadId);
 	}
 }

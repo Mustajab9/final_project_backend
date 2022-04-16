@@ -255,6 +255,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 
 			event.setCreatedBy(getId());
 
+			begin();
 			if (file != null) {
 				Attachment attachment = new Attachment();
 				attachment.setAttachmentCode(getAlphaNumericString(5));
@@ -264,13 +265,10 @@ public class EventServiceImpl extends BaseService implements EventService {
 				attachment.setAttachmentExtension(extension);
 				attachment.setCreatedBy(getId());
 
-				begin();
 				Attachment attachmentInsert = attachmentDao.save(attachment);
-				commit();
 				event.setAttachmentId(attachmentInsert);
 			}
 
-			begin();
 			Event eventInsert = eventDao.save(event);
 			commit();
 

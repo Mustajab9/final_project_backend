@@ -92,9 +92,7 @@ public class AttachmentServiceImpl extends BaseService implements AttachmentServ
 				attach.setCreatedBy(getId());
 			}
 
-			begin();
 			Attachment fileInsert = attachmentDao.save(attach);
-			commit();
 
 			InsertAttachmentDtoDataRes dataDto = new InsertAttachmentDtoDataRes();
 			dataDto.setId(fileInsert.getId());
