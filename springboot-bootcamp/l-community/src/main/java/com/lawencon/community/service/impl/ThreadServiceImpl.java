@@ -231,6 +231,7 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				data.setProfileImage(profiles.getProfileImage().getId());
 			}
 			
+			data.setIsPremium(thread.getIsPremium());
 			data.setVersion(thread.getVersion());
 			data.setIsActive(thread.getIsActive());
 
@@ -362,6 +363,7 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 			data.setProfileImage(profiles.getProfileImage().getId());
 		}
 		
+		data.setIsPremium(thread.getIsPremium());
 		data.setVersion(thread.getVersion());
 		data.setIsActive(thread.getIsActive());
 
@@ -622,6 +624,7 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				data.setProfileImage(profiles.getProfileImage().getId());
 			}
 						 
+			data.setIsPremium(thread.getIsPremium());
 			data.setVersion(thread.getVersion());
 			data.setIsActive(thread.getIsActive());
 
@@ -755,6 +758,7 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 				data.setProfileImage(profiles.getProfileImage().getId());
 			}
 					 
+			data.setIsPremium(thread.getIsPremium());
 			data.setVersion(thread.getVersion());
 			data.setIsActive(thread.getIsActive());
 

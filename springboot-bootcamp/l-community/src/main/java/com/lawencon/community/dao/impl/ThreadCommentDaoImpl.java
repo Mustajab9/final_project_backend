@@ -96,9 +96,7 @@ public class ThreadCommentDaoImpl extends BaseDao<ThreadComment> implements Thre
 			
 			countComment.setCountComment(Integer.valueOf(result.toString()));
 			
-		}catch (NoResultException e) {
-			e.printStackTrace();
-		}
+		}catch (NoResultException e) {}
 		
 		return countComment;
 	}

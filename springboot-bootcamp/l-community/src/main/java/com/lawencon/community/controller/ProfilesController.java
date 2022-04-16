@@ -20,12 +20,9 @@ import com.lawencon.community.dto.profiles.DeleteByProfilesIdDtoRes;
 import com.lawencon.community.dto.profiles.GetAllProfilesDtoRes;
 import com.lawencon.community.dto.profiles.GetByProfilesIdDtoRes;
 import com.lawencon.community.dto.profiles.GetProfileByUserDtoRes;
-import com.lawencon.community.dto.profiles.InsertProfilePictureDtoRes;
 import com.lawencon.community.dto.profiles.InsertProfilesDtoReq;
 import com.lawencon.community.dto.profiles.InsertProfilesDtoRes;
-import com.lawencon.community.dto.profiles.UpdateProfilesDtoReq;
 import com.lawencon.community.dto.profiles.UpdateProfilesDtoRes;
-import com.lawencon.community.dto.thread.InsertThreadDtoRes;
 import com.lawencon.community.service.ProfilesService;
 
 @RestController
@@ -76,8 +73,10 @@ private ProfilesService profileService;
 //	}
 	
 	@PutMapping
-	public ResponseEntity<UpdateProfilesDtoRes> update(@RequestBody @Valid UpdateProfilesDtoReq dtoReq) throws Exception {
-		UpdateProfilesDtoRes dtoRes = profileService.update(dtoReq);
+	public ResponseEntity<UpdateProfilesDtoRes> update(@RequestPart(name = "content") String content, 
+			@RequestPart(required = false) MultipartFile file) throws Exception {
+		System.out.println("FILE: " + file);
+		UpdateProfilesDtoRes dtoRes = profileService.update(content, file);
 		return new ResponseEntity<UpdateProfilesDtoRes>(dtoRes, HttpStatus.OK);
 	}
 	

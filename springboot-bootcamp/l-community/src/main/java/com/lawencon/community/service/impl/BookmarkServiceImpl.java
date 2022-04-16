@@ -177,6 +177,8 @@ public class BookmarkServiceImpl extends BaseService implements BookmarkService 
 			data.setThreadId(bookmark.getThreadId().getId());
 			data.setTypeCode(bookmark.getThreadId().getTypeId().getTypeCode());
 			
+			System.out.println("USER ID: " + getId());
+			System.out.println("CATEGORY BY THREAD ID: " + bookmark.getThreadId().getId());
 			List<ThreadCategory> categories = threadCategoryDao.findByThread(bookmark.getThreadId().getId());
 			List<String> listCategoryId = new ArrayList<>();
 			List<String> listCategoryName = new ArrayList<>();

@@ -383,9 +383,7 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 			data.setVersion(Integer.valueOf(obj[20].toString()));
 			data.setIsActive(Boolean.valueOf(obj[21].toString()));
 		
-		}catch(NoResultException | NonUniqueResultException e) {
-			e.printStackTrace();
-		}
+		}catch(NoResultException | NonUniqueResultException e) {}
 
 		return data;
 	}

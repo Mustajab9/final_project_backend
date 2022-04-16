@@ -44,7 +44,7 @@ public class BookmarkDaoImpl extends BaseDao<Bookmark> implements BookmarkDao {
 	@Override
 	public List<Bookmark> findByUser(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT t.thread_title, t.thread_content, t.is_premium, ty.type_name, a.attachment_content,");
+		builder.append("SELECT t.id AS thread_id, t.thread_title, t.thread_content, t.is_premium, ty.type_name, a.attachment_content,");
 		builder.append(" a.attachment_extension, t.created_by, t.created_at, b.version, b.is_active");
 		builder.append(" FROM bookmarks AS b");
 		builder.append(" INNER JOIN threads AS t ON t.id = b.thread_id");
@@ -63,39 +63,40 @@ public class BookmarkDaoImpl extends BaseDao<Bookmark> implements BookmarkDao {
 			Object[] obj = (Object[]) result;
 			Bookmark bookmark = new Bookmark();
 			
-			ThreadType threadType = new ThreadType();
-			threadType.setTypeName(obj[3].toString());
-			
 			Thread thread = new Thread();
-			thread.setTypeId(threadType);
-			thread.setThreadTitle(obj[0].toString());
-			thread.setThreadContent(obj[1].toString());
-			thread.setIsPremium(Boolean.valueOf(obj[2].toString()));
+			thread.setId(obj[0].toString());
+			thread.setThreadTitle(obj[1].toString());
+			thread.setThreadContent(obj[2].toString());
+			thread.setIsPremium(Boolean.valueOf(obj[3].toString()));
 			
-			if(obj[4] != null) {
+			ThreadType threadType = new ThreadType();
+			threadType.setTypeName(obj[4].toString());
+			thread.setTypeId(threadType);
+			
+			if(obj[5] != null) {
 				Attachment attachment = new Attachment();
 				
 				byte[] content = null;
 				try {
-					content = convertObjToByteArray(obj[4].toString());
+					content = convertObjToByteArray(obj[5].toString());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 
 				attachment.setAttachmentContent(content);
-				attachment.setAttachmentExtension(obj[5].toString());
+				attachment.setAttachmentExtension(obj[6].toString());
 				
 				ThreadAttachment threadAttachment = new ThreadAttachment();
 				threadAttachment.setAttachmentId(attachment);
 				threadAttachment.setThreadId(thread);
 			}
 			
-			thread.setCreatedBy(obj[6].toString());
-			thread.setCreatedAt(((Timestamp)obj[7]).toLocalDateTime());
+			thread.setCreatedBy(obj[7].toString());
+			thread.setCreatedAt(((Timestamp)obj[8]).toLocalDateTime());
 			
 			bookmark.setThreadId(thread);
-			bookmark.setVersion(Integer.valueOf(obj[8].toString()));
-			bookmark.setIsActive(Boolean.valueOf(obj[9].toString()));
+			bookmark.setVersion(Integer.valueOf(obj[9].toString()));
+			bookmark.setIsActive(Boolean.valueOf(obj[10].toString()));
 			
 			listResult.add(bookmark);
 		});
@@ -125,9 +126,7 @@ public class BookmarkDaoImpl extends BaseDao<Bookmark> implements BookmarkDao {
 			bookmark.setData(bookmarkData);
 			bookmark.setMsg(null);
 			
-		}catch(NoResultException e) {
-//			e.printStackTrace();
-		}
+		}catch(NoResultException e) {}
 		
 		return bookmark;
 	}	 

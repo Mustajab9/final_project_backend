@@ -162,9 +162,7 @@ public class ChoiceVoteDaoImpl extends BaseDao<ChoiceVote> implements ChoiceVote
 			
 			getChoiceVoteByUser.setMsg(null);
 			getChoiceVoteByUser.setData(getChoiceVoteByUserData);
-		}catch (NoResultException e) {
-			e.printStackTrace();
-		}
+		}catch (NoResultException e) {}
 		
 		return getChoiceVoteByUser;
 	}

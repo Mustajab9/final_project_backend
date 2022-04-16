@@ -123,9 +123,7 @@ public class ThreadLikeDaoImpl extends BaseDao<ThreadLike> implements ThreadLike
 
 			threadLike.setData(threadLikeData);
 			threadLike.setMsg(null);
-		} catch (NoResultException e) {
-			e.printStackTrace();
-		}
+		} catch (NoResultException e) {}
 
 		return threadLike;
 	}

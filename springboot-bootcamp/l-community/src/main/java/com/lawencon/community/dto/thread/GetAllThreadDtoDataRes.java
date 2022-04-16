@@ -18,6 +18,7 @@ public class GetAllThreadDtoDataRes {
 	private Integer totalVote;
 	private Integer totalLike;
 	private Integer totalComment;
+	private Boolean isPremium;
 	private Boolean isLiked = false;
 	private Boolean isBookmarked = false;
 	private Boolean isVoted = false;
@@ -144,6 +145,14 @@ public class GetAllThreadDtoDataRes {
 
 	public void setTotalComment(Integer totalComment) {
 		this.totalComment = totalComment;
+	}
+
+	public Boolean getIsPremium() {
+		return isPremium;
+	}
+
+	public void setIsPremium(Boolean isPremium) {
+		this.isPremium = isPremium;
 	}
 
 	public Boolean getIsLiked() {

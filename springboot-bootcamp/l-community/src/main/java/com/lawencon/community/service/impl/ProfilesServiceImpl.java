@@ -5,13 +5,17 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawencon.community.constant.CommonConstant;
+import com.lawencon.community.dao.AttachmentDao;
 import com.lawencon.community.dao.IndustryDao;
 import com.lawencon.community.dao.PositionDao;
 import com.lawencon.community.dao.ProfilesDao;
 import com.lawencon.community.dao.RegencyDao;
 import com.lawencon.community.dao.UserDao;
+import com.lawencon.community.dto.attachment.InsertAttachmentDtoRes;
 import com.lawencon.community.dto.profiles.DeleteByProfilesIdDtoRes;
 import com.lawencon.community.dto.profiles.GetAllProfilesDtoDataRes;
 import com.lawencon.community.dto.profiles.GetAllProfilesDtoRes;
@@ -25,11 +29,13 @@ import com.lawencon.community.dto.profiles.InsertProfilesDtoRes;
 import com.lawencon.community.dto.profiles.UpdateProfilesDtoDataRes;
 import com.lawencon.community.dto.profiles.UpdateProfilesDtoReq;
 import com.lawencon.community.dto.profiles.UpdateProfilesDtoRes;
+import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.Industry;
 import com.lawencon.community.model.Position;
 import com.lawencon.community.model.Profiles;
 import com.lawencon.community.model.Regency;
 import com.lawencon.community.model.User;
+import com.lawencon.community.service.AttachmentService;
 import com.lawencon.community.service.ProfilesService;
 
 @Service
@@ -39,14 +45,24 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 	private IndustryDao industryDao;
 	private PositionDao positionDao;
 	private RegencyDao regencyDao;
+	private AttachmentDao attachmentDao;
+	private AttachmentService attachmentService;
 
 	@Autowired
-	public ProfilesServiceImpl(ProfilesDao profilesDao, UserDao userDao, IndustryDao industryDao, PositionDao positionDao, RegencyDao regencyDao) {
+	public ProfilesServiceImpl(ProfilesDao profilesDao, UserDao userDao, 
+			IndustryDao industryDao, PositionDao positionDao, 
+			RegencyDao regencyDao, AttachmentDao attachmentDao) {
 		this.profilesDao = profilesDao;
 		this.userDao = userDao;
 		this.industryDao = industryDao;
 		this.positionDao = positionDao;
 		this.regencyDao = regencyDao;
+		this.attachmentDao = attachmentDao;
+	}
+	
+	@Autowired
+	public void setAttachmentService(AttachmentService attachmentService) {
+		this.attachmentService = attachmentService;
 	}
 	
 	@Override
@@ -194,10 +210,12 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 	}
 	
 	@Override
-	public UpdateProfilesDtoRes update(UpdateProfilesDtoReq data) throws Exception {
+	public UpdateProfilesDtoRes update(String content, MultipartFile file) throws Exception {
 		UpdateProfilesDtoRes update = new UpdateProfilesDtoRes();
 
 		try {
+			UpdateProfilesDtoReq data = new ObjectMapper().readValue(content, UpdateProfilesDtoReq.class);
+			System.out.println("VERSION: " + data.getVersion());
 			if (data.getVersion() != null) {
 				Profiles profile = profilesDao.findById(data.getId());
 
@@ -218,8 +236,25 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 				if (data.getIsActive() != null) {
 					profile.setIsActive(data.getIsActive());
 				}
-
+				
+				System.out.println("FILE: " + file);
 				begin();
+				if (file != null) {
+					Attachment attachment = new Attachment();
+					attachment.setAttachmentCode(getAlphaNumericString(5));
+					attachment.setAttachmentContent(file.getBytes());
+					
+					String extension = fileExtensionName(file);
+					attachment.setAttachmentExtension(extension);
+					
+					attachment.setCreatedBy(getId());
+					attachment.setVersion(0);
+					attachment.setIsActive(true);
+					
+					Attachment attachmentInsert = attachmentDao.save(attachment);
+					profile.setProfileImage(attachmentInsert);
+				}
+
 				Profiles profileUpdate = profilesDao.save(profile);
 				commit();
 
