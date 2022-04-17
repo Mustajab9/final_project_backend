@@ -10,4 +10,5 @@ public interface PollingChoiceDao {
 	PollingChoice save(PollingChoice data) throws Exception;
 	boolean deleteById(String id) throws Exception;
 	List<PollingChoice> findByPolling(String id) throws Exception;
+	List<?> validateDelete(String id) throws Exception;
 }

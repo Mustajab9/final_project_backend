@@ -97,6 +97,8 @@ public class PollingServiceImpl extends BaseService implements PollingService {
 		InsertPollingDtoRes insert = new InsertPollingDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			Polling polling = new Polling();
 			String code = getAlphaNumericString(5);
 			polling.setPollingCode(code);
@@ -174,5 +176,15 @@ public class PollingServiceImpl extends BaseService implements PollingService {
 		getByThread.setMsg(null);
 
 		return getByThread;
+	}
+	
+	private void validateInsert(InsertPollingDtoReq data) throws Exception {
+		if (data.getThreadId() == null || data.getThreadId().trim().equals("")) {
+			throw new Exception("Thread Id Cant Null");
+		} else {
+			if (data.getPollingName() == null || data.getPollingName().trim().equals("")) {
+				throw new Exception("Polling Name Cant Null");
+			}
+		}
 	}
 }

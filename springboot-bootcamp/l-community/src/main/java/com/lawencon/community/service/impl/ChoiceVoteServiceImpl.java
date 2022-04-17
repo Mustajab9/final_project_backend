@@ -101,6 +101,8 @@ public class ChoiceVoteServiceImpl extends BaseService implements ChoiceVoteServ
 		InsertChoiceVoteDtoRes insert = new InsertChoiceVoteDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			ChoiceVote choiceVote = new ChoiceVote();
 			choiceVote.setVoteCode(getAlphaNumericString(5));
 			
@@ -176,5 +178,11 @@ public class ChoiceVoteServiceImpl extends BaseService implements ChoiceVoteServ
 	@Override
 	public GetChoiceVoteByUserDtoRes findByUser(String id, String threadId) throws Exception {
 		return choiceVoteDao.findByUser(id, threadId);
+	}
+	
+	private void validateInsert(InsertChoiceVoteDtoReq data) throws Exception {
+		if (data.getChoiceId() == null || data.getChoiceId().trim().equals("")) {
+			throw new Exception("Choice Id tidak boleh kosong");
+		}
 	}
 }

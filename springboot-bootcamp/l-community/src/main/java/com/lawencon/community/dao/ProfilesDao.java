@@ -10,4 +10,5 @@ public interface ProfilesDao {
 	Profiles save(Profiles data) throws Exception;
 	boolean deleteById(String id) throws Exception;
 	Profiles findByUser(String id) throws Exception;
+	List<?> validateDelete(String id) throws Exception;
 }

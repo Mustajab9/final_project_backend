@@ -376,9 +376,11 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 	@Override
 	public InsertThreadDtoRes insert(String content, MultipartFile[] file) throws Exception {
 		InsertThreadDtoRes insert = new InsertThreadDtoRes();
+		InsertThreadDtoReq data = new ObjectMapper().readValue(content, InsertThreadDtoReq.class);
 
 		try {
-			InsertThreadDtoReq data = new ObjectMapper().readValue(content, InsertThreadDtoReq.class);
+			validateInsert(data);
+			
 			Thread thread = new Thread();
 			String code = getAlphaNumericString(5);
 			
@@ -769,5 +771,15 @@ public class ThreadServiceImpl extends BaseService implements ThreadService {
 		getByCategory.setMsg(null);
 
 		return getByCategory;
+	}
+	
+	private void validateInsert(InsertThreadDtoReq data) throws Exception {
+		if (data.getThreadTitle() == null || data.getThreadTitle().trim().equals("")) {
+			throw new Exception("Thread Title Cant Null");
+		} else {
+			if (data.getTypeId() == null || data.getTypeId().trim().equals("")) {
+				throw new Exception("Thread Type Cant Null");
+			}
+		}
 	}
 }

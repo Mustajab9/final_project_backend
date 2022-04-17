@@ -12,4 +12,6 @@ public interface RegencyDao {
 	boolean deleteById(String id) throws Exception;
 	List<Regency> findByProvince(String id) throws Exception;
 	Long countAll() throws Exception;
+	Regency findByCode(String code) throws Exception;
+	List<?> validateDelete(String id) throws Exception;
 }

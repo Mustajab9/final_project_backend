@@ -10,4 +10,5 @@ public interface SubscriptionDetailDao {
 	SubscriptionDetail save(SubscriptionDetail data) throws Exception;
 	boolean deleteById(String id) throws Exception;
 	List<SubscriptionDetail> findBySubscription(String id) throws Exception;
+	List<?> validateDelete(String id) throws Exception;
 }

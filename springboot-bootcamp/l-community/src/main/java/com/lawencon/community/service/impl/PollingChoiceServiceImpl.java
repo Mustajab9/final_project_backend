@@ -98,6 +98,8 @@ public class PollingChoiceServiceImpl extends BaseService implements PollingChoi
 		InsertPollingChoiceDtoRes insert = new InsertPollingChoiceDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			PollingChoice pollingChoice = new PollingChoice();
 			pollingChoice.setChoiceCode(getAlphaNumericString(5));
 			pollingChoice.setChoiceName(data.getChoiceName());
@@ -206,5 +208,15 @@ public class PollingChoiceServiceImpl extends BaseService implements PollingChoi
 		getByPolling.setMsg(null);
 
 		return getByPolling;
+	}
+	
+	private void validateInsert(InsertPollingChoiceDtoReq data) throws Exception {
+		if (data.getPollingId() == null || data.getPollingId().trim().equals("")) {
+			throw new Exception("Polling Cant Null");
+		} else {
+			if (data.getChoiceName() == null || data.getChoiceName().trim().equals("")) {
+				throw new Exception("Choice Name Cant Null");
+			}
+		}
 	}
 }

@@ -15,6 +15,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -140,7 +141,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 			}
 			
 			if(getId() != null) {				
-				GetCountNotPaidDtoDataRes count = eventDao.findIsEnroll(getId());
+				GetCountNotPaidDtoDataRes count = eventDao.findIsEnroll(event.getId(), getId());
 				if(count.getCountNotPaid() > 0) {
 					data.setIsEnroll(true);
 				}else {
@@ -201,7 +202,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 		}
 		
 		if(getId() != null) {				
-			GetCountNotPaidDtoDataRes count = eventDao.findIsEnroll(getId());
+			GetCountNotPaidDtoDataRes count = eventDao.findIsEnroll(event.getId(), getId());
 			if(count.getCountNotPaid() > 0) {
 				data.setIsEnroll(true);
 			}else {
@@ -223,10 +224,12 @@ public class EventServiceImpl extends BaseService implements EventService {
 
 	@Override
 	public InsertEventDtoRes insert(String data, MultipartFile file) throws Exception {
+		InsertEventDtoReq dataInsert = new ObjectMapper().readValue(data, InsertEventDtoReq.class);
 		InsertEventDtoRes insert = new InsertEventDtoRes();
 
 		try {
-			InsertEventDtoReq dataInsert = new ObjectMapper().readValue(data, InsertEventDtoReq.class);
+			validateInsert(dataInsert);
+			
 			Event event = new Event();
 			event.setEventCode(getAlphaNumericString(5));
 			event.setEventTitle(dataInsert.getEventTitle());
@@ -291,6 +294,8 @@ public class EventServiceImpl extends BaseService implements EventService {
 		UpdateEventDtoRes update = new UpdateEventDtoRes();
 
 		try {
+			validateUpdate(data);
+			
 			if (data.getVersion() != null) {
 				Event event = eventDao.findById(data.getId());
 				
@@ -338,8 +343,8 @@ public class EventServiceImpl extends BaseService implements EventService {
 			        model.put("profileName", invoiceReq.getProfileName());
 			        model.put("invoice", invoice);
 			        model.put("eventTitle", invoiceReq.getEventTitle());
-			        model.put("eventProvider", invoiceReq.getEventProvider());
-			        model.put("eventPrice", invoiceReq.getEventPrice());
+			        model.put("eventLocation", invoiceReq.getEventLocation());
+			        model.put("typeName", invoiceReq.getTypeName());
 			        model.put("eventDateStart", invoiceReq.getEventDateStart());
 			        model.put("eventDateEnd", invoiceReq.getEventDateEnd());
 			        model.put("eventTimeStart", invoiceReq.getEventTimeStart());
@@ -349,7 +354,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 			        ExecutorService executor = Executors.newSingleThreadExecutor();
 
 					executor.submit(() -> {
-						sendEmail(emailReq);
+						sendEmail("images/image-2.png", "images/image-3.png", "EventInvoiceEmailTemplate.flth", emailReq);
 					});
 					executor.shutdown();
 				}
@@ -371,6 +376,8 @@ public class EventServiceImpl extends BaseService implements EventService {
 		DeleteByEventIdDtoRes deleteById = new DeleteByEventIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = eventDao.deleteById(id);
 			commit();
@@ -507,7 +514,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 		return dtoRes;
 	}
 	
-	public String getRandomNumericString(int n) {
+	private String getRandomNumericString(int n) {
 		String randomNumericString = "0123456789";
 		StringBuilder sb = new StringBuilder(n);
 	
@@ -522,7 +529,7 @@ public class EventServiceImpl extends BaseService implements EventService {
 	}
 	
 	@Async
-	public void sendEmail(EmailDtoReq emailReq) {
+	private void sendEmail(String logo, String image, String template, EmailDtoReq emailReq) {
 		MimeMessage message = mailSender.createMimeMessage();
 		try {
 			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
@@ -531,8 +538,10 @@ public class EventServiceImpl extends BaseService implements EventService {
 			messageHelper.setSubject(emailReq.getSubject());
 			messageHelper.setFrom(emailReq.getFrom());
 			messageHelper.setTo(emailReq.getTo());
-			emailReq.setContent(getContentFromTemplate(emailReq.getModel()));
+			emailReq.setContent(getContentFromTemplate(template, emailReq.getModel()));
 			messageHelper.setText(emailReq.getContent(), true);
+			messageHelper.addInline("myLogo", new ClassPathResource(logo));
+			messageHelper.addInline("image", new ClassPathResource(image));
 			mailSender.send(messageHelper.getMimeMessage());
 		}catch(MessagingException e) {
 			e.printStackTrace();
@@ -540,15 +549,42 @@ public class EventServiceImpl extends BaseService implements EventService {
 		
 	}
 	
-	public String getContentFromTemplate(Map<String, Object> model) {
+	private String getContentFromTemplate(String template, Map<String, Object> model) {
         StringBuffer content = new StringBuffer();
 
         try {
             content.append(FreeMarkerTemplateUtils
-                    .processTemplateIntoString(freeMarkerConfiguration.getTemplate("EventInvoiceEmailTemplate.flth"), model));
+                    .processTemplateIntoString(freeMarkerConfiguration.getTemplate(template), model));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return content.toString();
     }
+	
+	private void validateInsert(InsertEventDtoReq data) throws Exception {
+		if (data.getEventTitle() == null || data.getEventTitle().trim().equals("")) {
+			throw new Exception("Event Title Null");
+		}else {
+			if(data.getCategoryId() == null || data.getCategoryId().trim().equals("")) {
+				throw new Exception("Category Id Null"); 
+			}
+			if(data.getEventTypeId() == null || data.getEventTypeId().trim().equals("")) {
+				throw new Exception("Event Type Null"); 
+			}
+		}
+	}
+	
+	private void validateUpdate(UpdateEventDtoReq data) throws Exception {
+		if (data.getId() == null || data.getId().trim().equals("")) {
+			throw new Exception("Event Id Can't Null");
+		}
+	}
+	
+	private void validateDelete(String id) throws Exception {
+		Event event = eventDao.findById(id);
+		
+		if(event == null) {
+			throw new Exception("Event Id Not Exsist");
+		}
+	}
 }

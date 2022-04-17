@@ -82,13 +82,14 @@ public class ThreadDaoImpl extends BaseDao<Thread> implements ThreadDao {
 		builder.append(" tt.id, tt.typeCode, tt.typeName, t.created_by, t.version, t.isActive");
 		builder.append(" FROM Thread AS t");
 		builder.append(" INNER JOIN ThreadType AS tt ON t.typeId.id = tt.id");
-		builder.append(" INNER JOIN ThreadCategory AS tc ON tc.threadId.id = t.id");
-		builder.append(" INNER JOIN Category AS c ON tc.categoryId.id = c.id");
+		builder.append(" LEFT JOIN ThreadCategory AS tc ON tc.threadId.id = t.id");
+		builder.append(" LEFT JOIN Category AS c ON tc.categoryId.id = c.id");
 		builder.append(" WHERE c.id IN (:id)");
 		
 		List<?> results = createNativeQuery(builder.toString())
 							.setParameter("id", id)
 							.getResultList();
+		
 		List<Thread> listResult = new ArrayList<>();
 		
 		results.forEach(result->{
@@ -114,5 +115,20 @@ public class ThreadDaoImpl extends BaseDao<Thread> implements ThreadDao {
 		});
 		
 		return listResult;
+	}
+	
+	@Override
+	public List<?> validateDelete(String id) throws Exception {
+		String sql = "SELECT t.id FORM threads AS t WHERE t.id = ?1";
+		
+		List<?> listObj = createNativeQuery(sql).setParameter(1, id).setMaxResults(1).getResultList();
+		List<String> result = new ArrayList<>();
+		
+		listObj.forEach(val -> {
+			Object obj = (Object) val;
+			result.add(obj != null ? obj.toString() : null);
+		});
+		
+		return result;
 	}
 }

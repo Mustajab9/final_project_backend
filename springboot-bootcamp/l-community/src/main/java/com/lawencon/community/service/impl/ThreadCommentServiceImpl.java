@@ -112,6 +112,8 @@ public class ThreadCommentServiceImpl extends BaseService implements ThreadComme
 		InsertThreadCommentDtoRes insert = new InsertThreadCommentDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			ThreadComment threadComment = new ThreadComment();
 			String code = getAlphaNumericString(5);
 			
@@ -205,5 +207,15 @@ public class ThreadCommentServiceImpl extends BaseService implements ThreadComme
 	@Override
 	public GetCountCommentByThreadDtoRes countByThread(String id) throws Exception {
 		return threadCommentDao.countByThread(id);
+	}
+	
+	private void validateInsert(InsertThreadCommentDtoReq data) throws Exception {
+		if (data.getThreadId() == null || data.getThreadId().trim().equals("")) {
+			throw new Exception("Thread Id Cant Null");
+		} else {
+			if (data.getCommentContent() == null || data.getCommentContent().trim().equals("")) {
+				throw new Exception("Comment Content Cant Null");
+			}
+		}
 	}
 }

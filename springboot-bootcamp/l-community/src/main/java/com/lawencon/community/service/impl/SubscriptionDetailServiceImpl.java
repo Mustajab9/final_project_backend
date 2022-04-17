@@ -115,6 +115,8 @@ public class SubscriptionDetailServiceImpl extends BaseService implements Subscr
 		InsertSubscriptionDetailDtoRes insert = new InsertSubscriptionDetailDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			SubscriptionDetail detail = new SubscriptionDetail();
 
 			Subscription subscription = subscriptionDao.findById(data.getSubscriptionId());
@@ -134,10 +136,13 @@ public class SubscriptionDetailServiceImpl extends BaseService implements Subscr
 				if(subscription.getSubscriptionDuration().compareTo(new Date()) >= 0){
 					java.sql.Date date = subscription.getSubscriptionDuration();
 					
+					begin();
 					subscriptionDao.update(date, LenghtDay, subscription.getId(), getId());
-					
+					commit();
 				}else {
+					begin();
 					subscriptionDao.update(new Date(), LenghtDay, subscription.getId(), getId());
+					commit();
 				}
 			}
 
@@ -195,5 +200,18 @@ public class SubscriptionDetailServiceImpl extends BaseService implements Subscr
 		getBySubscription.setMsg(null);
 
 		return getBySubscription;
+	}
+	
+	private void validateInsert(InsertSubscriptionDetailDtoReq data) throws Exception {
+		if (data.getSubscriptionId() == null || data.getSubscriptionId().trim().equals("")) {
+			throw new Exception("Subscription Id Cant Null");
+		} else {
+			if (data.getPriceId() == null || data.getPriceId().trim().equals("")) {
+				throw new Exception("Price Cant Null");
+			}
+			if(data.getRoleId() ==  null || data.getRoleId().trim().equals("")) {
+				throw new Exception("Role Cant Null");
+			}
+		}
 	}
 }

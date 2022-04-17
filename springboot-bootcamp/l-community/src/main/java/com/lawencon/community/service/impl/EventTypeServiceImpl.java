@@ -83,8 +83,10 @@ public class EventTypeServiceImpl extends BaseService implements EventTypeServic
 		InsertEventTypeDtoRes insert = new InsertEventTypeDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			EventType eventType = new EventType();
-			eventType.setTypeCode(getAlphaNumericString(5));
+			eventType.setTypeCode(data.getTypeCode());
 			eventType.setTypeName(data.getTypeName());
 			eventType.setCreatedBy(getId());
 			
@@ -111,6 +113,8 @@ public class EventTypeServiceImpl extends BaseService implements EventTypeServic
 		UpdateEventTypeDtoRes update = new UpdateEventTypeDtoRes();
 
 		try {
+			validateUpdate(data);
+			
 			if (data.getVersion() != null) {
 				EventType eventType = typeDao.findById(data.getId());
 				eventType.setTypeName(data.getTypeName());
@@ -145,6 +149,8 @@ public class EventTypeServiceImpl extends BaseService implements EventTypeServic
 		DeleteByEventTypeIdDtoRes deleteById = new DeleteByEventTypeIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = typeDao.deleteById(id);
 			commit();
@@ -159,5 +165,41 @@ public class EventTypeServiceImpl extends BaseService implements EventTypeServic
 		}
 
 		return deleteById;
+	}
+	
+	private void validateInsert(InsertEventTypeDtoReq data) throws Exception {
+		if (data.getTypeCode() == null || data.getTypeCode().trim().equals("")) {
+			throw new Exception("Type Code Cant Null");
+		} else {
+			EventType type = typeDao.findByCode(data.getTypeCode());
+			if (type != null) {
+				throw new Exception("Type Code Already Exsist");
+			}
+			if (data.getTypeName() == null || data.getTypeName().trim().equals("")) {
+				throw new Exception("Type Name Cant Null");
+			}
+		}
+	}
+
+	private void validateUpdate(UpdateEventTypeDtoReq data) throws Exception {
+		if (data.getId() == null || data.getId().trim().equals("")) {
+			throw new Exception("Type Id Cant Null");
+		} else {
+			EventType type = typeDao.findById(data.getId());
+			if (data.getTypeName() == null || data.getTypeName().trim().equals("")) {
+				throw new Exception("Type Name Cant Null");
+			}
+			if (type.getVersion() != data.getVersion()) {
+				throw new Exception("Type You Update Already Update By Someone");
+			}
+		}
+	}
+
+	private void validateDelete(String id) throws Exception {
+		EventType type = typeDao.findById(id);
+		
+		if(type == null) {
+			throw new Exception("Type Id Not Exsist");
+		}
 	}
 }

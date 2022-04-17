@@ -25,6 +25,5 @@ public class SubscriptionJob implements Job {
 			ConnHandler.commit();
 			ConnHandler.clear();			
 		}
-		
 	}
 }

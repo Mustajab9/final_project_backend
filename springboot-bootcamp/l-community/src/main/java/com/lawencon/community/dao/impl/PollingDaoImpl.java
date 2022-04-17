@@ -1,6 +1,7 @@
 package com.lawencon.community.dao.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -61,6 +62,21 @@ public class PollingDaoImpl extends BaseDao<Polling> implements PollingDao {
 		polling.setIsActive(Boolean.valueOf(obj[8].toString()));
 
 		return polling;
+	}
+	
+	@Override
+	public List<?> validateDelete(String id) throws Exception {
+		String sql = "SELECT p.id FORM pollings AS p WHERE p.id = ?1";
+		
+		List<?> listObj = createNativeQuery(sql).setParameter(1, id).setMaxResults(1).getResultList();
+		List<String> result = new ArrayList<>();
+		
+		listObj.forEach(val -> {
+			Object obj = (Object) val;
+			result.add(obj != null ? obj.toString() : null);
+		});
+		
+		return result;
 	}
 
 }

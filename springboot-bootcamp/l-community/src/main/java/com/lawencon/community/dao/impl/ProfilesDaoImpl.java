@@ -1,5 +1,6 @@
 package com.lawencon.community.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -42,14 +43,15 @@ public class ProfilesDaoImpl extends BaseDao<Profiles> implements ProfilesDao {
 	public Profiles findByUser(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT u.id AS user_id, u.email, p.id, p.profile_name, p.profile_company, p.profile_phone, a.id AS attachment_id, a.attachment_extension, i.id AS industry_id, i.industry_name,");
-		builder.append(" po.id AS position_id, po.position_name, r.id AS regency_id, pr.id AS province_id, pr.province_name, p.version, p.is_active");
+		builder.append(" po.id AS position_id, po.position_name, r.id AS regency_id, pr.id AS province_id, pr.province_name, rl.role_code, p.version, p.is_active");
 		builder.append(" FROM profiles AS p");
 		builder.append(" LEFT JOIN attachments AS a ON a.id = p.profile_image");
 		builder.append(" INNER JOIN industries AS i ON i.id = p.industry_id");
 		builder.append(" INNER JOIN positions AS po ON po.id = p.position_id");
 		builder.append(" LEFT JOIN regencies AS r ON r.id = p.regency_id");
 		builder.append(" LEFT JOIN provinces AS pr ON pr.id = r.province_id");
-		builder.append(" INNER JOIN users AS u ON u.id = p.user_id ");
+		builder.append(" INNER JOIN users AS u ON u.id = p.user_id");
+		builder.append(" INNER JOIN roles AS rl ON rl.id = u.role_id");
 		builder.append(" WHERE u.id = :id");
 		
 		Profiles profile = new Profiles();
@@ -68,7 +70,10 @@ public class ProfilesDaoImpl extends BaseDao<Profiles> implements ProfilesDao {
 			profile.setId(obj[2].toString());
 			profile.setProfileName(obj[3].toString());
 			profile.setProfileCompany(obj[4].toString());
-			profile.setProfilePhone(obj[5].toString());
+			
+			if(obj[5] != null) {				
+				profile.setProfilePhone(obj[5].toString());
+			}
 			
 			if(obj[6] != null) {
 				Attachment attachment = new Attachment();
@@ -98,12 +103,27 @@ public class ProfilesDaoImpl extends BaseDao<Profiles> implements ProfilesDao {
 				
 				profile.setRegencyId(regency);
 			}
-			
-			profile.setVersion(Integer.valueOf(obj[15].toString()));
-			profile.setIsActive(Boolean.valueOf(obj[16].toString()));
+			profile.setCreatedBy(obj[15].toString());
+			profile.setVersion(Integer.valueOf(obj[16].toString()));
+			profile.setIsActive(Boolean.valueOf(obj[17].toString()));
 		}catch (NoResultException e) {}
 
 		return profile;
+	}
+	
+	@Override
+	public List<?> validateDelete(String id) throws Exception {
+		String sql = "SELECT p.id FORM profiles AS p WHERE p.id = ?1";
+		
+		List<?> listObj = createNativeQuery(sql).setParameter(1, id).setMaxResults(1).getResultList();
+		List<String> result = new ArrayList<>();
+		
+		listObj.forEach(val -> {
+			Object obj = (Object) val;
+			result.add(obj != null ? obj.toString() : null);
+		});
+		
+		return result;
 	}
 	
 }

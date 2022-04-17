@@ -10,4 +10,5 @@ public interface ThreadAttachmentDao {
 	ThreadAttachment save(ThreadAttachment data) throws Exception;
 	boolean deleteById(String id) throws Exception;
 	List<ThreadAttachment> findByThread(String id);
+	List<?> validateDelete(String id) throws Exception;
 }

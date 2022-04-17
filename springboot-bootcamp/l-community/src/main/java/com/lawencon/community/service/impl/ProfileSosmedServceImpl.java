@@ -110,6 +110,8 @@ public class ProfileSosmedServceImpl extends BaseService implements ProfileSosme
 		InsertProfileSosmedDtoRes insert = new InsertProfileSosmedDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			ProfileSosmed profileSosmed = new ProfileSosmed();
 			profileSosmed.setAccountName(data.getAccountName());
 			
@@ -226,5 +228,15 @@ public class ProfileSosmedServceImpl extends BaseService implements ProfileSosme
 		getByUser.setMsg(null);
 
 		return getByUser;
+	}
+	
+	private void validateInsert(InsertProfileSosmedDtoReq data) throws Exception {
+		if (data.getProfileId() == null || data.getProfileId().trim().equals("")) {
+			throw new Exception("Profile Id Cant Null");
+		} else {
+			if (data.getSocialMediaId() == null || data.getSocialMediaId().trim().equals("")) {
+				throw new Exception("Social Media Id Cant Null");
+			}
+		}
 	}
 }

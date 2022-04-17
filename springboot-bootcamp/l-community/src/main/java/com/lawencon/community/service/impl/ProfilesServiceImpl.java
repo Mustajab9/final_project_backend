@@ -13,9 +13,9 @@ import com.lawencon.community.dao.AttachmentDao;
 import com.lawencon.community.dao.IndustryDao;
 import com.lawencon.community.dao.PositionDao;
 import com.lawencon.community.dao.ProfilesDao;
+import com.lawencon.community.dao.ProvinceDao;
 import com.lawencon.community.dao.RegencyDao;
 import com.lawencon.community.dao.UserDao;
-import com.lawencon.community.dto.attachment.InsertAttachmentDtoRes;
 import com.lawencon.community.dto.profiles.DeleteByProfilesIdDtoRes;
 import com.lawencon.community.dto.profiles.GetAllProfilesDtoDataRes;
 import com.lawencon.community.dto.profiles.GetAllProfilesDtoRes;
@@ -33,9 +33,9 @@ import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.Industry;
 import com.lawencon.community.model.Position;
 import com.lawencon.community.model.Profiles;
+import com.lawencon.community.model.Province;
 import com.lawencon.community.model.Regency;
 import com.lawencon.community.model.User;
-import com.lawencon.community.service.AttachmentService;
 import com.lawencon.community.service.ProfilesService;
 
 @Service
@@ -44,25 +44,21 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 	private UserDao userDao;
 	private IndustryDao industryDao;
 	private PositionDao positionDao;
+	private ProvinceDao provinceDao;
 	private RegencyDao regencyDao;
 	private AttachmentDao attachmentDao;
-	private AttachmentService attachmentService;
 
 	@Autowired
 	public ProfilesServiceImpl(ProfilesDao profilesDao, UserDao userDao, 
-			IndustryDao industryDao, PositionDao positionDao, 
+			IndustryDao industryDao, PositionDao positionDao, ProvinceDao provinceDao,
 			RegencyDao regencyDao, AttachmentDao attachmentDao) {
 		this.profilesDao = profilesDao;
 		this.userDao = userDao;
 		this.industryDao = industryDao;
 		this.positionDao = positionDao;
+		this.provinceDao = provinceDao;
 		this.regencyDao = regencyDao;
 		this.attachmentDao = attachmentDao;
-	}
-	
-	@Autowired
-	public void setAttachmentService(AttachmentService attachmentService) {
-		this.attachmentService = attachmentService;
 	}
 	
 	@Override
@@ -102,10 +98,16 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 				data.setPositionName(profile.getPositionId().getPositionName());						
 			}
 			
+			if(profile.getProvinceId() != null) {
+				data.setProvinceId(profile.getProvinceId().getId());
+				data.setProvinceName(profile.getProvinceId().getProvinceName());
+				data.setProvinceCode(profile.getProvinceId().getProvinceCode());
+			}
+			
 			if(profile.getRegencyId() != null) {
-				data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
-				data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
-				data.setProvinceCode(profile.getRegencyId().getProvinceId().getProvinceCode());			
+				data.setRegencyId(profile.getRegencyId().getId());
+				data.setRegencyCode(profile.getRegencyId().getRegencyCode());
+				data.setRegencyName(profile.getRegencyId().getRegencyName());
 			}
 			
 			data.setVersion(profile.getVersion());
@@ -153,10 +155,16 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			data.setPositionName(profile.getPositionId().getPositionName());						
 		}
 		
+		if(profile.getProvinceId() != null) {
+			data.setProvinceId(profile.getProvinceId().getId());
+			data.setProvinceName(profile.getProvinceId().getProvinceName());
+			data.setProvinceCode(profile.getProvinceId().getProvinceCode());
+		}
+		
 		if(profile.getRegencyId() != null) {
-			data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
-			data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
-			data.setProvinceCode(profile.getRegencyId().getProvinceId().getProvinceCode());			
+			data.setRegencyId(profile.getRegencyId().getId());
+			data.setRegencyCode(profile.getRegencyId().getRegencyCode());
+			data.setRegencyName(profile.getRegencyId().getRegencyName());
 		}
 		
 		data.setVersion(profile.getVersion());
@@ -173,12 +181,14 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 		InsertProfilesDtoRes insert = new InsertProfilesDtoRes();
 
 		try {
+			validateInsert(data);			
+			
 			Profiles profile = new Profiles();
 			String code = getAlphaNumericString(5);
 			profile.setProfileCode(code);
 			profile.setProfileName(data.getProfileName());
 			profile.setProfileCompany(data.getProfileCompany());
-			profile.setProfilePhone(data.getPhoneNumber());
+			profile.setProfilePhone(data.getProfilePhone());
 			
 			User user = userDao.findById(data.getUserId());
 			profile.setUserId(user);
@@ -228,6 +238,9 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 				Position position = positionDao.findById(data.getPositionId());
 				profile.setPositionId(position);
 				
+				Province province = provinceDao.findById(data.getProvinceId());
+				profile.setProvinceId(province);
+				
 				Regency regency = regencyDao.findById(data.getRegencyId());
 				profile.setRegencyId(regency);
 				profile.setVersion(data.getVersion());
@@ -238,7 +251,7 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 				}
 				
 				System.out.println("FILE: " + file);
-				begin();
+				
 				if (file != null) {
 					Attachment attachment = new Attachment();
 					attachment.setAttachmentCode(getAlphaNumericString(5));
@@ -251,10 +264,14 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 					attachment.setVersion(0);
 					attachment.setIsActive(true);
 					
+					begin();
 					Attachment attachmentInsert = attachmentDao.save(attachment);
+					commit();
+					
 					profile.setProfileImage(attachmentInsert);
 				}
-
+				
+				begin();
 				Profiles profileUpdate = profilesDao.save(profile);
 				commit();
 
@@ -327,14 +344,17 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			data.setPositionName(profile.getPositionId().getPositionName());						
 		}
 		
+		if(profile.getProvinceId() != null) {
+			data.setProvinceId(profile.getProvinceId().getId());
+			data.setProvinceName(profile.getProvinceId().getProvinceName());
+		}
+		
 		if(profile.getRegencyId() != null) {
-			data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
-			data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
 			data.setRegencyId(profile.getRegencyId().getId());
 			data.setRegencyName(profile.getRegencyId().getRegencyName());
 		}
 		
-		
+		data.setRoleCode(profile.getCreatedBy());
 		data.setVersion(profile.getVersion());
 		data.setIsActive(profile.getIsActive());
 
@@ -344,5 +364,25 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 		return getByUser;
 	}
 	
-	
+	private void validateInsert(InsertProfilesDtoReq data) throws Exception {
+		if (data.getUserId() == null || data.getUserId().trim().equals("")) {
+			throw new Exception("User Id Cant Null");
+		} else {
+			if (data.getIndustryId() == null || data.getIndustryId().trim().equals("")) {
+				throw new Exception("Industry Cant Null");
+			}
+			if (data.getPositionId() == null || data.getPositionId().trim().equals("")) {
+				throw new Exception("Position Cant Null");
+			}
+			if (data.getProfileName() == null || data.getProfileName().trim().equals("")) {
+				throw new Exception("Profile Name Cant Null");
+			}
+			if (data.getProfileCompany() == null || data.getProfileCompany().trim().equals("")) {
+				throw new Exception("Company Name Cant Null");
+			}
+			if (data.getProfilePhone() == null || data.getProfilePhone().trim().equals("")) {
+				throw new Exception("Profile Phone Cant Null");
+			}
+		}
+	}
 }

@@ -6,6 +6,7 @@ public class UpdateProfilesDtoReq {
 	private String profileCompany;
 	private String industryId;
 	private String positionId;
+	private String provinceId;
 	private String regencyId;
 	private Integer version;
 	private Boolean isActive;
@@ -48,6 +49,14 @@ public class UpdateProfilesDtoReq {
 
 	public void setPositionId(String positionId) {
 		this.positionId = positionId;
+	}
+
+	public String getProvinceId() {
+		return provinceId;
+	}
+
+	public void setProvinceId(String provinceId) {
+		this.provinceId = provinceId;
 	}
 
 	public String getRegencyId() {

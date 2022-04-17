@@ -1,5 +1,6 @@
 package com.lawencon.community.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -96,6 +97,21 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
 		
 
 		return user;
+	}
+	
+	@Override
+	public List<?> validateDelete(String id) throws Exception {
+		String sql = "SELECT u.id FORM users AS u WHERE u.id = ?1";
+		
+		List<?> listObj = createNativeQuery(sql).setParameter(1, id).setMaxResults(1).getResultList();
+		List<String> result = new ArrayList<>();
+		
+		listObj.forEach(val -> {
+			Object obj = (Object) val;
+			result.add(obj != null ? obj.toString() : null);
+		});
+		
+		return result;
 	}
 
 }

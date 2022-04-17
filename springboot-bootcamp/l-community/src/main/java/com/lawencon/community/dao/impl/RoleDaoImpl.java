@@ -1,6 +1,7 @@
 package com.lawencon.community.dao.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -89,5 +90,29 @@ public class RoleDaoImpl extends BaseDao<Role> implements RoleDao {
 		}
 		
 		return data;
+	}
+	
+	@Override
+	public Role validateCode(String code) throws Exception {
+		List<Role> types = createQuery("FROM Role WHERE roleCode = ?1", Role.class)
+											.setParameter(1, code)
+											.getResultList();
+		
+		return resultCheck(types);	
+	}
+	
+	@Override
+	public List<?> validateDelete(String id) throws Exception {
+		String sql = "SELECT r.id FORM roles AS r WHERE r.id = ?1";
+		
+		List<?> listObj = createNativeQuery(sql).setParameter(1, id).setMaxResults(1).getResultList();
+		List<String> result = new ArrayList<>();
+		
+		listObj.forEach(val -> {
+			Object obj = (Object) val;
+			result.add(obj != null ? obj.toString() : null);
+		});
+		
+		return result;
 	}
 }

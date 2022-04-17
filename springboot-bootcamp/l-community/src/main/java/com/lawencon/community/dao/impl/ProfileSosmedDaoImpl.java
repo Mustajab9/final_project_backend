@@ -54,10 +54,12 @@ public class ProfileSosmedDaoImpl extends BaseDao<ProfileSosmed> implements Prof
 				data.setId(obj[0].toString());
 				data.setAccountName(obj[1].toString());
 				
-				Profiles profiles = new Profiles();
-				profiles.setId(obj[2].toString());
-				profiles.setProfileName(obj[3].toString());
-				data.setProfileId(profiles);
+				if(obj[2] != null) {					
+					Profiles profiles = new Profiles();
+					profiles.setId(obj[2].toString());
+					profiles.setProfileName(obj[3].toString());
+					data.setProfileId(profiles);
+				}
 				
 				data.setVersion(Integer.valueOf(obj[6].toString()));
 				data.setIsActive(Boolean.valueOf(obj[7].toString()));
@@ -72,5 +74,20 @@ public class ProfileSosmedDaoImpl extends BaseDao<ProfileSosmed> implements Prof
 		});
 		
 		return listResult;
+	}
+	
+	@Override
+	public List<?> validateDelete(String id) throws Exception {
+		String sql = "SELECT p.id FORM profile_sosmed AS p WHERE p.id = ?1";
+		
+		List<?> listObj = createNativeQuery(sql).setParameter(1, id).setMaxResults(1).getResultList();
+		List<String> result = new ArrayList<>();
+		
+		listObj.forEach(val -> {
+			Object obj = (Object) val;
+			result.add(obj != null ? obj.toString() : null);
+		});
+		
+		return result;
 	}
 }

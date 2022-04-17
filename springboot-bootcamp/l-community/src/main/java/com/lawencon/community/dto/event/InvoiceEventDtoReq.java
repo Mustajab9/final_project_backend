@@ -4,8 +4,8 @@ public class InvoiceEventDtoReq {
 	private String profileName;
 	private String invoice;
 	private String eventTitle;
-	private String eventProvider;
-	private String eventPrice;
+	private String eventLocation;
+	private String typeName;
 	private String eventDateStart;
 	private String eventDateEnd;
 	private String eventTimeStart;
@@ -37,20 +37,20 @@ public class InvoiceEventDtoReq {
 		this.eventTitle = eventTitle;
 	}
 
-	public String getEventProvider() {
-		return eventProvider;
+	public String getEventLocation() {
+		return eventLocation;
 	}
 
-	public void setEventProvider(String eventProvider) {
-		this.eventProvider = eventProvider;
+	public void setEventLocation(String eventLocation) {
+		this.eventLocation = eventLocation;
 	}
 
-	public String getEventPrice() {
-		return eventPrice;
+	public String getTypeName() {
+		return typeName;
 	}
 
-	public void setEventPrice(String eventPrice) {
-		this.eventPrice = eventPrice;
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
 
 	public String getEventDateStart() {

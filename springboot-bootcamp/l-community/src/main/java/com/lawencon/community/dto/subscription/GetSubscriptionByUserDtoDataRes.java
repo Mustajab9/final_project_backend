@@ -1,11 +1,9 @@
 package com.lawencon.community.dto.subscription;
 
-import java.sql.Date;
-
 public class GetSubscriptionByUserDtoDataRes {
 	private String id;
 	private String SubscriptionCode;
-	private Date subscriptionDuration;
+	private String subscriptionDuration;
 	private Boolean isApprove;
 	private String profileId;
 	private String profileCode;
@@ -33,11 +31,11 @@ public class GetSubscriptionByUserDtoDataRes {
 		SubscriptionCode = subscriptionCode;
 	}
 
-	public Date getsubscriptionDuration() {
+	public String getsubscriptionDuration() {
 		return subscriptionDuration;
 	}
 
-	public void setsubscriptionDuration(Date subscriptionDuration) {
+	public void setsubscriptionDuration(String subscriptionDuration) {
 		this.subscriptionDuration = subscriptionDuration;
 	}
 

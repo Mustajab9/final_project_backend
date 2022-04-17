@@ -1,5 +1,6 @@
 package com.lawencon.community.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -52,5 +53,29 @@ public class ThreadTypeDaoImpl extends BaseDao<ThreadType> implements ThreadType
 	@Override
 	public Long countAll() {
 		return super.countAll();
+	}
+	
+	@Override
+	public ThreadType findByCode(String code) throws Exception {
+		List<ThreadType> types = createQuery("FROM ThreadType WHERE typeCode = ?1", ThreadType.class)
+											.setParameter(1, code)
+											.getResultList();
+		
+		return resultCheck(types);	
+	}
+	
+	@Override
+	public List<?> validateDelete(String id) throws Exception {
+		String sql = "SELECT t.id FORM thread_types AS t WHERE t.id = ?1";
+		
+		List<?> listObj = createNativeQuery(sql).setParameter(1, id).setMaxResults(1).getResultList();
+		List<String> result = new ArrayList<>();
+		
+		listObj.forEach(val -> {
+			Object obj = (Object) val;
+			result.add(obj != null ? obj.toString() : null);
+		});
+		
+		return result;
 	}
 }

@@ -83,6 +83,8 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 		InsertSocialMediaDtoRes insert = new InsertSocialMediaDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			SocialMedia socialMedia = new SocialMedia();
 
 			socialMedia.setSocialMediaCode(data.getSocialMediaCode());
@@ -112,6 +114,8 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 		UpdateSocialMediaDtoRes update = new UpdateSocialMediaDtoRes();
 
 		try {
+			validateUpdate(data);
+			
 			if (data.getVersion() != null) {
 				SocialMedia socialMedia = socialMediaDao.findById(data.getId());
 				
@@ -147,6 +151,8 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 		DeleteBySocialMediaIdDtoRes deleteById = new DeleteBySocialMediaIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = socialMediaDao.deleteById(id);
 			commit();
@@ -161,5 +167,41 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 		}
 
 		return deleteById;
+	}
+	
+	private void validateInsert(InsertSocialMediaDtoReq data) throws Exception {
+		if (data.getSocialMediaCode() == null || data.getSocialMediaCode().trim().equals("")) {
+			throw new Exception("Social Media Code Cant Null");
+		} else {
+			SocialMedia socialMedia = socialMediaDao.findByCode(data.getSocialMediaCode());
+			if (socialMedia != null) {
+				throw new Exception("Social Media Code Already Exsist");
+			}
+			if (data.getSocialMediaName() == null || data.getSocialMediaName().trim().equals("")) {
+				throw new Exception("Social Media Name Cant Null");
+			}
+		}
+	}
+
+	private void validateUpdate(UpdateSocialMediaDtoReq data) throws Exception {
+		if (data.getId() == null || data.getId().trim().equals("")) {
+			throw new Exception("Social Media Id Cant Null");
+		} else {
+			SocialMedia socialMedia = socialMediaDao.findById(data.getId());
+			if (data.getSocialMediaName() == null || data.getSocialMediaName().trim().equals("")) {
+				throw new Exception("Social Media Name Cant Null");
+			}
+			if (socialMedia.getVersion() != data.getVersion()) {
+				throw new Exception("Social Media You Update Already Update By Someone");
+			}
+		}
+	}
+
+	private void validateDelete(String id) throws Exception {
+		SocialMedia socialMedia = socialMediaDao.findById(id);
+		
+		if(socialMedia == null) {
+			throw new Exception("Social Media Id Not Exsist");
+		}
 	}
 }

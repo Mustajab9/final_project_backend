@@ -93,6 +93,8 @@ public class RegencyServiceImpl extends BaseService implements RegencyService {
 		InsertRegencyDtoRes insert = new InsertRegencyDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			Regency regency = new Regency();
 			regency.setRegencyName(data.getRegencyName());
 			regency.setRegencyCode(data.getRegencyCode());
@@ -124,6 +126,8 @@ public class RegencyServiceImpl extends BaseService implements RegencyService {
 		UpdateRegencyDtoRes update = new UpdateRegencyDtoRes();
 
 		try {
+			validateUpdate(data);
+			
 			if (data.getVersion() != null) {
 				Regency regency = regencyDao.findById(data.getId());
 				
@@ -159,6 +163,8 @@ public class RegencyServiceImpl extends BaseService implements RegencyService {
 		DeleteByRegencyIdDtoRes deleteById = new DeleteByRegencyIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = regencyDao.deleteById(id);
 			commit();
@@ -201,5 +207,45 @@ public class RegencyServiceImpl extends BaseService implements RegencyService {
 		getByProvinceCode.setMsg(null);
 
 		return getByProvinceCode;
+	}
+	
+	private void validateInsert(InsertRegencyDtoReq data) throws Exception {
+		if(data.getProvinceId() == null || data.getProvinceId().trim().equals("")) {
+			throw new Exception("Province Cant Null");
+		}else {
+			if (data.getRegencyCode() == null || data.getRegencyCode().trim().equals("")) {
+				throw new Exception("Regency Code Cant Null");
+			} else {
+				Regency regency = regencyDao.findByCode(data.getRegencyCode());
+				if (regency != null) {
+					throw new Exception("Regency Code Already Exsist");
+				}
+				if (data.getRegencyName() == null || data.getRegencyName().trim().equals("")) {
+					throw new Exception("Regency Name Cant Null");
+				}
+			}
+		}
+	}
+
+	private void validateUpdate(UpdateRegencyDtoReq data) throws Exception {
+		if (data.getId() == null || data.getId().trim().equals("")) {
+			throw new Exception("Regency Id Cant Null");
+		} else {
+			Regency regency = regencyDao.findById(data.getId());
+			if (data.getRegencyName() == null || data.getRegencyName().trim().equals("")) {
+				throw new Exception("Regency Name Cant Null");
+			}
+			if (regency.getVersion() != data.getVersion()) {
+				throw new Exception("Regency You Update Already Update By Someone");
+			}
+		}
+	}
+
+	private void validateDelete(String id) throws Exception {
+		Regency regency = regencyDao.findById(id);
+		
+		if(regency == null) {
+			throw new Exception("Regency Id Not Exsist");
+		}
 	}
 }

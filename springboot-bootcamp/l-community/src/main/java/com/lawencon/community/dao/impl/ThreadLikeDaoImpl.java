@@ -127,4 +127,19 @@ public class ThreadLikeDaoImpl extends BaseDao<ThreadLike> implements ThreadLike
 
 		return threadLike;
 	}
+	
+	@Override
+	public List<?> validateDelete(String id) throws Exception {
+		String sql = "SELECT t.id FORM thread_like AS t WHERE t.id = ?1";
+		
+		List<?> listObj = createNativeQuery(sql).setParameter(1, id).setMaxResults(1).getResultList();
+		List<String> result = new ArrayList<>();
+		
+		listObj.forEach(val -> {
+			Object obj = (Object) val;
+			result.add(obj != null ? obj.toString() : null);
+		});
+		
+		return result;
+	}
 }

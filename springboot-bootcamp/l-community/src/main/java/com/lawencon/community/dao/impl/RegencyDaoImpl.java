@@ -91,4 +91,28 @@ public class RegencyDaoImpl extends BaseDao<Regency> implements RegencyDao {
 		
 		return listResult;
 	}
+	
+	@Override
+	public Regency findByCode(String code) throws Exception {
+		List<Regency> types = createQuery("FROM Regency WHERE regencyCode = ?1", Regency.class)
+											.setParameter(1, code)
+											.getResultList();
+		
+		return resultCheck(types);	
+	}
+	
+	@Override
+	public List<?> validateDelete(String id) throws Exception {
+		String sql = "SELECT r.id FORM regencies AS r WHERE r.id = ?1";
+		
+		List<?> listObj = createNativeQuery(sql).setParameter(1, id).setMaxResults(1).getResultList();
+		List<String> result = new ArrayList<>();
+		
+		listObj.forEach(val -> {
+			Object obj = (Object) val;
+			result.add(obj != null ? obj.toString() : null);
+		});
+		
+		return result;
+	}
 }

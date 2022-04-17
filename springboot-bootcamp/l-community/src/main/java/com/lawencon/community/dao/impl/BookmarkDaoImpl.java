@@ -129,5 +129,20 @@ public class BookmarkDaoImpl extends BaseDao<Bookmark> implements BookmarkDao {
 		}catch(NoResultException e) {}
 		
 		return bookmark;
-	}	 
+	}
+	
+	@Override
+	public List<?> validateDelete(String id) throws Exception {
+		String sql = "SELECT b.id FORM bookmarks AS b WHERE b.id = ?1";
+		
+		List<?> listObj = createNativeQuery(sql).setParameter(1, id).setMaxResults(1).getResultList();
+		List<String> result = new ArrayList<>();
+		
+		listObj.forEach(val -> {
+			Object obj = (Object) val;
+			result.add(obj != null ? obj.toString() : null);
+		});
+		
+		return result;
+	}
 }

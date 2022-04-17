@@ -115,4 +115,19 @@ public class SubscriptionDetailDaoImpl extends BaseDao<SubscriptionDetail> imple
 		
 		return listResult;
 	}
+	
+	@Override
+	public List<?> validateDelete(String id) throws Exception {
+		String sql = "SELECT s.id FORM subscriptions AS s WHERE s.id = ?1";
+		
+		List<?> listObj = createNativeQuery(sql).setParameter(1, id).setMaxResults(1).getResultList();
+		List<String> result = new ArrayList<>();
+		
+		listObj.forEach(val -> {
+			Object obj = (Object) val;
+			result.add(obj != null ? obj.toString() : null);
+		});
+		
+		return result;
+	}
 }

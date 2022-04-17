@@ -12,4 +12,5 @@ public interface ThreadCommentDao {
 	boolean deleteById(String id) throws Exception;
 	List<ThreadComment> findByThread(String id) throws Exception;
 	GetCountCommentByThreadDtoRes countByThread(String id) throws Exception;
+	List<?> validateDelete(String id) throws Exception;
 }

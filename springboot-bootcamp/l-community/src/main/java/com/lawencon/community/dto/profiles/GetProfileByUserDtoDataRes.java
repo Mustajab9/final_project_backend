@@ -18,6 +18,7 @@ public class GetProfileByUserDtoDataRes {
 	private String regencyId;
 	private String regencyName;
 	private String postalCode;
+	private String roleCode;
 	private Integer version;
 	private Boolean isActive;
 
@@ -155,6 +156,14 @@ public class GetProfileByUserDtoDataRes {
 
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
+	}
+
+	public String getRoleCode() {
+		return roleCode;
+	}
+
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
 	}
 
 	public Integer getVersion() {

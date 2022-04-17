@@ -36,10 +36,10 @@ public class ThreadCategoryDaoImpl extends BaseDao<ThreadCategory> implements Th
 	@Override
 	public List<ThreadCategory> findByThread(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT tc.id, c.id AS category_id, c.category_name, t.id AS thread_id, t.thread_title, t.thread_content, tc.version, tc.is_active");
-		builder.append(" FROM thread_categories tc");
-		builder.append(" JOIN threads t ON t.id = tc.thread_id");
-		builder.append(" JOIN categories c ON c.id = tc.category_id");
+		builder.append("SELECT tc.id AS thread_category_id, c.id AS category_id, c.category_name, t.id AS thread_id, t.thread_title, t.thread_content, tc.version, tc.is_active");
+		builder.append(" FROM thread_categories AS tc");
+		builder.append(" JOIN threads AS t ON t.id = tc.thread_id");
+		builder.append(" JOIN categories AS c ON c.id = tc.category_id");
 		builder.append(" WHERE t.id = :id");
 		
 		List<?> results = createNativeQuery(builder.toString())
@@ -71,5 +71,20 @@ public class ThreadCategoryDaoImpl extends BaseDao<ThreadCategory> implements Th
 		});
 		
 		return listResult;
+	}
+	
+	@Override
+	public List<?> validateDelete(String id) throws Exception {
+		String sql = "SELECT t.id FORM thread_categories AS t WHERE t.id = ?1";
+		
+		List<?> listObj = createNativeQuery(sql).setParameter(1, id).setMaxResults(1).getResultList();
+		List<String> result = new ArrayList<>();
+		
+		listObj.forEach(val -> {
+			Object obj = (Object) val;
+			result.add(obj != null ? obj.toString() : null);
+		});
+		
+		return result;
 	}
 }

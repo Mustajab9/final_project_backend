@@ -83,6 +83,8 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 		InsertThreadTypeDtoRes insert = new InsertThreadTypeDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			ThreadType threadType = new ThreadType();
 
 			threadType.setTypeCode(data.getTypeCode());
@@ -112,6 +114,8 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 		UpdateThreadTypeDtoRes update = new UpdateThreadTypeDtoRes();
 
 		try {
+			validateUpdate(data);
+			
 			if (data.getVersion() != null) {
 				ThreadType threadType = typeDao.findById(data.getId());
 
@@ -147,6 +151,8 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 		DeleteByThreadTypeIdDtoRes deleteById = new DeleteByThreadTypeIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = typeDao.deleteById(id);
 			commit();
@@ -161,5 +167,41 @@ public class ThreadTypeServiceImpl extends BaseService implements ThreadTypeServ
 		}
 
 		return deleteById;
+	}
+	
+	private void validateInsert(InsertThreadTypeDtoReq data) throws Exception {
+		if (data.getTypeCode() == null || data.getTypeCode().trim().equals("")) {
+			throw new Exception("Type Code Cant Null");
+		} else {
+			ThreadType type = typeDao.findByCode(data.getTypeCode());
+			if (type != null) {
+				throw new Exception("Type Code Already Exsist");
+			}
+			if (data.getTypeName() == null || data.getTypeName().trim().equals("")) {
+				throw new Exception("Type Name Cant Null");
+			}
+		}
+	}
+
+	private void validateUpdate(UpdateThreadTypeDtoReq data) throws Exception {
+		if (data.getId() == null || data.getId().trim().equals("")) {
+			throw new Exception("Type Id Cant Null");
+		} else {
+			ThreadType type = typeDao.findById(data.getId());
+			if (data.getTypeName() == null || data.getTypeName().trim().equals("")) {
+				throw new Exception("Type Name Cant Null");
+			}
+			if (type.getVersion() != data.getVersion()) {
+				throw new Exception("Type You Update Already Update By Someone");
+			}
+		}
+	}
+
+	private void validateDelete(String id) throws Exception {
+		ThreadType type = typeDao.findById(id);
+		
+		if(type == null) {
+			throw new Exception("Type Id Not Exsist");
+		}
 	}
 }

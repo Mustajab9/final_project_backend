@@ -86,7 +86,7 @@ public class SubscriptionDaoImpl extends BaseDao<Subscription> implements Subscr
 	@Override
 	public Subscription findByUser(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT s.id, s.subscription_code, s.subscription_duration, s.is_approve, p.id, p.profile_name, s.version. s.is_active");
+		builder.append("SELECT s.id AS subscription_id, s.subscription_code, s.subscription_duration, s.is_approve, p.id, p.profile_name, s.version, s.is_active");
 		builder.append(" FROM subscriptions s");
 		builder.append(" JOIN profiles p ON p.id = s.profile_id");
 		builder.append(" WHERE p.user_id = :id");
@@ -102,7 +102,7 @@ public class SubscriptionDaoImpl extends BaseDao<Subscription> implements Subscr
 			
 			data.setId(obj[0].toString());
 			data.setSubscriptionCode(obj[1].toString());
-			data.setSubscriptionDuration((java.sql.Date)obj[2]);
+			data.setCreatedBy(obj[2].toString());
 			data.setIsApprove(Boolean.valueOf(obj[3].toString()));
 			
 			Profiles profiles = new Profiles();
@@ -113,9 +113,7 @@ public class SubscriptionDaoImpl extends BaseDao<Subscription> implements Subscr
 			data.setVersion(Integer.valueOf(obj[6].toString()));
 			data.setIsActive(Boolean.valueOf(obj[7].toString()));
 			
-		}catch(NoResultException | NonUniqueResultException e) {
-			e.printStackTrace();
-		}
+		}catch(NoResultException | NonUniqueResultException e) {}
 		
 		return data;
 	}

@@ -15,6 +15,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -183,6 +184,8 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 		InsertEnrollEventDtoRes insert = new InsertEnrollEventDtoRes();
 
 		try {
+			validateInsert(enrollEventDto);
+			
 			EnrollEvent enrollEvent = new EnrollEvent();
 			enrollEvent.setEnrollCode(getAlphaNumericString(5));
 			
@@ -272,8 +275,8 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 			        model.put("profileName", invoiceReq.getProfileId().getProfileName());
 			        model.put("invoice", invoice);
 			        model.put("eventTitle", invoiceReq.getEventId().getEventTitle());
-			        model.put("eventProvider", invoiceReq.getEventId().getEventProvider());
-			        model.put("eventPrice", invoiceReq.getEventId().getEventPrice());
+			        model.put("eventLocation", invoiceReq.getEventId().getLocation());
+			        model.put("typeName", invoiceReq.getEventId().getTypeId().getTypeName());
 			        model.put("eventDateStart", invoiceReq.getEventId().getEventDateStart());
 			        model.put("eventDateEnd", invoiceReq.getEventId().getEventDateEnd());
 			        model.put("eventTimeStart", invoiceReq.getEventId().getEventTimeStart());
@@ -283,7 +286,7 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 			        ExecutorService executor = Executors.newSingleThreadExecutor();
 
 					executor.submit(() -> {
-						sendEmail(emailReq);
+						sendEmail("images/image-2.png", "images/image-3.png", "EnrollInvoiceEmailTemplate.flth", emailReq);
 					});
 					executor.shutdown();
 				}
@@ -305,6 +308,8 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 		DeleteByEnrollEventIdDtoRes deleteById = new DeleteByEnrollEventIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = enrollEventDao.deleteById(id);
 			commit();
@@ -359,7 +364,7 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 		return getByUser;
 	}
 	
-	public String getRandomNumericString(int n) {
+	private String getRandomNumericString(int n) {
 		String randomNumericString = "0123456789";
 		StringBuilder sb = new StringBuilder(n);
 	
@@ -374,7 +379,7 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 	}
 	
 	@Async
-	public void sendEmail(EmailDtoReq emailReq) {
+	private void sendEmail(String logo, String image, String template, EmailDtoReq emailReq) {
 		MimeMessage message = mailSender.createMimeMessage();
 		try {
 			MimeMessageHelper messageHelper = new MimeMessageHelper(message,
@@ -383,8 +388,10 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 			messageHelper.setSubject(emailReq.getSubject());
 			messageHelper.setFrom(emailReq.getFrom());
 			messageHelper.setTo(emailReq.getTo());
-			emailReq.setContent(getContentFromTemplate(emailReq.getModel()));
+			emailReq.setContent(getContentFromTemplate(template, emailReq.getModel()));
 			messageHelper.setText(emailReq.getContent(), true);
+			messageHelper.addInline("myLogo", new ClassPathResource(logo));
+			messageHelper.addInline("image", new ClassPathResource(image));
 			mailSender.send(messageHelper.getMimeMessage());
 		}catch(MessagingException e) {
 			e.printStackTrace();
@@ -392,15 +399,33 @@ public class EnrollEventServiceImpl extends BaseService implements EnrollEventSe
 		
 	}
 	
-	public String getContentFromTemplate(Map<String, Object> model) {
+	private String getContentFromTemplate(String template, Map<String, Object> model) {
         StringBuffer content = new StringBuffer();
 
         try {
             content.append(FreeMarkerTemplateUtils
-                    .processTemplateIntoString(freeMarkerConfiguration.getTemplate("EventInvoiceEmailTemplate.flth"), model));
+                    .processTemplateIntoString(freeMarkerConfiguration.getTemplate(template), model));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return content.toString();
     }
+	
+	private void validateInsert(InsertEnrollEventDtoReq data) throws Exception {
+		if (data.getEventId() == null || data.getEventId().trim().equals("")) {
+			throw new Exception("Event Id Null");
+		}else {
+			if(data.getPaymentId() == null || data.getPaymentId().trim().equals("")) {
+				throw new Exception("Payment Id Null");
+			}
+		}
+	}
+	
+	private void validateDelete(String id) throws Exception {
+		EnrollEvent enrollEvent = enrollEventDao.findById(id);
+		
+		if(enrollEvent == null) {
+			throw new Exception("Enroll Id Not Exsist");
+		}
+	}
 }

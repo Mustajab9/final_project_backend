@@ -10,4 +10,5 @@ public interface PaymentEventDetailDao {
 	PaymentEventDetail save(PaymentEventDetail data) throws Exception;
 	boolean deleteById(String id) throws Exception;
 	List<PaymentEventDetail> findByEvent(String id) throws Exception;
+	List<?> validateDelete(String id) throws Exception;
 }

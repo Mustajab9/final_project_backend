@@ -114,6 +114,8 @@ public class BookmarkServiceImpl extends BaseService implements BookmarkService 
 		InsertBookmarkDtoRes insert = new InsertBookmarkDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			Thread thread = threadDao.findById(data.getThreadId());
 			Bookmark bookmark = new Bookmark();
 			bookmark.setBookmarCode(getAlphaNumericString(5));
@@ -143,6 +145,8 @@ public class BookmarkServiceImpl extends BaseService implements BookmarkService 
 		DeleteByBookmarkIdDtoRes deleteById = new DeleteByBookmarkIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = bookmarkDao.deleteById(id);
 			commit();
@@ -281,5 +285,19 @@ public class BookmarkServiceImpl extends BaseService implements BookmarkService 
 	@Override
 	public GetBookmarkByUserAndThreadDtoRes findByUserAndThread(String userId, String threadId) throws Exception {
 		return bookmarkDao.findByUserAndThread(userId, threadId);
+	}
+	
+	private void validateInsert(InsertBookmarkDtoReq data) throws Exception {
+		if (data.getThreadId() == null || data.getThreadId().trim().equals("")) {
+			throw new Exception("Thread Id Null");
+		}
+	}
+	
+	private void validateDelete(String id) throws Exception {
+		Bookmark bookmark = bookmarkDao.findById(id);
+		
+		if(bookmark == null) {
+			throw new Exception("Bookmark Id Not Exsist");
+		}
 	}
 }

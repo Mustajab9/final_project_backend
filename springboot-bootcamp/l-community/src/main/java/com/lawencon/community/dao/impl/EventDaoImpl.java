@@ -118,7 +118,10 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 			data.setIsActive(Boolean.valueOf(obj[18].toString()));
 			data.setEventLocation(obj[19].toString());
 			data.setEnrollIsApprove(Boolean.valueOf(obj[20].toString()));
-			data.setEnrollInvoice(obj[21].toString());
+			
+			if(obj[21] != null) {				
+				data.setEnrollInvoice(obj[21].toString());
+			}
 			
 			listResult.add(data);
 		});
@@ -482,18 +485,19 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 	}
 	
 	@Override
-	public GetCountNotPaidDtoDataRes findIsEnroll(String id) throws Exception {
+	public GetCountNotPaidDtoDataRes findIsEnroll(String eventId, String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT COUNT(e.id)");
 		builder.append(" FROM events AS e");
-		builder.append(" WHERE e.id IN");
+		builder.append(" WHERE :eventId IN");
 		builder.append(" (SELECT ee.event_id FROM enroll_events ee");
 		builder.append(" INNER JOIN profiles p ON p.id = ee.profile_id");
-		builder.append(" INNER JOIN users u ON u.id = p.user_id WHERE u.id =:id)");
+		builder.append(" INNER JOIN users u ON u.id = p.user_id WHERE u.id = :id)");
 		
 		GetCountNotPaidDtoDataRes countNotPaid = new GetCountNotPaidDtoDataRes();
 		try {
 			Object result = createNativeQuery(builder.toString())
+					.setParameter("eventId", eventId)
 					.setParameter("id", id)
 					.getSingleResult();
 			
@@ -509,13 +513,14 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 	@Override
 	public InvoiceEventDtoReq getDataSendInvoice(String id) throws Exception {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT p.profile_name, pe.payment_events_invoice, e.event_provider, e.event_price,");
+		builder.append("SELECT p.profile_name, pe.payment_events_invoice, e.location, t.type_name,");
 		builder.append(" e.event_date_start, e.event_date_end, e.event_time_start, e.event_time_end, pe.id, u.email, e.event_title");
 		builder.append(" FROM events AS e");
 		builder.append(" LEFT JOIN payment_event_detail AS ped ON e.id = ped.event_id");
 		builder.append(" LEFT JOIN payment_events AS pe ON pe.id = ped.payment_event_id");
 		builder.append(" INNER JOIN profiles AS p ON p.user_id = ped.created_by");
 		builder.append(" INNER JOIN users AS u ON u.id = p.user_id");
+		builder.append(" INNER JOIN event_types AS t ON t.id = e.type_id");
 		builder.append(" WHERE e.id = :id");
 		
 		InvoiceEventDtoReq data = null;
@@ -534,8 +539,8 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 				data.setInvoice(obj[1].toString());
 			}
 			
-			data.setEventProvider(obj[2].toString());
-			data.setEventPrice(obj[3].toString());
+			data.setEventLocation(obj[2].toString());
+			data.setTypeName(obj[3].toString());
 			data.setEventDateStart(obj[4].toString());
 			data.setEventDateEnd(obj[5].toString());
 			data.setEventTimeStart(obj[6].toString());
@@ -597,7 +602,7 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 			}
 					
 			try {
-				GetCountNotPaidDtoDataRes count = findIsEnroll(userId);
+				GetCountNotPaidDtoDataRes count = findIsEnroll(obj[0].toString(), userId);
 				if(count.getCountNotPaid() > 0) {
 					data.setIsEnroll(true);
 				}else {
@@ -670,5 +675,20 @@ public class EventDaoImpl extends BaseDao<Event> implements EventDao {
 		});
 		
 		return resultList;
+	}
+	
+	@Override
+	public List<?> validateDelete(String id) throws Exception {
+		String sql = "SELECT e.id FORM events AS e WHERE e.id = ?1";
+		
+		List<?> listObj = createNativeQuery(sql).setParameter(1, id).setMaxResults(1).getResultList();
+		List<String> result = new ArrayList<>();
+		
+		listObj.forEach(val -> {
+			Object obj = (Object) val;
+			result.add(obj != null ? obj.toString() : null);
+		});
+		
+		return result;
 	}
 }

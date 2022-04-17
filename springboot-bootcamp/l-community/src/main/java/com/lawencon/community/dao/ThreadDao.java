@@ -11,4 +11,5 @@ public interface ThreadDao {
 	boolean deleteById(String id) throws Exception;
 	List<Thread> findByUser(String id) throws Exception;
 	List<Thread> findByCategory(String id[]) throws Exception;
+	List<?> validateDelete(String id) throws Exception;
 }

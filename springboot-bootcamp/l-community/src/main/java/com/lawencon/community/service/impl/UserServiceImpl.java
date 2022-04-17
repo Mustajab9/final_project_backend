@@ -27,6 +27,7 @@ import com.lawencon.community.dao.RoleDao;
 import com.lawencon.community.dao.UserDao;
 import com.lawencon.community.dto.user.ChangePasswordDtoReq;
 import com.lawencon.community.dto.user.DeleteByUserIdDtoRes;
+import com.lawencon.community.dto.user.EmailDtoReq;
 import com.lawencon.community.dto.user.GetAllUserDtoDataRes;
 import com.lawencon.community.dto.user.GetAllUserDtoRes;
 import com.lawencon.community.dto.user.GetByUserIdDtoDataRes;
@@ -38,7 +39,6 @@ import com.lawencon.community.dto.user.InsertUserDtoRes;
 import com.lawencon.community.dto.user.UpdateUserDtoDataRes;
 import com.lawencon.community.dto.user.UpdateUserDtoReq;
 import com.lawencon.community.dto.user.UpdateUserDtoRes;
-import com.lawencon.community.dto.user.EmailDtoReq;
 import com.lawencon.community.model.Role;
 import com.lawencon.community.model.User;
 import com.lawencon.community.service.UserService;
@@ -51,6 +51,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 	private static final String subject = "Registration Verification Code";
 	private static final String email = "mustajabsa@gmail.com";
 	private static final Boolean isActive = false;
+	private static final Integer version = 0;
 	private UserDao userDao;
 	private RoleDao roleDao;
 	private PasswordEncoder passwordEncoder;
@@ -128,12 +129,13 @@ public class UserServiceImpl extends BaseService implements UserService {
 		InsertUserDtoRes dataRes = new InsertUserDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			User user = new User();
 			user.setEmail(data.getUsername());
-
-			String password = data.getPassword();
-			String encodedPassword = passwordEncoder.encode(password);
-			user.setPassword(encodedPassword);
+			
+			String passwordEncode = passwordEncoder.encode(data.getPassword());
+			user.setPassword(passwordEncode);
 
 			String generatedVerificationCode = getRandomNumericString(5);
 			user.setVerificationCode(generatedVerificationCode);
@@ -141,9 +143,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 			Role role = roleDao.findByCode(data.getRoleCode());
 			user.setRoleId(role);
 			user.setIsActive(isActive);
-
-			user.setVersion(0);
-			user.setIsActive(false);
+			user.setVersion(version);
 
 			begin();
 			User insertUser = userDao.save(user);
@@ -183,13 +183,23 @@ public class UserServiceImpl extends BaseService implements UserService {
 		UpdateUserDtoRes update = new UpdateUserDtoRes();
 
 		try {
+			validateUpdate(data);
+			
 			if (data.getVersion() != null) {
 				User user = userDao.findById(data.getId());
 
 				user.setEmail(data.getEmail());
+				
+				if (passwordEncoder.matches(data.getPassword(), user.getPassword()) == false) {
+					user.setPassword(data.getPassword());
+				}else {
+					if(data.getPassword() != null) {
+						String passwordEncode = passwordEncoder.encode(data.getPassword());
+						user.setPassword(passwordEncode);
+					}
+				}
 
-				String passwordEncode = passwordEncoder.encode(data.getPassword());
-				user.setPassword(passwordEncode);
+				
 
 				Role role = roleDao.findById(data.getRoleId());
 				user.setRoleId(role);
@@ -226,6 +236,8 @@ public class UserServiceImpl extends BaseService implements UserService {
 		DeleteByUserIdDtoRes deleteById = new DeleteByUserIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = userDao.deleteById(id);
 			commit();
@@ -408,4 +420,39 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
         return content.toString();
     }
+	
+	private void validateInsert(InsertUserDtoReq data) throws Exception {
+		if (data.getRoleCode() == null || data.getRoleCode().trim().equals("")) {
+			throw new Exception("Role Code Cant Null");
+		} else {
+			if (data.getUsername() == null || data.getUsername().trim().equals("")) {
+				throw new Exception("User Name Cant Null");
+			}
+		}
+	}
+
+	private void validateUpdate(UpdateUserDtoReq data) throws Exception {
+		if (data.getId() == null || data.getId().trim().equals("")) {
+			throw new Exception("Type Id Cant Null");
+		} else {
+			User user = userDao.findById(data.getId());
+			if (data.getPassword() == null || data.getPassword().trim().equals("")) {
+				throw new Exception("Password Cant Null");
+			}
+			if(data.getRoleId() == null || data.getRoleId().trim().equals("")) {
+				throw new Exception("Role Cant Null");
+			}
+			if (user.getVersion() != data.getVersion()) {
+				throw new Exception("User You Update Already Update By Someone");
+			}
+		}
+	}
+
+	private void validateDelete(String id) throws Exception {
+		User user = userDao.findById(id);
+		
+		if(user == null) {
+			throw new Exception("User Id Not Exsist");
+		}
+	}
 }

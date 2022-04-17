@@ -93,6 +93,8 @@ public class ThreadCategoryServiceImpl extends BaseService implements ThreadCate
 		InsertThreadCategoryDtoRes insert = new InsertThreadCategoryDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			ThreadCategory threadCategory = new ThreadCategory();
 			
 			Thread thread = threadDao.findById(data.getThreadId());
@@ -166,5 +168,15 @@ public class ThreadCategoryServiceImpl extends BaseService implements ThreadCate
 		getByThread.setMsg(null);
 
 		return getByThread;
+	}
+	
+	private void validateInsert(InsertThreadCategoryDtoReq data) throws Exception {
+		if (data.getThreadId() == null || data.getThreadId().trim().equals("")) {
+			throw new Exception("Thread Id Cant Null");
+		} else {
+			if (data.getCategoryId() == null || data.getCategoryId().trim().equals("")) {
+				throw new Exception("Category Cant Null");
+			}
+		}
 	}
 }

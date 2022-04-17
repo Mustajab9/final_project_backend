@@ -120,6 +120,8 @@ public class PaymentEventServiceImpl extends BaseService implements PaymentEvent
 		InsertPaymentEventDtoRes insert = new InsertPaymentEventDtoRes();
 
 		try {
+			validateInsert(paymentEventDto);
+			
 			PaymentEvent paymentEvent = new PaymentEvent();
 			paymentEvent.setPaymentEventCode(getAlphaNumericString(5));
 
@@ -262,5 +264,16 @@ public class PaymentEventServiceImpl extends BaseService implements PaymentEvent
 		getByUser.setMsg(null);
 
 		return getByUser;
+	}
+	
+	
+	private void validateInsert(InsertPaymentEventDtoReq data) throws Exception {
+		if (data.getEventId() == null) {
+			throw new Exception("Event Id Cant Null");
+		} else {
+			if (data.getPaymentId() == null || data.getPaymentId().trim().equals("")) {
+				throw new Exception("P Cant Null");
+			}
+		}
 	}
 }

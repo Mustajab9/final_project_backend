@@ -128,6 +128,8 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 		InsertSubscriptionDtoRes insert = new InsertSubscriptionDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			Subscription subscription = new Subscription();
 			String code = getAlphaNumericString(5);
 			Date now = new Date();
@@ -142,7 +144,8 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 			
 			begin();
 			Subscription subscriptionInsert = subscriptionDao.save(subscription);
-
+			commit();
+			
 			InsertSubscriptionDtoDataRes dataDto = new InsertSubscriptionDtoDataRes();
 			dataDto.setId(subscriptionInsert.getId());
 			
@@ -159,9 +162,11 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 				Role role = roleDao.findByCode(RoleConstant.MEMBER.getCode());
 				user.setRoleId(role);
 				
+				begin();
 				userDao.save(user);
+				commit();
 			}
-			commit();
+			
 
 			insert.setData(dataDto);
 			insert.setMsg("You " + CommonConstant.SUCCESS.getDetail() + " Upgrade to Membership");
@@ -191,6 +196,16 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 				subscription.setVersion(data.getVersion());
 				subscription.setUpdatedBy(getId());
 				subscription.setIsActive(data.getIsActive());
+				
+				Profiles profile = profileDao.findById(subscription.getProfileId().getId());
+				
+				User user = userDao.findById(profile.getUserId().getId());
+				Role role = roleDao.findByCode(RoleConstant.MEMBER.getCode());
+				user.setRoleId(role);
+				
+				begin();
+				userDao.save(user);
+				commit();
 
 				UpdateSubscriptionDtoDataRes dataDto = new UpdateSubscriptionDtoDataRes();
 				dataDto.setVersion(subscription.getVersion() + 1);
@@ -235,14 +250,16 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 		Subscription subscription = subscriptionDao.findByUser(id);
 		GetSubscriptionByUserDtoDataRes data = new GetSubscriptionByUserDtoDataRes();
 
-		data.setId(subscription.getId());
-		data.setSubscriptionCode(subscription.getSubscriptionCode());
-		data.setsubscriptionDuration(subscription.getSubscriptionDuration());
-		data.setIsApprove(subscription.getIsApprove());
-		data.setProfileId(subscription.getProfileId().getId());
-		data.setProfileName(subscription.getProfileId().getProfileName());
-		data.setVersion(subscription.getVersion());
-		data.setIsActive(subscription.getIsActive());
+		if(subscription != null) {			
+			data.setId(subscription.getId());
+			data.setSubscriptionCode(subscription.getSubscriptionCode());
+			data.setsubscriptionDuration(subscription.getCreatedBy());
+			data.setIsApprove(subscription.getIsApprove());
+			data.setProfileId(subscription.getProfileId().getId());
+			data.setProfileName(subscription.getProfileId().getProfileName());
+			data.setVersion(subscription.getVersion());
+			data.setIsActive(subscription.getIsActive());
+		}
 
 		getById.setData(data);
 		getById.setMsg(null);
@@ -262,7 +279,6 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 			Subscription subscription = listSubscription.get(i);
 			
 			if(subscription.getSubscriptionDuration().before(new Date())) {
-//				Profiles profile = profileDao.findById(subscription.getProfileId().getId());
 				
 				User user = userDao.findById(subscription.getProfileId().getUserId().getId());
 				user.setRoleId(role);
@@ -270,6 +286,17 @@ public class SubscriptionServiceImpl extends BaseService implements Subscription
 				begin();
 				userDao.save(user);
 				commit();
+			}
+		}
+	}
+	
+	
+	private void validateInsert(InsertSubscriptionDtoReq data) throws Exception {
+		if (data.getProfileId() == null || data.getProfileId().trim().equals("")) {
+			throw new Exception("Profile Id Cant Null");
+		} else {
+			if (data.getPriceId() == null || data.getPriceId().trim().equals("")) {
+				throw new Exception("Price Id Cant Null");
 			}
 		}
 	}

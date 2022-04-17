@@ -85,6 +85,8 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		InsertRoleDtoRes insert = new InsertRoleDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			Role role = new Role();
 			role.setRoleName(data.getRoleName());
 			role.setRoleCode(data.getRoleCode());
@@ -112,6 +114,8 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		UpdateRoleDtoRes update = new UpdateRoleDtoRes();
 
 		try {
+			validateUpdate(data);
+			
 			if (data.getVersion() != null) {
 				Role role = roleDao.findById(data.getId());
 
@@ -148,6 +152,8 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		DeleteByRoleIdDtoRes deleteById = new DeleteByRoleIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = roleDao.deleteById(id);
 			commit();
@@ -181,5 +187,41 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 		getById.setMsg(null);
 
 		return getById;
+	}
+	
+	private void validateInsert(InsertRoleDtoReq data) throws Exception {
+		if (data.getRoleCode() == null || data.getRoleCode().trim().equals("")) {
+			throw new Exception("Role Code Cant Null");
+		} else {
+			Role role = roleDao.findByCode(data.getRoleCode());
+			if (role != null) {
+				throw new Exception("Role Code Already Exsist");
+			}
+			if (data.getRoleName() == null || data.getRoleName().trim().equals("")) {
+				throw new Exception("Role Name Cant Null");
+			}
+		}
+	}
+
+	private void validateUpdate(UpdateRoleDtoReq data) throws Exception {
+		if (data.getId() == null || data.getId().trim().equals("")) {
+			throw new Exception("Role Id Cant Null");
+		} else {
+			Role role = roleDao.findById(data.getId());
+			if (data.getRoleName() == null || data.getRoleName().trim().equals("")) {
+				throw new Exception("Role Name Cant Null");
+			}
+			if (role.getVersion() != data.getVersion()) {
+				throw new Exception("Role You Update Already Update By Someone");
+			}
+		}
+	}
+
+	private void validateDelete(String id) throws Exception {
+		Role role = roleDao.findById(id);
+		
+		if(role == null) {
+			throw new Exception("Role Id Not Exsist");
+		}
 	}
 }

@@ -83,6 +83,8 @@ public class ProvinceServiceImpl extends BaseService implements ProvinceService 
 		InsertProvinceDtoRes insert = new InsertProvinceDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			Province province = new Province();
 			province.setProvinceName(data.getProvinceName());
 			province.setProvinceCode(data.getProvinceCode());
@@ -111,6 +113,8 @@ public class ProvinceServiceImpl extends BaseService implements ProvinceService 
 		UpdateProvinceDtoRes update = new UpdateProvinceDtoRes();
 
 		try {
+			validateUpdate(data);
+			
 			if (data.getVersion() != null) {
 				Province province = provinceDao.findById(data.getId());
 
@@ -146,6 +150,8 @@ public class ProvinceServiceImpl extends BaseService implements ProvinceService 
 		DeleteByProvinceIdDtoRes deleteById = new DeleteByProvinceIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = provinceDao.deleteById(id);
 			commit();
@@ -160,5 +166,41 @@ public class ProvinceServiceImpl extends BaseService implements ProvinceService 
 		}
 
 		return deleteById;
+	}
+	
+	private void validateInsert(InsertProvinceDtoReq data) throws Exception {
+		if (data.getProvinceCode() == null || data.getProvinceCode().trim().equals("")) {
+			throw new Exception("Province Code Cant Null");
+		} else {
+			Province province = provinceDao.findByCode(data.getProvinceCode());
+			if (province != null) {
+				throw new Exception("Province Code Already Exsist");
+			}
+			if (data.getProvinceName() == null || data.getProvinceName().trim().equals("")) {
+				throw new Exception("Province Name Cant Null");
+			}
+		}
+	}
+
+	private void validateUpdate(UpdateProvinceDtoReq data) throws Exception {
+		if (data.getId() == null || data.getId().trim().equals("")) {
+			throw new Exception("Province Id Cant Null");
+		} else {
+			Province province = provinceDao.findById(data.getId());
+			if (data.getProvinceName() == null || data.getProvinceName().trim().equals("")) {
+				throw new Exception("Province Name Cant Null");
+			}
+			if (province.getVersion() != data.getVersion()) {
+				throw new Exception("Province You Update Already Update By Someone");
+			}
+		}
+	}
+
+	private void validateDelete(String id) throws Exception {
+		Province province = provinceDao.findById(id);
+		
+		if(province == null) {
+			throw new Exception("Province Id Not Exsist");
+		}
 	}
 }

@@ -12,4 +12,5 @@ public interface BookmarkDao {
 	boolean deleteById(String id) throws Exception;
 	List<Bookmark> findByUser(String id) throws Exception;
 	GetBookmarkByUserAndThreadDtoRes findByUserAndThread(String userId, String threadId) throws Exception;
+	List<?> validateDelete(String id) throws Exception;
 }

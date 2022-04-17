@@ -93,6 +93,8 @@ public class ThreadAttachmentServiceImpl extends BaseService implements ThreadAt
 		InsertThreadAttachmentDtoRes insert = new InsertThreadAttachmentDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			ThreadAttachment threadAttachment = new ThreadAttachment();			
 			
 			Thread thread = threadDao.findById(data.getThreadId());
@@ -172,5 +174,15 @@ public class ThreadAttachmentServiceImpl extends BaseService implements ThreadAt
 		getByThread.setMsg(null);
 
 		return getByThread;
+	}
+	
+	private void validateInsert(InsertThreadAttachmentDtoReq data) throws Exception {
+		if (data.getThreadId() == null || data.getThreadId().trim().equals("")) {
+			throw new Exception("Thread Id Cant Null");
+		} else {
+			if (data.getAttachmentId() == null || data.getAttachmentId().trim().equals("")) {
+				throw new Exception("Attachment Cant Null");
+			}
+		}
 	}
 }

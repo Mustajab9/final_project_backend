@@ -114,6 +114,8 @@ public class ThreadLikeServiceImpl extends BaseService implements ThreadLikeServ
 		InsertThreadLikeDtoRes insert = new InsertThreadLikeDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			ThreadLike threadLike = new ThreadLike();
 			String code = getAlphaNumericString(5);
 			
@@ -290,5 +292,11 @@ public class ThreadLikeServiceImpl extends BaseService implements ThreadLikeServ
 		getByUser.setMsg(null);
 
 		return getByUser;
+	}
+	
+	private void validateInsert(InsertThreadLikeDtoReq data) throws Exception {
+		if (data.getThreadId() == null || data.getThreadId().trim().equals("")) {
+			throw new Exception("Thread Id Cant Null");
+		}
 	}
 }

@@ -150,6 +150,8 @@ public class PaymentEventDetailServiceImpl extends BaseService implements Paymen
 		InsertPaymentEventDetailDtoRes insert = new InsertPaymentEventDetailDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			PaymentEventDetail paymentDetail = new PaymentEventDetail();
 			
 			PaymentEvent paymentEvent = paymentEventDao.findById(data.getPaymentEventId());
@@ -231,5 +233,15 @@ public class PaymentEventDetailServiceImpl extends BaseService implements Paymen
 		getByEvent.setMsg(null);
 
 		return getByEvent;
+	}
+	
+	private void validateInsert(InsertPaymentEventDetailDtoReq data) throws Exception {
+		if (data.getEventId() == null || data.getEventId().trim().equals("")) {
+			throw new Exception("Event Id Cant Null");
+		} else {
+			if (data.getPaymentEventId() == null || data.getPaymentEventId().trim().equals("")) {
+				throw new Exception("Payment Event Cant Null");
+			}
+		}
 	}
 }

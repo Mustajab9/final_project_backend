@@ -13,4 +13,5 @@ public interface ThreadLikeDao {
 	List<ThreadLike> findByUser(String id) throws Exception;
 	GetThreadLikeByThreadDtoRes countByThread(String id) throws Exception;
 	GetThreadLikeByThreadDtoRes countByThreadAndUser(String id, String threadId) throws Exception;
+	List<?> validateDelete(String id) throws Exception;
 }
