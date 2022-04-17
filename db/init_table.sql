@@ -538,6 +538,7 @@ CREATE TABLE social_media(
 ALTER TABLE social_media ADD CONSTRAINT social_media_pk PRIMARY KEY(id);
 ALTER TABLE social_media ADD CONSTRAINT social_media_bk UNIQUE(social_media_code);
 ALTER TABLE social_media ADD CONSTRAINT social_media_ck UNIQUE(social_media_name,social_media_code);
+ALTER TABLE social_media ADD COLUMN social_media_icon varchar(50);
 
 CREATE TABLE profile_sosmed(
 	id varchar(36) DEFAULT uuid_generate_v4 (),
