@@ -60,10 +60,6 @@ public class Profiles extends BaseEntity {
 	private Position positionId;
 	
 	@OneToOne
-	@JoinColumn(name = "province_id")
-	private Province provinceId;
-	
-	@OneToOne
 	@JoinColumn(name = "regency_id")
 	private Regency regencyId;
 	
@@ -140,14 +136,6 @@ public class Profiles extends BaseEntity {
 
 	public void setPositionId(Position positionId) {
 		this.positionId = positionId;
-	}
-
-	public Province getProvinceId() {
-		return provinceId;
-	}
-
-	public void setProvinceId(Province provinceId) {
-		this.provinceId = provinceId;
 	}
 
 	public Regency getRegencyId() {

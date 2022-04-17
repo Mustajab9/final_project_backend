@@ -13,7 +13,6 @@ import com.lawencon.community.dao.AttachmentDao;
 import com.lawencon.community.dao.IndustryDao;
 import com.lawencon.community.dao.PositionDao;
 import com.lawencon.community.dao.ProfilesDao;
-import com.lawencon.community.dao.ProvinceDao;
 import com.lawencon.community.dao.RegencyDao;
 import com.lawencon.community.dao.UserDao;
 import com.lawencon.community.dto.profiles.DeleteByProfilesIdDtoRes;
@@ -33,7 +32,6 @@ import com.lawencon.community.model.Attachment;
 import com.lawencon.community.model.Industry;
 import com.lawencon.community.model.Position;
 import com.lawencon.community.model.Profiles;
-import com.lawencon.community.model.Province;
 import com.lawencon.community.model.Regency;
 import com.lawencon.community.model.User;
 import com.lawencon.community.service.ProfilesService;
@@ -44,19 +42,17 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 	private UserDao userDao;
 	private IndustryDao industryDao;
 	private PositionDao positionDao;
-	private ProvinceDao provinceDao;
 	private RegencyDao regencyDao;
 	private AttachmentDao attachmentDao;
 
 	@Autowired
 	public ProfilesServiceImpl(ProfilesDao profilesDao, UserDao userDao, 
-			IndustryDao industryDao, PositionDao positionDao, ProvinceDao provinceDao,
+			IndustryDao industryDao, PositionDao positionDao,
 			RegencyDao regencyDao, AttachmentDao attachmentDao) {
 		this.profilesDao = profilesDao;
 		this.userDao = userDao;
 		this.industryDao = industryDao;
 		this.positionDao = positionDao;
-		this.provinceDao = provinceDao;
 		this.regencyDao = regencyDao;
 		this.attachmentDao = attachmentDao;
 	}
@@ -98,13 +94,10 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 				data.setPositionName(profile.getPositionId().getPositionName());						
 			}
 			
-			if(profile.getProvinceId() != null) {
-				data.setProvinceId(profile.getProvinceId().getId());
-				data.setProvinceName(profile.getProvinceId().getProvinceName());
-				data.setProvinceCode(profile.getProvinceId().getProvinceCode());
-			}
-			
 			if(profile.getRegencyId() != null) {
+				data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
+				data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
+				data.setProvinceCode(profile.getRegencyId().getProvinceId().getProvinceCode());
 				data.setRegencyId(profile.getRegencyId().getId());
 				data.setRegencyCode(profile.getRegencyId().getRegencyCode());
 				data.setRegencyName(profile.getRegencyId().getRegencyName());
@@ -155,13 +148,10 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			data.setPositionName(profile.getPositionId().getPositionName());						
 		}
 		
-		if(profile.getProvinceId() != null) {
-			data.setProvinceId(profile.getProvinceId().getId());
-			data.setProvinceName(profile.getProvinceId().getProvinceName());
-			data.setProvinceCode(profile.getProvinceId().getProvinceCode());
-		}
-		
 		if(profile.getRegencyId() != null) {
+			data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
+			data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
+			data.setProvinceCode(profile.getRegencyId().getProvinceId().getProvinceCode());
 			data.setRegencyId(profile.getRegencyId().getId());
 			data.setRegencyCode(profile.getRegencyId().getRegencyCode());
 			data.setRegencyName(profile.getRegencyId().getRegencyName());
@@ -237,9 +227,6 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 				
 				Position position = positionDao.findById(data.getPositionId());
 				profile.setPositionId(position);
-				
-				Province province = provinceDao.findById(data.getProvinceId());
-				profile.setProvinceId(province);
 				
 				Regency regency = regencyDao.findById(data.getRegencyId());
 				profile.setRegencyId(regency);
@@ -344,12 +331,9 @@ public class ProfilesServiceImpl extends BaseService implements ProfilesService 
 			data.setPositionName(profile.getPositionId().getPositionName());						
 		}
 		
-		if(profile.getProvinceId() != null) {
-			data.setProvinceId(profile.getProvinceId().getId());
-			data.setProvinceName(profile.getProvinceId().getProvinceName());
-		}
-		
 		if(profile.getRegencyId() != null) {
+			data.setProvinceId(profile.getRegencyId().getProvinceId().getId());
+			data.setProvinceName(profile.getRegencyId().getProvinceId().getProvinceName());
 			data.setRegencyId(profile.getRegencyId().getId());
 			data.setRegencyName(profile.getRegencyId().getRegencyName());
 		}

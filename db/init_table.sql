@@ -127,7 +127,6 @@ CREATE TABLE profiles(
 	user_id varchar(36) NOT NULL,
 	industry_id varchar(36) NOT NULL,
 	position_id varchar(36) NOT NULL,
-	province_id varchar(36),
 	regency_id varchar(36),
 	created_by varchar(36) NOT NULL,
 	created_at timestamp without time zone NOT NULL,
@@ -143,7 +142,6 @@ ALTER TABLE profiles ADD CONSTRAINT profile_image_fk FOREIGN KEY(profile_image) 
 ALTER TABLE profiles ADD CONSTRAINT profile_user_fk FOREIGN KEY(user_id) REFERENCES users(id);
 ALTER TABLE profiles ADD CONSTRAINT profile_industry_fk FOREIGN KEY(industry_id) REFERENCES industries(id);
 ALTER TABLE profiles ADD CONSTRAINT profile_position_fk FOREIGN KEY(position_id) REFERENCES positions(id);
-ALTER TABLE profiles ADD CONSTRAINT profile_province_fk FOREIGN KEY(province_id) REFERENCES provinces(id);
 ALTER TABLE profiles ADD CONSTRAINT profile_regency_fk FOREIGN KEY(regency_id) REFERENCES regencies(id);
 ALTER TABLE profiles ADD CONSTRAINT profile_ck UNIQUE(profile_name, profile_code);
 
