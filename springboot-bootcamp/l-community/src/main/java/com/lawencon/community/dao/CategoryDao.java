@@ -9,4 +9,5 @@ public interface CategoryDao {
 	Category save(Category data) throws Exception;
 	boolean deleteById(String id) throws Exception;
 	Long countAll() throws Exception;
+	Category findByCode(String code) throws Exception;
 }

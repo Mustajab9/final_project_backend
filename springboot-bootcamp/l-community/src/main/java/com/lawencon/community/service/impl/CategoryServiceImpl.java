@@ -83,6 +83,8 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 		InsertCategoryDtoRes insert = new InsertCategoryDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			Category category = new Category();
 			category.setCategoryCode(data.getCategoryCode());
 			category.setCategoryName(data.getCategoryName());
@@ -111,6 +113,8 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 		UpdateCategoryDtoRes update = new UpdateCategoryDtoRes();
 
 		try {
+			validateUpdate(data);
+			
 			if (data.getVersion() != null) {
 				Category category = categoryDao.findById(data.getId());
 				category.setCategoryName(data.getCategoryName());
@@ -145,6 +149,8 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 		DeleteByCategoryIdDtoRes deleteById = new DeleteByCategoryIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = categoryDao.deleteById(id);
 			commit();
@@ -160,4 +166,41 @@ public class CategoryServiceImpl extends BaseService implements CategoryService 
 
 		return deleteById;
 	}
+	
+	private void validateInsert(InsertCategoryDtoReq data) throws Exception {
+		if (data.getCategoryCode() == null || data.getCategoryCode().trim().equals("")) {
+			throw new Exception("Category Code Can't Be Null");
+		} else {
+			Category category = categoryDao.findByCode(data.getCategoryCode());
+			if (category != null) {
+				throw new Exception("Category Code Already Existed");
+			}
+			if (data.getCategoryName() == null || data.getCategoryName().trim().equals("")) {
+				throw new Exception("Category Name Can't Be Null");
+			}
+		}
+	}
+	
+	private void validateUpdate(UpdateCategoryDtoReq data) throws Exception {
+		if (data.getId() == null || data.getId().trim().equals("")) {
+			throw new Exception("Category Id Can't Be Null");
+		} else {
+			Category category = categoryDao.findById(data.getId());
+			if (data.getCategoryName() == null || data.getCategoryName().trim().equals("")) {
+				throw new Exception("Category Name Can't Be Null");
+			}
+			if (category.getVersion() != data.getVersion()) {
+				throw new Exception("Category That You Update Already Updated By Someone");
+			}
+		}
+	}
+
+	private void validateDelete(String id) throws Exception {
+		Category category = categoryDao.findById(id);
+		
+		if(category == null) {
+			throw new Exception("Category Id Is Not Exsis");
+		}
+	}
+	
 }

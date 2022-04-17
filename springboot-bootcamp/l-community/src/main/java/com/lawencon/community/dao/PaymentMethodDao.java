@@ -9,4 +9,5 @@ public interface PaymentMethodDao {
 	PaymentMethod save(PaymentMethod data) throws Exception;
 	boolean deleteById(String id) throws Exception;
 	Long countAll() throws Exception;
+	PaymentMethod findByCode(String code) throws Exception;
 }

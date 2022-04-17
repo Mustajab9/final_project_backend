@@ -53,4 +53,13 @@ public class IndustryDaoImpl extends BaseDao<Industry> implements IndustryDao {
 	public Long countAll() {
 		return super.countAll();
 	}
+	
+	@Override
+	public Industry findByCode(String code) throws Exception {
+		List<Industry> types = createQuery("FROM Industry WHERE industryCode = ?1", Industry.class)
+				.setParameter(1, code).getResultList();
+
+		return resultCheck(types);
+	}
+	
 }

@@ -9,4 +9,5 @@ public interface IndustryDao {
 	Industry save(Industry data) throws Exception;
 	boolean deleteById(String id) throws Exception;
 	Long countAll() throws Exception;
+	Industry findByCode(String code) throws Exception;
 }

@@ -53,4 +53,13 @@ public class PaymentMethodDaoImpl extends BaseDao<PaymentMethod> implements Paym
 	public Long countAll() {
 		return super.countAll();
 	}
+	
+	@Override
+	public PaymentMethod findByCode(String code) throws Exception {
+		List<PaymentMethod> types = createQuery("FROM PaymentMethod WHERE paymentCode = ?1", PaymentMethod.class)
+				.setParameter(1, code).getResultList();
+
+		return resultCheck(types);
+	}
+	
 }

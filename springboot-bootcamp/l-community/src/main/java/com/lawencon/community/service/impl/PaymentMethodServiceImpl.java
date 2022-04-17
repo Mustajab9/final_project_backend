@@ -83,6 +83,8 @@ public class PaymentMethodServiceImpl extends BaseService implements PaymentMeth
 		InsertPaymentMethodDtoRes insert = new InsertPaymentMethodDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			PaymentMethod paymentMethod = new PaymentMethod();
 			paymentMethod.setPaymentCode(getAlphaNumericString(5));
 			paymentMethod.setPaymentName(data.getPaymentName());
@@ -111,6 +113,8 @@ public class PaymentMethodServiceImpl extends BaseService implements PaymentMeth
 		UpdatePaymentMethodDtoRes update = new UpdatePaymentMethodDtoRes();
 
 		try {
+			validateUpdate(data);
+			
 			if (data.getVersion() != null) {
 				PaymentMethod paymentMethod = paymentMethodDao.findById(data.getId());
 				paymentMethod.setPaymentName(data.getPaymentName());
@@ -145,6 +149,8 @@ public class PaymentMethodServiceImpl extends BaseService implements PaymentMeth
 		DeleteByPaymentMethodIdDtoRes deleteById = new DeleteByPaymentMethodIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = paymentMethodDao.deleteById(id);
 			commit();
@@ -160,4 +166,41 @@ public class PaymentMethodServiceImpl extends BaseService implements PaymentMeth
 
 		return deleteById;
 	}
+	
+	private void validateInsert(InsertPaymentMethodDtoReq data) throws Exception {
+		if (data.getPaymentCode() == null || data.getPaymentCode().trim().equals("")) {
+			throw new Exception("Payment Code Can't Be Null");
+		} else {
+			PaymentMethod paymentMethod = paymentMethodDao.findByCode(data.getPaymentCode());
+			if (paymentMethod != null) {
+				throw new Exception("Payment Code Already Existed");
+			}
+			if (data.getPaymentName() == null || data.getPaymentName().trim().equals("")) {
+				throw new Exception("Payment Name Can't Be Null");
+			}
+		}
+	}
+	
+	private void validateUpdate(UpdatePaymentMethodDtoReq data) throws Exception {
+		if (data.getId() == null || data.getId().trim().equals("")) {
+			throw new Exception("Payment Id Can't Be Null");
+		} else {
+			PaymentMethod paymentMethod = paymentMethodDao.findById(data.getId());
+			if (data.getPaymentName() == null || data.getPaymentName().trim().equals("")) {
+				throw new Exception("Payment Name Can't Be Null");
+			}
+			if (paymentMethod.getVersion() != data.getVersion()) {
+				throw new Exception("Payment That You Update Already Updated By Someone");
+			}
+		}
+	}
+
+	private void validateDelete(String id) throws Exception {
+		PaymentMethod paymentMethod = paymentMethodDao.findById(id);
+		
+		if(paymentMethod == null) {
+			throw new Exception("Payment Id Is Not Exist");
+		}
+	}
+	
 }

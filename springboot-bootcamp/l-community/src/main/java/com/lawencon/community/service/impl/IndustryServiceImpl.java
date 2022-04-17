@@ -83,6 +83,8 @@ public class IndustryServiceImpl extends BaseService implements IndustryService 
 		InsertIndustryDtoRes insert = new InsertIndustryDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			Industry industry = new Industry();
 			industry.setIndustryCode(getAlphaNumericString(5));
 			industry.setIndustryName(data.getIndustryName());
@@ -111,6 +113,8 @@ public class IndustryServiceImpl extends BaseService implements IndustryService 
 		UpdateIndustryDtoRes update = new UpdateIndustryDtoRes();
 
 		try {
+			validateUpdate(data);
+			
 			if (data.getVersion() != null) {
 				Industry industry = industryDao.findById(data.getId());
 				industry.setIndustryName(data.getIndustryName());
@@ -144,6 +148,8 @@ public class IndustryServiceImpl extends BaseService implements IndustryService 
 		DeleteByIndustryIdDtoRes deleteById = new DeleteByIndustryIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = industryDao.deleteById(id);
 			commit();
@@ -159,4 +165,41 @@ public class IndustryServiceImpl extends BaseService implements IndustryService 
 
 		return deleteById;
 	}
+	
+	private void validateInsert(InsertIndustryDtoReq data) throws Exception {
+		if (data.getIndustryCode() == null || data.getIndustryCode().trim().equals("")) {
+			throw new Exception("Industry Code Can't Be Null");
+		} else {
+			Industry industry = industryDao.findByCode(data.getIndustryCode());
+			if (industry != null) {
+				throw new Exception("Industry Code Already Existed");
+			}
+			if (data.getIndustryName() == null || data.getIndustryName().trim().equals("")) {
+				throw new Exception("Industry Name Can't Be Null");
+			}
+		}
+	}
+	
+	private void validateUpdate(UpdateIndustryDtoReq data) throws Exception {
+		if (data.getId() == null || data.getId().trim().equals("")) {
+			throw new Exception("Industry Id Can't Be Null");
+		} else {
+			Industry industry = industryDao.findById(data.getId());
+			if (data.getIndustryName() == null || data.getIndustryName().trim().equals("")) {
+				throw new Exception("Industry Name Can't Be Null");
+			}
+			if (industry.getVersion() != data.getVersion()) {
+				throw new Exception("Industry That You Update Already Updated By Someone");
+			}
+		}
+	}
+
+	private void validateDelete(String id) throws Exception {
+		Industry industry = industryDao.findById(id);
+		
+		if(industry == null) {
+			throw new Exception("Industry Id Is Not Exist");
+		}
+	}
+	
 }
