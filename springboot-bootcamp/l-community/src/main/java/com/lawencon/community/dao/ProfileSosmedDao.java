@@ -10,5 +10,6 @@ public interface ProfileSosmedDao {
 	ProfileSosmed save(ProfileSosmed data) throws Exception;
 	boolean deleteById(String id) throws Exception;
 	List<ProfileSosmed> findByUser(String id) throws Exception;
+	ProfileSosmed findBySosmedId(String id, String user) throws Exception;
 	List<?> validateDelete(String id) throws Exception;
 }

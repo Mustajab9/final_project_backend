@@ -85,6 +85,8 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 		InsertPriceListMemberDtoRes insert = new InsertPriceListMemberDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			PriceListMember priceListMember = new PriceListMember();
 			priceListMember.setPriceNominal(data.getPriceNominal());
 			priceListMember.setPriceCode(data.getPriceCode());
@@ -115,6 +117,8 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 
 		try {
 			if (data.getVersion() != null) {
+				validateUpdate(data);
+				
 				PriceListMember priceListMember = priceListMemberDao.findById(data.getId());
 
 				priceListMember.setPriceNominal(data.getPriceNominal());
@@ -150,6 +154,8 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 		DeleteByPriceListMemberIdDtoRes deleteById = new DeleteByPriceListMemberIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = priceListMemberDao.deleteById(id);
 			commit();
@@ -164,5 +170,41 @@ public class PriceListMemberServiceImpl extends BaseService implements PriceList
 		}
 
 		return deleteById;
+	}
+	
+	private void validateInsert(InsertPriceListMemberDtoReq data) throws Exception {
+		if (data.getPriceCode() == null || data.getPriceCode().trim().equals("")) {
+			throw new Exception("Price List Code Can't Be Null");
+		} else {
+			PriceListMember priceListMember = priceListMemberDao.findByCode(data.getPriceCode());
+			if (priceListMember != null) {
+				throw new Exception("Price List Code Already Existed");
+			}
+			if (data.getPriceNominal() == null || data.getPriceNominal().equals("")) {
+				throw new Exception("Price List Nominal Can't Be Null");
+			}
+		}
+	}
+	
+	private void validateUpdate(UpdatePriceListMemberDtoReq data) throws Exception {
+		if (data.getId() == null || data.getId().trim().equals("")) {
+			throw new Exception("Price List Id Can't Be Null");
+		} else {
+			PriceListMember priceListMember = priceListMemberDao.findById(data.getId());
+			if (data.getPriceNominal() == null || data.getPriceNominal().equals("")) {
+				throw new Exception("Price List Nominal Can't Be Null");
+			}
+			if (priceListMember.getVersion() != data.getVersion()) {
+				throw new Exception("Price List That You Update Already Updated By Someone");
+			}
+		}
+	}
+
+	private void validateDelete(String id) throws Exception {
+		PriceListMember priceListMember = priceListMemberDao.findById(id);
+		
+		if(priceListMember == null) {
+			throw new Exception("Price List Id Is Not Exist");
+		}
 	}
 }

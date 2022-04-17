@@ -46,6 +46,7 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 			data.setId(socialMedia.getId());
 			data.setSocialMediaCode(socialMedia.getSocialMediaCode());
 			data.setSocialMediaName(socialMedia.getSocialMediaName());
+			data.setSocialMediaIcon(socialMedia.getSocialMediaIcon());
 			data.setVersion(socialMedia.getVersion());
 			data.setIsActive(socialMedia.getIsActive());
 
@@ -69,6 +70,7 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 		data.setId(socialMedia.getId());
 		data.setSocialMediaCode(socialMedia.getSocialMediaCode());
 		data.setSocialMediaName(socialMedia.getSocialMediaName());
+		data.setSocialMediaIcon(socialMedia.getSocialMediaIcon());
 		data.setVersion(socialMedia.getVersion());
 		data.setIsActive(socialMedia.getIsActive());
 
@@ -89,6 +91,7 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 
 			socialMedia.setSocialMediaCode(data.getSocialMediaCode());
 			socialMedia.setSocialMediaName(data.getSocialMediaName());
+			socialMedia.setSocialMediaIcon(data.getSocialMediaIcon());
 			socialMedia.setCreatedBy(getId());
 
 			begin();
@@ -120,6 +123,7 @@ public class SocialMediaServiceImpl extends BaseService implements SocialMediaSe
 				SocialMedia socialMedia = socialMediaDao.findById(data.getId());
 				
 				socialMedia.setSocialMediaName(data.getSocialMediaName());
+				socialMedia.setSocialMediaIcon(data.getSocialMediaIcon());
 				socialMedia.setVersion(data.getVersion());
 				socialMedia.setUpdatedBy(getId());
 

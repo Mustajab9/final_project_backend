@@ -13,6 +13,7 @@ public class GetAllProfileSosmedDtoDataRes {
 	private String socialMediaid;
 	private String socialMediaCode;
 	private String socialMediaName;
+	private String socialMediaIcon;
 	private Integer version;
 	private Boolean isActive;
 
@@ -110,6 +111,14 @@ public class GetAllProfileSosmedDtoDataRes {
 
 	public void setSocialMediaName(String socialMediaName) {
 		this.socialMediaName = socialMediaName;
+	}
+
+	public String getSocialMediaIcon() {
+		return socialMediaIcon;
+	}
+
+	public void setSocialMediaIcon(String socialMediaIcon) {
+		this.socialMediaIcon = socialMediaIcon;
 	}
 
 	public Integer getVersion() {

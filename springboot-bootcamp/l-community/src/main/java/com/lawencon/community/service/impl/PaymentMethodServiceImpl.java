@@ -86,7 +86,7 @@ public class PaymentMethodServiceImpl extends BaseService implements PaymentMeth
 			validateInsert(data);
 			
 			PaymentMethod paymentMethod = new PaymentMethod();
-			paymentMethod.setPaymentCode(getAlphaNumericString(5));
+			paymentMethod.setPaymentCode(data.getPaymentCode());
 			paymentMethod.setPaymentName(data.getPaymentName());
 			paymentMethod.setCreatedBy(getId());
 			

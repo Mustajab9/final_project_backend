@@ -3,6 +3,7 @@ package com.lawencon.community.dto.socialmedia;
 public class UpdateSocialMediaDtoReq {
 	private String id;
 	private String socialMediaName;
+	private String socialMediaIcon;
 	private Integer version;
 	private Boolean isActive;
 
@@ -20,6 +21,14 @@ public class UpdateSocialMediaDtoReq {
 
 	public void setSocialMediaName(String socialMediaName) {
 		this.socialMediaName = socialMediaName;
+	}
+
+	public String getSocialMediaIcon() {
+		return socialMediaIcon;
+	}
+
+	public void setSocialMediaIcon(String socialMediaIcon) {
+		this.socialMediaIcon = socialMediaIcon;
 	}
 
 	public Integer getVersion() {

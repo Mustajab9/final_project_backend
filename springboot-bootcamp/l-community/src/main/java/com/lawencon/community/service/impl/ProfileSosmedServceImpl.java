@@ -64,6 +64,7 @@ public class ProfileSosmedServceImpl extends BaseService implements ProfileSosme
 			data.setSocialMediaid(profileSosmed.getSocialMediaId().getId());
 			data.setSocialMediaName(profileSosmed.getSocialMediaId().getSocialMediaName());
 			data.setSocialMediaCode(profileSosmed.getSocialMediaId().getSocialMediaCode());
+			data.setSocialMediaIcon(profileSosmed.getSocialMediaId().getSocialMediaIcon());
 			
 			data.setVersion(profileSosmed.getVersion());
 			data.setIsActive(profileSosmed.getIsActive());
@@ -96,6 +97,7 @@ public class ProfileSosmedServceImpl extends BaseService implements ProfileSosme
 		data.setSocialMediaid(profileSosmed.getSocialMediaId().getId());
 		data.setSocialMediaName(profileSosmed.getSocialMediaId().getSocialMediaName());
 		data.setSocialMediaCode(profileSosmed.getSocialMediaId().getSocialMediaCode());
+		data.setSocialMediaIcon(profileSosmed.getSocialMediaId().getSocialMediaIcon());
 		data.setVersion(profileSosmed.getVersion());
 		data.setIsActive(profileSosmed.getIsActive());
 
@@ -220,6 +222,7 @@ public class ProfileSosmedServceImpl extends BaseService implements ProfileSosme
 			
 			data.setSocialMediaid(profileSosmed.getSocialMediaId().getId());
 			data.setSocialMediaName(profileSosmed.getSocialMediaId().getSocialMediaName());
+			data.setSocialMediaIcon(profileSosmed.getSocialMediaId().getSocialMediaIcon());
 
 			profileList.add(data);
 		}

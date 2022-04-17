@@ -83,6 +83,8 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 		InsertPositionDtoRes insert = new InsertPositionDtoRes();
 
 		try {
+			validateInsert(data);
+			
 			Position position = new Position();
 			position.setPositionName(data.getPositionName());
 			position.setPositionCode(data.getPositionCode());
@@ -112,6 +114,8 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 
 		try {
 			if (data.getVersion() != null) {
+				validateUpdate(data);
+				
 				Position position = positionDao.findById(data.getId());
 
 				position.setPositionName(data.getPositionName());
@@ -146,6 +150,8 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 		DeleteByPositionIdDtoRes deleteById = new DeleteByPositionIdDtoRes();
 
 		try {
+			validateDelete(id);
+			
 			begin();
 			boolean isDeleted = positionDao.deleteById(id);
 			commit();
@@ -160,5 +166,45 @@ public class PositionServiceImpl extends BaseService implements PositionService 
 		}
 
 		return deleteById;
+	}
+	
+	private void validateInsert(InsertPositionDtoReq data) throws Exception {
+		if(data.getPositionCode() == null || data.getPositionCode().trim().equals("")) {
+			throw new Exception("Position Code Can't Be Null");
+		}
+		else {
+			Position position = positionDao.findByCode(data.getPositionCode());
+			if(position != null) {
+				throw new Exception("Position Code Already Exist");
+			}
+			
+			if (data.getPositionName() == null || data.getPositionName().trim().equals("")) {
+				throw new Exception("Position Name Can't Be Null");
+			}
+		}
+	}
+	
+	private void validateUpdate(UpdatePositionDtoReq data) throws Exception {
+		if(data.getId() == null || data.getId().trim().equals("")) {
+			throw new Exception("Position ID can't be null");
+		}
+		else {
+			Position position = positionDao.findById(data.getId());
+			if(data.getPositionName() == null || data.getPositionName().trim().equals("")) {
+				throw new Exception("Position Name cant be null");
+			}
+			
+			if (position.getVersion() != data.getVersion()) {
+				throw new Exception("Already Updated By Someone");
+			}
+		}
+	}
+	
+	private void validateDelete(String id) throws Exception {
+		Position position = positionDao.findById(id);
+		
+		if(position == null) {
+			throw new Exception("Position ID is not exist");
+		}
 	}
 }

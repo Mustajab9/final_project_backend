@@ -28,6 +28,10 @@ public class SocialMedia extends BaseEntity {
 	@Column(name = "social_media_code", length=5)
 	private String socialMediaCode;
 	
+	@FullTextField
+	@Column(name = "social_media_icon", length=50)
+	private String socialMediaIcon;
+	
 	public String getSocialMediaName() {
 		return socialMediaName;
 	}
@@ -43,4 +47,13 @@ public class SocialMedia extends BaseEntity {
 	public void setSocialMediaCode(String socialMediaCode) {
 		this.socialMediaCode = socialMediaCode;
 	}
+
+	public String getSocialMediaIcon() {
+		return socialMediaIcon;
+	}
+
+	public void setSocialMediaIcon(String socialMediaIcon) {
+		this.socialMediaIcon = socialMediaIcon;
+	}
+	
 }

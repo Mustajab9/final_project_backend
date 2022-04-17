@@ -28,7 +28,7 @@ public class SocialMediaDaoImpl extends BaseDao<SocialMedia> implements SocialMe
 				sq.setData(data);
 				sq.setCount(count);
 			}else {
-				return super.getAll(query, startPage, maxPage, "socialMediaName", "socialMediaCode");
+				return super.getAll(query, startPage, maxPage, "socialMediaName", "socialMediaCode", "socialMediaIcon");
 			}
 		}
 		
@@ -66,7 +66,7 @@ public class SocialMediaDaoImpl extends BaseDao<SocialMedia> implements SocialMe
 	
 	@Override
 	public List<?> validateDelete(String id) throws Exception {
-		String sql = "SELECT s.id FORM social_media AS s WHERE s.id = ?1";
+		String sql = "SELECT s.id FROM social_media AS s WHERE s.id = ?1";
 		
 		List<?> listObj = createNativeQuery(sql).setParameter(1, id).setMaxResults(1).getResultList();
 		List<String> result = new ArrayList<>();
